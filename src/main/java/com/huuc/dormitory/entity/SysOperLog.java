@@ -1,10 +1,19 @@
 package com.huuc.dormitory.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 
 /**
  * 操作日志实体类
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class SysOperLog {
 
     /** 日志主键ID */
@@ -30,68 +39,4 @@ public class SysOperLog {
 
     /** 操作时间 */
     private LocalDateTime operTime;
-
-    public Long getLogId() {
-        return logId;
-    }
-
-    public void setLogId(Long logId) {
-        this.logId = logId;
-    }
-
-    public Long getOperatorId() {
-        return operatorId;
-    }
-
-    public void setOperatorId(Long operatorId) {
-        this.operatorId = operatorId;
-    }
-
-    public String getModuleName() {
-        return moduleName;
-    }
-
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName;
-    }
-
-    public String getOperType() {
-        return operType;
-    }
-
-    public void setOperType(String operType) {
-        this.operType = operType;
-    }
-
-    public String getOperDesc() {
-        return operDesc;
-    }
-
-    public void setOperDesc(String operDesc) {
-        this.operDesc = operDesc;
-    }
-
-    public String getOperIp() {
-        return operIp;
-    }
-
-    public void setOperIp(String operIp) {
-        this.operIp = operIp;
-    }
-
-    public String getRequestParam() {
-        return requestParam;
-    }
-
-    public void setRequestParam(String requestParam) {
-        this.requestParam = requestParam;
-    }
-
-    public LocalDateTime getOperTime() {
-        return operTime;
-    }
-
-    public void setOperTime(LocalDateTime operTime) {
-        this.operTime = operTime;
-    }
 }

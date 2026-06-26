@@ -1,11 +1,20 @@
 package com.huuc.dormitory.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
  * 修改密码请求DTO
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class PasswordDTO {
 
     /** 新密码 */
@@ -16,20 +25,4 @@ public class PasswordDTO {
     /** 确认密码 */
     @NotBlank(message = "确认密码不能为空")
     private String confirmPassword;
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
 }

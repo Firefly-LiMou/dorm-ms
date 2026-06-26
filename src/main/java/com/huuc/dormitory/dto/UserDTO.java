@@ -1,11 +1,20 @@
 package com.huuc.dormitory.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
  * 用户信息DTO（管理员新增/编辑用户）
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class UserDTO {
 
     /** 用户ID（编辑时必填） */
@@ -40,84 +49,4 @@ public class UserDTO {
 
     /** 账号状态 */
     private Integer status;
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public Integer getRoleType() {
-        return roleType;
-    }
-
-    public void setRoleType(Integer roleType) {
-        this.roleType = roleType;
-    }
-
-    public Integer getGender() {
-        return gender;
-    }
-
-    public void setGender(Integer gender) {
-        this.gender = gender;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
-    public String getMajor() {
-        return major;
-    }
-
-    public void setMajor(String major) {
-        this.major = major;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 }
