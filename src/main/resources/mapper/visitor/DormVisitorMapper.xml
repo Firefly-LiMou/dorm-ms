@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huuc.dormitory.dao.DormVisitorMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="DormVisitor">
+        <id column="visitor_id" property="visitorId"/>
+        <result column="visitor_name" property="visitorName"/>
+        <result column="id_card" property="idCard"/>
+        <result column="student_id" property="studentId"/>
+        <result column="building_id" property="buildingId"/>
+        <result column="visit_time" property="visitTime"/>
+        <result column="leave_time" property="leaveTime"/>
+        <result column="visit_reason" property="visitReason"/>
+        <result column="registrar_id" property="registrarId"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 根据ID查询访客 -->
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_visitor
+        WHERE visitor_id = #{visitorId}
+    </select>
+
+    <!-- 查询访客列表 -->
+    <select id="selectList" parameterType="DormVisitor" resultMap="BaseResultMap">
+        SELECT * FROM dorm_visitor
+        <where>
+            <if test="studentId != null">
+                AND student_id = #{studentId}
+            </if>
+            <if test="buildingId != null">
+                AND building_id = #{buildingId}
+            </if>
+            <if test="leaveTime != null">
+                AND leave_time IS NOT NULL
+            </if>
+        </where>
+        ORDER BY visit_time DESC
+    </select>
+
+    <!-- 根据楼栋ID查询访客列表 -->
+    <select id="selectByBuildingId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_visitor
+        WHERE building_id = #{buildingId}
+        ORDER BY visit_time DESC
+    </select>
+
+    <!-- 插入访客 -->
+    <insert id="insert" parameterType="DormVisitor" useGeneratedKeys="true" keyProperty="visitorId">
+        INSERT INTO dorm_visitor (visitor_name, id_card, student_id, building_id, visit_time, visit_reason, registrar_id)
+        VALUES (#{visitorName}, #{idCard}, #{studentId}, #{buildingId}, #{visitTime}, #{visitReason}, #{registrarId})
+    </insert>
+
+    <!-- 更新离开时间 -->
+    <update id="updateLeaveTime">
+        UPDATE dorm_visitor
+        SET leave_time = #{leaveTime}
+        WHERE visitor_id = #{visitorId}
+    </update>
+</mapper>

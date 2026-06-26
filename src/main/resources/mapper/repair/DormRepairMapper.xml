@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huuc.dormitory.dao.DormRepairMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="DormRepair">
+        <id column="repair_id" property="repairId"/>
+        <result column="student_id" property="studentId"/>
+        <result column="room_id" property="roomId"/>
+        <result column="repair_type" property="repairType"/>
+        <result column="repair_content" property="repairContent"/>
+        <result column="contact_phone" property="contactPhone"/>
+        <result column="submit_time" property="submitTime"/>
+        <result column="repair_status" property="repairStatus"/>
+        <result column="handler_id" property="handlerId"/>
+        <result column="handle_result" property="handleResult"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 根据ID查询报修 -->
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_repair
+        WHERE repair_id = #{repairId}
+    </select>
+
+    <!-- 根据学生ID查询报修列表 -->
+    <select id="selectByStudentId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_repair
+        WHERE student_id = #{studentId}
+        ORDER BY submit_time DESC
+    </select>
+
+    <!-- 查询报修列表 -->
+    <select id="selectList" parameterType="DormRepair" resultMap="BaseResultMap">
+        SELECT * FROM dorm_repair
+        <where>
+            <if test="studentId != null">
+                AND student_id = #{studentId}
+            </if>
+            <if test="roomId != null">
+                AND room_id = #{roomId}
+            </if>
+            <if test="repairType != null">
+                AND repair_type = #{repairType}
+            </if>
+            <if test="repairStatus != null">
+                AND repair_status = #{repairStatus}
+            </if>
+        </where>
+        ORDER BY submit_time DESC
+    </select>
+
+    <!-- 根据楼栋ID查询报修列表 -->
+    <select id="selectByBuildingId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT r.* FROM dorm_repair r
+        LEFT JOIN dorm_room dr ON r.room_id = dr.room_id
+        WHERE dr.building_id = #{buildingId}
+        ORDER BY r.submit_time DESC
+    </select>
+
+    <!-- 插入报修 -->
+    <insert id="insert" parameterType="DormRepair" useGeneratedKeys="true" keyProperty="repairId">
+        INSERT INTO dorm_repair (student_id, room_id, repair_type, repair_content, contact_phone, submit_time, repair_status)
+        VALUES (#{studentId}, #{roomId}, #{repairType}, #{repairContent}, #{contactPhone}, #{submitTime}, #{repairStatus})
+    </insert>
+
+    <!-- 更新报修 -->
+    <update id="update" parameterType="DormRepair">
+        UPDATE dorm_repair
+        <set>
+            <if test="repairStatus != null">repair_status = #{repairStatus},</if>
+            <if test="handlerId != null">handler_id = #{handlerId},</if>
+            <if test="handleResult != null">handle_result = #{handleResult},</if>
+            <if test="finishTime != null">finish_time = #{finishTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </set>
+        WHERE repair_id = #{repairId}
+    </update>
+</mapper>
