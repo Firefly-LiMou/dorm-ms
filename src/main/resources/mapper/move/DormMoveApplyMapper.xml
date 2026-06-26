@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huuc.dormitory.dao.DormMoveApplyMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="DormMoveApply">
+        <id column="apply_id" property="applyId"/>
+        <result column="student_id" property="studentId"/>
+        <result column="original_bed_id" property="originalBedId"/>
+        <result column="target_bed_id" property="targetBedId"/>
+        <result column="apply_reason" property="applyReason"/>
+        <result column="apply_time" property="applyTime"/>
+        <result column="audit_status" property="auditStatus"/>
+        <result column="auditor_id" property="auditorId"/>
+        <result column="audit_time" property="auditTime"/>
+        <result column="audit_opinion" property="auditOpinion"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 根据ID查询调宿申请 -->
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_move_apply
+        WHERE apply_id = #{applyId}
+    </select>
+
+    <!-- 根据学生ID查询调宿申请列表 -->
+    <select id="selectByStudentId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_move_apply
+        WHERE student_id = #{studentId}
+        ORDER BY apply_time DESC
+    </select>
+
+    <!-- 查询调宿申请列表 -->
+    <select id="selectList" parameterType="DormMoveApply" resultMap="BaseResultMap">
+        SELECT * FROM dorm_move_apply
+        <where>
+            <if test="studentId != null">
+                AND student_id = #{studentId}
+            </if>
+            <if test="auditStatus != null">
+                AND audit_status = #{auditStatus}
+            </if>
+        </where>
+        ORDER BY apply_time DESC
+    </select>
+
+    <!-- 根据楼栋ID查询调宿申请 -->
+    <select id="selectByBuildingId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT ma.* FROM dorm_move_apply ma
+        LEFT JOIN dorm_bed db ON ma.original_bed_id = db.bed_id
+        LEFT JOIN dorm_room dr ON db.room_id = dr.room_id
+        WHERE dr.building_id = #{buildingId}
+        ORDER BY ma.apply_time DESC
+    </select>
+
+    <!-- 插入调宿申请 -->
+    <insert id="insert" parameterType="DormMoveApply" useGeneratedKeys="true" keyProperty="applyId">
+        INSERT INTO dorm_move_apply (student_id, original_bed_id, target_bed_id, apply_reason, apply_time, audit_status)
+        VALUES (#{studentId}, #{originalBedId}, #{targetBedId}, #{applyReason}, #{applyTime}, #{auditStatus})
+    </insert>
+
+    <!-- 更新调宿申请 -->
+    <update id="update" parameterType="DormMoveApply">
+        UPDATE dorm_move_apply
+        <set>
+            <if test="auditStatus != null">audit_status = #{auditStatus},</if>
+            <if test="auditorId != null">auditor_id = #{auditorId},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+            <if test="auditOpinion != null">audit_opinion = #{auditOpinion},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </set>
+        WHERE apply_id = #{applyId}
+    </update>
+
+    <!-- 统计学生待审批申请数 -->
+    <select id="countPendingByStudentId" parameterType="Long" resultType="int">
+        SELECT COUNT(*) FROM dorm_move_apply
+        WHERE student_id = #{studentId} AND audit_status = 0
+    </select>
+</mapper>

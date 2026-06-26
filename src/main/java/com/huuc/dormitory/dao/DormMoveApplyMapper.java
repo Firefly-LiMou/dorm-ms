@@ -1,0 +1,47 @@
+package com.huuc.dormitory.dao;
+
+import com.huuc.dormitory.entity.DormMoveApply;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * 调宿申请Mapper接口
+ */
+public interface DormMoveApplyMapper {
+
+    /**
+     * 根据ID查询调宿申请
+     */
+    DormMoveApply selectById(Long applyId);
+
+    /**
+     * 根据学生ID查询调宿申请列表
+     */
+    List<DormMoveApply> selectByStudentId(Long studentId);
+
+    /**
+     * 查询调宿申请列表
+     */
+    List<DormMoveApply> selectList(DormMoveApply query);
+
+    /**
+     * 根据楼栋ID查询调宿申请
+     */
+    List<DormMoveApply> selectByBuildingId(Long buildingId);
+
+    /**
+     * 插入调宿申请
+     */
+    int insert(DormMoveApply apply);
+
+    /**
+     * 更新调宿申请
+     */
+    int update(DormMoveApply apply);
+
+    /**
+     * 统计学生待审批申请数
+     */
+    int countPendingByStudentId(Long studentId);
+}
