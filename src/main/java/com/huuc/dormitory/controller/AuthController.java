@@ -1,6 +1,7 @@
 package com.huuc.dormitory.controller;
 
 import com.huuc.dormitory.common.aop.OperLog;
+import com.huuc.dormitory.common.enums.OperTypeEnum;
 import com.huuc.dormitory.common.result.Result;
 import com.huuc.dormitory.common.utils.SessionUtil;
 import com.huuc.dormitory.dto.LoginDTO;
@@ -38,7 +39,7 @@ public class AuthController {
      */
     @PostMapping("/login")
     @ResponseBody
-    @OperLog(module = "用户认证", type = "登录", desc = "用户登录")
+    @OperLog(module = "用户认证", type = OperTypeEnum.QUERY, desc = "用户登录")
     public Result<SysUser> login(@RequestBody @Valid LoginDTO dto, HttpSession session) {
         SysUser user = userService.login(dto);
 
@@ -58,7 +59,7 @@ public class AuthController {
      */
     @PostMapping("/logout")
     @ResponseBody
-    @OperLog(module = "用户认证", type = "登出", desc = "用户登出")
+    @OperLog(module = "用户认证", type = OperTypeEnum.QUERY, desc = "用户登出")
     public Result<Void> logout(HttpSession session) {
         SessionUtil.removeCurrentUser(session);
         return Result.success();

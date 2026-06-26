@@ -78,7 +78,7 @@ public class OperLogAspect {
             SysOperLog log = new SysOperLog();
             log.setOperatorId(operatorId);
             log.setModuleName(operLog.module());
-            log.setOperType(operLog.type());
+            log.setOperType(operLog.type().getCode());
             log.setOperDesc(operLog.desc());
             log.setOperIp(operIp);
             log.setRequestParam(requestParam);

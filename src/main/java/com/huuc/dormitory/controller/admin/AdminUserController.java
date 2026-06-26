@@ -3,6 +3,7 @@ package com.huuc.dormitory.controller.admin;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.huuc.dormitory.common.aop.OperLog;
+import com.huuc.dormitory.common.enums.OperTypeEnum;
 import com.huuc.dormitory.common.result.Result;
 import com.huuc.dormitory.dto.PasswordDTO;
 import com.huuc.dormitory.dto.UserDTO;
@@ -64,7 +65,7 @@ public class AdminUserController {
      */
     @PostMapping("/add")
     @ResponseBody
-    @OperLog(module = "用户管理", type = "新增", desc = "新增用户")
+    @OperLog(module = "用户管理", type = OperTypeEnum.ADD, desc = "新增用户")
     public Result<Void> addUser(@RequestBody @Valid UserDTO dto) {
         userService.addUser(dto);
         return Result.success();
@@ -75,7 +76,7 @@ public class AdminUserController {
      */
     @PostMapping("/update")
     @ResponseBody
-    @OperLog(module = "用户管理", type = "修改", desc = "编辑用户")
+    @OperLog(module = "用户管理", type = OperTypeEnum.UPDATE, desc = "编辑用户")
     public Result<Void> updateUser(@RequestBody @Valid UserDTO dto) {
         userService.updateUser(dto);
         return Result.success();
@@ -86,7 +87,7 @@ public class AdminUserController {
      */
     @PostMapping("/toggleStatus/{userId}")
     @ResponseBody
-    @OperLog(module = "用户管理", type = "修改", desc = "切换用户状态")
+    @OperLog(module = "用户管理", type = OperTypeEnum.UPDATE, desc = "切换用户状态")
     public Result<Void> toggleUserStatus(@PathVariable Long userId) {
         userService.toggleUserStatus(userId);
         return Result.success();

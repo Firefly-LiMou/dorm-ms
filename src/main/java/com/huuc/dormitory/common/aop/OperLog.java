@@ -1,5 +1,7 @@
 package com.huuc.dormitory.common.aop;
 
+import com.huuc.dormitory.common.enums.OperTypeEnum;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,8 +18,8 @@ public @interface OperLog {
     /** 操作模块 */
     String module();
 
-    /** 操作类型（新增/修改/删除/审批） */
-    String type();
+    /** 操作类型 */
+    OperTypeEnum type();
 
     /** 操作描述 */
     String desc() default "";

@@ -1,6 +1,7 @@
 package com.huuc.dormitory.controller.student;
 
 import com.huuc.dormitory.common.aop.OperLog;
+import com.huuc.dormitory.common.enums.OperTypeEnum;
 import com.huuc.dormitory.common.result.Result;
 import com.huuc.dormitory.common.utils.SessionUtil;
 import com.huuc.dormitory.dto.PasswordDTO;
@@ -47,7 +48,7 @@ public class StudentUserController {
      */
     @PostMapping("/updatePhone")
     @ResponseBody
-    @OperLog(module = "个人信息", type = "修改", desc = "修改联系电话")
+    @OperLog(module = "个人信息", type = OperTypeEnum.UPDATE, desc = "修改联系电话")
     public Result<Void> updatePhone(@RequestParam String phone, HttpSession session) {
         Long userId = SessionUtil.getCurrentUserId(session);
         userService.updatePhone(phone, userId);
@@ -59,7 +60,7 @@ public class StudentUserController {
      */
     @PostMapping("/updatePassword")
     @ResponseBody
-    @OperLog(module = "个人信息", type = "修改", desc = "修改密码")
+    @OperLog(module = "个人信息", type = OperTypeEnum.UPDATE, desc = "修改密码")
     public Result<Void> updatePassword(@RequestBody @Valid PasswordDTO dto, HttpSession session) {
         Long userId = SessionUtil.getCurrentUserId(session);
         userService.updatePassword(dto, userId);
