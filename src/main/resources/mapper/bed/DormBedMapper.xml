@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huuc.dormitory.dao.DormBedMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="DormBed">
+        <id column="bed_id" property="bedId"/>
+        <result column="bed_no" property="bedNo"/>
+        <result column="room_id" property="roomId"/>
+        <result column="bed_status" property="bedStatus"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+    <!-- 根据ID查询床位 -->
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_bed
+        WHERE bed_id = #{bedId} AND is_deleted = 0
+    </select>
+
+    <!-- 根据房间ID查询床位列表 -->
+    <select id="selectByRoomId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_bed
+        WHERE room_id = #{roomId} AND is_deleted = 0
+        ORDER BY bed_no ASC
+    </select>
+
+    <!-- 根据房间ID查询空闲床位列表 -->
+    <select id="selectFreeByRoomId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_bed
+        WHERE room_id = #{roomId} AND bed_status = 0 AND is_deleted = 0
+        ORDER BY bed_no ASC
+    </select>
+
+    <!-- 插入床位 -->
+    <insert id="insert" parameterType="DormBed" useGeneratedKeys="true" keyProperty="bedId">
+        INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark)
+        VALUES (#{bedNo}, #{roomId}, #{bedStatus}, #{remark})
+    </insert>
+
+    <!-- 批量插入床位 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark)
+        VALUES
+        <foreach collection="list" item="bed" separator=",">
+            (#{bed.bedNo}, #{bed.roomId}, #{bed.bedStatus}, #{bed.remark})
+        </foreach>
+    </insert>
+
+    <!-- 更新床位状态 -->
+    <update id="updateStatus">
+        UPDATE dorm_bed
+        SET bed_status = #{status}
+        WHERE bed_id = #{bedId} AND is_deleted = 0
+    </update>
+
+    <!-- 逻辑删除床位 -->
+    <update id="updateDeleted">
+        UPDATE dorm_bed
+        SET is_deleted = #{isDeleted}
+        WHERE bed_id = #{bedId}
+    </update>
+
+    <!-- 统计房间下未删除的床位数 -->
+    <select id="countByRoomId" parameterType="Long" resultType="int">
+        SELECT COUNT(*) FROM dorm_bed
+        WHERE room_id = #{roomId} AND is_deleted = 0
+    </select>
+</mapper>

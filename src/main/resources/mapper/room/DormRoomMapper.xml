@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huuc.dormitory.dao.DormRoomMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="DormRoom">
+        <id column="room_id" property="roomId"/>
+        <result column="room_no" property="roomNo"/>
+        <result column="building_id" property="buildingId"/>
+        <result column="floor_num" property="floorNum"/>
+        <result column="bed_total" property="bedTotal"/>
+        <result column="room_type" property="roomType"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+    <!-- 根据ID查询房间 -->
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_room
+        WHERE room_id = #{roomId} AND is_deleted = 0
+    </select>
+
+    <!-- 根据楼栋ID查询房间列表 -->
+    <select id="selectByBuildingId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_room
+        WHERE building_id = #{buildingId} AND is_deleted = 0
+        ORDER BY room_no ASC
+    </select>
+
+    <!-- 查询房间列表 -->
+    <select id="selectList" parameterType="DormRoom" resultMap="BaseResultMap">
+        SELECT * FROM dorm_room
+        <where>
+            is_deleted = 0
+            <if test="roomNo != null and roomNo != ''">
+                AND room_no LIKE CONCAT('%', #{roomNo}, '%')
+            </if>
+            <if test="buildingId != null">
+                AND building_id = #{buildingId}
+            </if>
+            <if test="floorNum != null">
+                AND floor_num = #{floorNum}
+            </if>
+            <if test="roomType != null">
+                AND room_type = #{roomType}
+            </if>
+        </where>
+        ORDER BY building_id, room_no ASC
+    </select>
+
+    <!-- 插入房间 -->
+    <insert id="insert" parameterType="DormRoom" useGeneratedKeys="true" keyProperty="roomId">
+        INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type, remark)
+        VALUES (#{roomNo}, #{buildingId}, #{floorNum}, #{bedTotal}, #{roomType}, #{remark})
+    </insert>
+
+    <!-- 更新房间 -->
+    <update id="update" parameterType="DormRoom">
+        UPDATE dorm_room
+        <set>
+            <if test="roomNo != null">room_no = #{roomNo},</if>
+            <if test="buildingId != null">building_id = #{buildingId},</if>
+            <if test="floorNum != null">floor_num = #{floorNum},</if>
+            <if test="bedTotal != null">bed_total = #{bedTotal},</if>
+            <if test="roomType != null">room_type = #{roomType},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </set>
+        WHERE room_id = #{roomId} AND is_deleted = 0
+    </update>
+
+    <!-- 逻辑删除房间 -->
+    <update id="updateDeleted">
+        UPDATE dorm_room
+        SET is_deleted = #{isDeleted}
+        WHERE room_id = #{roomId}
+    </update>
+
+    <!-- 统计房间下床位数 -->
+    <select id="countBeds" parameterType="Long" resultType="int">
+        SELECT COUNT(*) FROM dorm_bed
+        WHERE room_id = #{roomId} AND is_deleted = 0
+    </select>
+
+    <!-- 根据楼栋ID和房间号查询房间 -->
+    <select id="selectByBuildingIdAndRoomNo" resultMap="BaseResultMap">
+        SELECT * FROM dorm_room
+        WHERE building_id = #{buildingId} AND room_no = #{roomNo} AND is_deleted = 0
+    </select>
+</mapper>
