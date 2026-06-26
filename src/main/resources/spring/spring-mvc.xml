@@ -52,9 +52,21 @@
             <bean class="com.huuc.dormitory.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
 
-        <!-- 权限拦截器 -->
+        <!-- 管理员端权限拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/admin/**"/>
+            <bean class="com.huuc.dormitory.interceptor.PermissionInterceptor"/>
+        </mvc:interceptor>
+
+        <!-- 宿管端权限拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/dorm/**"/>
+            <bean class="com.huuc.dormitory.interceptor.PermissionInterceptor"/>
+        </mvc:interceptor>
+
+        <!-- 学生端权限拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/student/**"/>
             <bean class="com.huuc.dormitory.interceptor.PermissionInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

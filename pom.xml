@@ -141,6 +141,13 @@
             <version>${jackson.version}</version>
         </dependency>
 
+        <!-- Hibernate Validator参数校验 -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.2.5.Final</version>
+        </dependency>
+
         <!-- SLF4J日志门面 -->
         <dependency>
             <groupId>org.slf4j</groupId>
