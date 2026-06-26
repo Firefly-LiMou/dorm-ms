@@ -1,5 +1,8 @@
 package com.huuc.dormitory.common.result;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 统一返回结果封装
  */
@@ -13,6 +16,9 @@ public class Result<T> {
 
     /** 返回数据 */
     private T data;
+
+    /** 扩展数据（可选） */
+    private Map<String, Object> extra;
 
     public Result() {
     }
@@ -101,5 +107,24 @@ public class Result<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public Map<String, Object> getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Map<String, Object> extra) {
+        this.extra = extra;
+    }
+
+    /**
+     * 添加扩展数据
+     */
+    public Result<T> putExtra(String key, Object value) {
+        if (this.extra == null) {
+            this.extra = new HashMap<>();
+        }
+        this.extra.put(key, value);
+        return this;
     }
 }

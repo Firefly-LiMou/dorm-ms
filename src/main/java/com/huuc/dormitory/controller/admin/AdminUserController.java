@@ -5,16 +5,14 @@ import com.github.pagehelper.PageInfo;
 import com.huuc.dormitory.common.aop.OperLog;
 import com.huuc.dormitory.common.enums.OperTypeEnum;
 import com.huuc.dormitory.common.result.Result;
-import com.huuc.dormitory.common.validation.AddGroup;
-import com.huuc.dormitory.common.validation.UpdateGroup;
 import com.huuc.dormitory.dto.UserDTO;
 import com.huuc.dormitory.entity.SysUser;
 import com.huuc.dormitory.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -67,7 +65,7 @@ public class AdminUserController {
     @PostMapping("/add")
     @ResponseBody
     @OperLog(module = "用户管理", type = OperTypeEnum.ADD, desc = "新增用户")
-    public Result<Void> addUser(@RequestBody @Validated(AddGroup.class) UserDTO dto) {
+    public Result<Void> addUser(@RequestBody @Valid UserDTO dto) {
         userService.addUser(dto);
         return Result.success();
     }
@@ -78,7 +76,7 @@ public class AdminUserController {
     @PostMapping("/update")
     @ResponseBody
     @OperLog(module = "用户管理", type = OperTypeEnum.UPDATE, desc = "编辑用户")
-    public Result<Void> updateUser(@RequestBody @Validated(UpdateGroup.class) UserDTO dto) {
+    public Result<Void> updateUser(@RequestBody @Valid UserDTO dto) {
         userService.updateUser(dto);
         return Result.success();
     }

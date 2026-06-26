@@ -88,6 +88,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void addUser(UserDTO dto) {
+        // 参数校验
+        if (dto.getUsername() == null || dto.getUsername().trim().isEmpty()) {
+            throw new BusinessException("用户名不能为空");
+        }
+
         // 验证用户名唯一性
         SysUser existUser = sysUserMapper.selectByUsername(dto.getUsername());
         if (existUser != null) {
@@ -116,6 +121,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(UserDTO dto) {
+        // 参数校验
+        if (dto.getUserId() == null) {
+            throw new BusinessException("用户ID不能为空");
+        }
+
         // 验证用户存在
         SysUser existUser = sysUserMapper.selectById(dto.getUserId());
         if (existUser == null) {
