@@ -10,8 +10,8 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <!-- 组件扫描：扫描Controller层 -->
-    <context:component-scan base-package="com.huuc.dormitory.controller"/>
+    <!-- 组件扫描：扫描Controller层、公共组件、拦截器 -->
+    <context:component-scan base-package="com.huuc.dormitory.controller, com.huuc.dormitory.common, com.huuc.dormitory.interceptor"/>
 
     <!-- 开启MVC注解驱动 -->
     <mvc:annotation-driven>

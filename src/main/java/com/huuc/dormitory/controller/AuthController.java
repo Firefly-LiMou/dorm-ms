@@ -7,6 +7,7 @@ import com.huuc.dormitory.common.utils.SessionUtil;
 import com.huuc.dormitory.dto.LoginDTO;
 import com.huuc.dormitory.entity.SysUser;
 import com.huuc.dormitory.service.UserService;
+import com.huuc.dormitory.vo.LoginVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,7 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseBody
     @OperLog(module = "用户认证", type = OperTypeEnum.QUERY, desc = "用户登录")
-    public Result<SysUser> login(@RequestBody @Valid LoginDTO dto, HttpSession session) {
+    public Result<LoginVO> login(@RequestBody @Valid LoginDTO dto, HttpSession session) {
         SysUser user = userService.login(dto);
 
         // 将用户信息存入Session
@@ -51,7 +52,8 @@ public class AuthController {
         user.setPassword(null);
 
         // 返回用户信息和是否需要修改密码的标记
-        return Result.success(user);
+        LoginVO loginVO = new LoginVO(user, needChangePassword);
+        return Result.success(loginVO);
     }
 
     /**

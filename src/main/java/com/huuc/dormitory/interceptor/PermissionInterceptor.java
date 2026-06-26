@@ -3,6 +3,7 @@ package com.huuc.dormitory.interceptor;
 import com.huuc.dormitory.common.enums.RoleTypeEnum;
 import com.huuc.dormitory.common.utils.SessionUtil;
 import com.huuc.dormitory.entity.SysUser;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
  * 根据用户角色判断是否有权限访问对应接口
  */
 public class PermissionInterceptor implements HandlerInterceptor {
+
+    private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -29,19 +32,19 @@ public class PermissionInterceptor implements HandlerInterceptor {
         Integer roleType = user.getRoleType();
 
         // 管理员接口：仅管理员可访问
-        if (requestURI.contains("/admin/") && !RoleTypeEnum.ADMIN.getCode().equals(roleType)) {
+        if (pathMatcher.match("/admin/**", requestURI) && !RoleTypeEnum.ADMIN.getCode().equals(roleType)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "无权限访问");
             return false;
         }
 
         // 宿管接口：仅宿管可访问
-        if (requestURI.contains("/dorm/") && !RoleTypeEnum.DORM_MANAGER.getCode().equals(roleType)) {
+        if (pathMatcher.match("/dorm/**", requestURI) && !RoleTypeEnum.DORM_MANAGER.getCode().equals(roleType)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "无权限访问");
             return false;
         }
 
         // 学生接口：仅学生可访问
-        if (requestURI.contains("/student/") && !RoleTypeEnum.STUDENT.getCode().equals(roleType)) {
+        if (pathMatcher.match("/student/**", requestURI) && !RoleTypeEnum.STUDENT.getCode().equals(roleType)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "无权限访问");
             return false;
         }

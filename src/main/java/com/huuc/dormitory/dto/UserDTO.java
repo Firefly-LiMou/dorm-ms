@@ -1,5 +1,8 @@
 package com.huuc.dormitory.dto;
 
+import com.huuc.dormitory.common.validation.AddGroup;
+import com.huuc.dormitory.common.validation.UpdateGroup;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -9,10 +12,11 @@ import javax.validation.constraints.NotNull;
 public class UserDTO {
 
     /** 用户ID（编辑时必填） */
+    @NotNull(message = "用户ID不能为空", groups = {UpdateGroup.class})
     private Long userId;
 
     /** 登录账号 */
-    @NotBlank(message = "用户名不能为空")
+    @NotBlank(message = "用户名不能为空", groups = {AddGroup.class})
     private String username;
 
     /** 真实姓名 */

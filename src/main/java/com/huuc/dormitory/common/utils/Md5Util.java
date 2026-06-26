@@ -36,6 +36,9 @@ public class Md5Util {
      * 验证密码是否正确
      */
     public static boolean verify(String password, String encryptedPassword) {
+        if (password == null || encryptedPassword == null) {
+            return false;
+        }
         return encrypt(password).equals(encryptedPassword);
     }
 }

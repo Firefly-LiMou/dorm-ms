@@ -66,11 +66,6 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("两次输入的密码不一致");
         }
 
-        // 验证密码长度
-        if (dto.getNewPassword().length() < 6 || dto.getNewPassword().length() > 20) {
-            throw new BusinessException("密码长度必须在6-20个字符之间");
-        }
-
         // 加密密码
         String encryptedPassword = Md5Util.encrypt(dto.getNewPassword());
 
