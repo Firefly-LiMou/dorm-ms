@@ -10,8 +10,7 @@
   <packaging>war</packaging>
 
   <name>dorm-ms Maven Webapp</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://localhost:8080/dorm-ms</url>
+  <url></url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
