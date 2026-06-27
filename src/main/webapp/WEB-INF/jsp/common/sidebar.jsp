@@ -127,19 +127,19 @@
                     </a>
                     <ul class="submenu">
                         <li>
-                            <a href="${pageContext.request.contextPath}/dorm/building/list" class="submenu-link">
+                            <a href="${pageContext.request.contextPath}/dorm/building/listPage" class="submenu-link">
                                 <i class="fas fa-hotel"></i>
                                 <span>楼栋信息</span>
                             </a>
                         </li>
                         <li>
-                            <a href="${pageContext.request.contextPath}/dorm/room/list" class="submenu-link">
+                            <a href="${pageContext.request.contextPath}/dorm/room/listPage" class="submenu-link">
                                 <i class="fas fa-door-open"></i>
                                 <span>房间信息</span>
                             </a>
                         </li>
                         <li>
-                            <a href="${pageContext.request.contextPath}/dorm/bed/list" class="submenu-link">
+                            <a href="${pageContext.request.contextPath}/dorm/bed/listPage" class="submenu-link">
                                 <i class="fas fa-bed"></i>
                                 <span>床位信息</span>
                             </a>
