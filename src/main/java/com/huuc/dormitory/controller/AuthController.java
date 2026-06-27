@@ -27,6 +27,14 @@ public class AuthController {
     private UserService userService;
 
     /**
+     * 根路径重定向到登录页
+     */
+    @GetMapping("/")
+    public String index() {
+        return "redirect:/login";
+    }
+
+    /**
      * 跳转登录页
      */
     @GetMapping("/login")
