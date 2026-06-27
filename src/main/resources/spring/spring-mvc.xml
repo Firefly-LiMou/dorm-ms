@@ -15,18 +15,10 @@
 
     <!-- 开启MVC注解驱动 -->
     <mvc:annotation-driven>
-        <!-- 配置Jackson日期格式 -->
         <mvc:message-converters>
+            <!-- 引用JacksonConfig中定义的objectMapper -->
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                <property name="objectMapper">
-                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
-                        <property name="dateFormat">
-                            <bean class="java.text.SimpleDateFormat">
-                                <constructor-arg value="yyyy-MM-dd HH:mm:ss"/>
-                            </bean>
-                        </property>
-                    </bean>
-                </property>
+                <property name="objectMapper" ref="objectMapper"/>
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
