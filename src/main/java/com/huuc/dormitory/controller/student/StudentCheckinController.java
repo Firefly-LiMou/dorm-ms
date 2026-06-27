@@ -23,6 +23,15 @@ public class StudentCheckinController {
     private CheckinService checkinService;
 
     /**
+     * 住宿信息页面
+     * @return 信息页视图
+     */
+    @GetMapping("/infoPage")
+    public String infoPage() {
+        return "student/checkin/info";
+    }
+
+    /**
      * 查看本人住宿信息
      */
     @GetMapping("/info")

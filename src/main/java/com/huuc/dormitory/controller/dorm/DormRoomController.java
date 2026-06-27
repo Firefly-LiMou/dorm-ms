@@ -23,6 +23,15 @@ public class DormRoomController {
     private RoomService roomService;
 
     /**
+     * 房间列表页面
+     * @return 列表页视图
+     */
+    @GetMapping("/listPage")
+    public String listPage() {
+        return "dorm/room/list";
+    }
+
+    /**
      * 获取楼栋下房间列表
      */
     @GetMapping("/building/{buildingId}")

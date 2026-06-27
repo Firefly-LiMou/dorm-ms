@@ -24,6 +24,15 @@ public class DormBuildingController {
     private BuildingService buildingService;
 
     /**
+     * 楼栋列表页面
+     * @return 列表页视图
+     */
+    @GetMapping("/listPage")
+    public String listPage() {
+        return "dorm/building/list";
+    }
+
+    /**
      * 获取本人负责楼栋列表
      */
     @GetMapping("/list")

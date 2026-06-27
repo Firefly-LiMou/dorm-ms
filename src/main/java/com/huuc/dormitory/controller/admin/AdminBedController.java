@@ -27,6 +27,15 @@ public class AdminBedController {
     private BedService bedService;
 
     /**
+     * 床位列表页面
+     * @return 列表页视图
+     */
+    @GetMapping("/list")
+    public String listPage() {
+        return "admin/bed/list";
+    }
+
+    /**
      * 获取房间下床位列表
      */
     @GetMapping("/room/{roomId}")
