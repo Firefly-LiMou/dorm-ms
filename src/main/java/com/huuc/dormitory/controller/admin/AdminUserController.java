@@ -56,7 +56,7 @@ public class AdminUserController {
      * @param userId 用户ID
      * @return 用户信息（密码字段已清空）
      */
-    @GetMapping("/{userId}")
+    @GetMapping("/detail/{userId}")
     @ResponseBody
     public Result<SysUser> getUserById(@PathVariable Long userId) {
         SysUser user = userService.getUserById(userId);

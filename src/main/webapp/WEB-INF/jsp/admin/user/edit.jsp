@@ -215,7 +215,7 @@
          * @param {number} userId - 用户ID
          */
         function loadUserData(userId) {
-            $.ajaxRequest('/admin/user/' + userId, 'GET', null, function(result) {
+            $.ajaxRequest('/admin/user/detail/' + userId, 'GET', null, function(result) {
                 if (result.data) {
                     var user = result.data;
                     $('#userId').val(user.userId);
@@ -248,6 +248,7 @@
         function submitForm() {
             var formData = {
                 userId: parseInt($('#userId').val()),
+                username: $('#username').val().trim(),
                 realName: $('#realName').val().trim(),
                 roleType: parseInt($('#roleType').val()),
                 gender: $('#gender').val() ? parseInt($('#gender').val()) : null,

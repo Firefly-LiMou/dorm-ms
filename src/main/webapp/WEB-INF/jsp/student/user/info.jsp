@@ -191,8 +191,8 @@
                 $.ajaxRequest('/student/user/updatePhone', 'POST', {phone: phone}, function(result) {
                     $.toast('success', '联系电话修改成功');
                     $('#editPhoneModal').modal('hide');
-                    // 更新显示
-                    $('#phone').text(phone);
+                    // 更新显示（input元素用val()）
+                    $('#phone').val(phone);
                     $('#btnSavePhone').prop('disabled', false).text('保存');
                 }, function(result) {
                     $.toast('error', result.msg || '修改失败');

@@ -103,7 +103,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-6 mb-3">
-                                        <a href="${pageContext.request.contextPath}/student/checkin/info" class="btn btn-outline-primary w-100">
+                                        <a href="${pageContext.request.contextPath}/student/checkin/infoPage" class="btn btn-outline-primary w-100">
                                             <i class="fas fa-bed mr-2"></i>住宿信息
                                         </a>
                                     </div>

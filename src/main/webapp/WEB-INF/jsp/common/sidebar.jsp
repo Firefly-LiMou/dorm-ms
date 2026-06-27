@@ -234,7 +234,7 @@
                     </a>
                     <ul class="submenu">
                         <li>
-                            <a href="${pageContext.request.contextPath}/student/checkin/info" class="submenu-link">
+                            <a href="${pageContext.request.contextPath}/student/checkin/infoPage" class="submenu-link">
                                 <i class="fas fa-bed"></i>
                                 <span>住宿信息</span>
                             </a>
