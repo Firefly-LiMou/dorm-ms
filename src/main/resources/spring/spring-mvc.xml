@@ -49,25 +49,25 @@
             <mvc:exclude-mapping path="/logout"/>
             <mvc:exclude-mapping path="/static/**"/>
             <mvc:exclude-mapping path="/captcha"/>
-            <bean class="com.huuc.dormitory.interceptor.LoginInterceptor"/>
+            <ref bean="loginInterceptor"/>
         </mvc:interceptor>
 
         <!-- 管理员端权限拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/admin/**"/>
-            <bean class="com.huuc.dormitory.interceptor.PermissionInterceptor"/>
+            <ref bean="permissionInterceptor"/>
         </mvc:interceptor>
 
         <!-- 宿管端权限拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/dorm/**"/>
-            <bean class="com.huuc.dormitory.interceptor.PermissionInterceptor"/>
+            <ref bean="permissionInterceptor"/>
         </mvc:interceptor>
 
         <!-- 学生端权限拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/student/**"/>
-            <bean class="com.huuc.dormitory.interceptor.PermissionInterceptor"/>
+            <ref bean="permissionInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 </beans>
