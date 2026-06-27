@@ -1,0 +1,188 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>晚归统计 - 高校公寓管理系统</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
+    <!-- 公共CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- 侧边栏 -->
+        <%@ include file="/WEB-INF/jsp/common/sidebar.jsp" %>
+
+        <!-- 内容区域 -->
+        <div class="content-wrapper">
+            <!-- 导航栏 -->
+            <%@ include file="/WEB-INF/jsp/common/header.jsp" %>
+
+            <!-- 内容主体 -->
+            <div class="content-body">
+                <!-- 页面标题 -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 style="color: #333; margin-bottom: 8px;">晚归统计</h4>
+                        <p style="color: #666; margin: 0;">按楼栋统计月度晚归人次</p>
+                    </div>
+                    <a href="${pageContext.request.contextPath}/dorm/late-return/list" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-1"></i>返回列表
+                    </a>
+                </div>
+
+                <!-- 未分配楼栋提示 -->
+                <div id="noBuildingTip" class="alert alert-warning" style="display: none;">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>您暂未负责任何楼栋，请联系管理员分配楼栋后再使用此功能。
+                </div>
+
+                <!-- 查询区域 -->
+                <div class="form-container mb-4" id="searchContainer">
+                    <form id="searchForm" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="searchMonth" class="form-label">统计月份</label>
+                            <input type="month" class="form-control" id="searchMonth">
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end gap-2">
+                            <button type="button" class="btn btn-primary" onclick="loadData()">
+                                <i class="fas fa-search mr-1"></i>查询
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="resetSearch()">
+                                <i class="fas fa-undo mr-1"></i>重置
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 统计数据 -->
+                <div class="form-container" id="statsContainer">
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>楼栋ID</th>
+                                    <th>楼栋名称</th>
+                                    <th>晚归人次</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <tr>
+                                    <td colspan="3" class="text-center py-4">
+                                        <i class="fas fa-spinner fa-spin mr-2"></i>加载中...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 合计 -->
+                    <div id="totalContainer" class="mt-3" style="display: none;">
+                        <div class="alert alert-info">
+                            <i class="fas fa-chart-bar mr-2"></i>
+                            合计晚归人次：<strong id="totalCount">0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部 -->
+            <%@ include file="/WEB-INF/jsp/common/footer.jsp" %>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="${pageContext.request.contextPath}/static/js/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="${pageContext.request.contextPath}/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- 公共JS -->
+    <script src="${pageContext.request.contextPath}/static/js/common.js"></script>
+    <!-- 导航栏JS -->
+    <script>window.needChangePasswordFlag = '${sessionScope.needChangePassword}';</script>
+    <script src="${pageContext.request.contextPath}/static/js/header.js"></script>
+
+    <script>
+        $(function() {
+            // 设置默认月份为当前月
+            var now = new Date();
+            var yearMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+            $('#searchMonth').val(yearMonth);
+
+            loadData();
+        });
+
+        /**
+         * 加载数据
+         */
+        function loadData() {
+            var yearMonth = $('#searchMonth').val() || null;
+
+            $.ajaxRequest('/dorm/late-return/stats', 'GET', {
+                yearMonth: yearMonth
+            }, function(result) {
+                $('#noBuildingTip').hide();
+                $('#searchContainer').show();
+                $('#statsContainer').show();
+
+                if (result.data) {
+                    renderTable(result.data);
+                }
+            }, function(result) {
+                // 判断是否是未分配楼栋
+                if (result.msg && result.msg.indexOf('未负责任何楼栋') !== -1) {
+                    $('#noBuildingTip').show();
+                    $('#searchContainer').hide();
+                    $('#statsContainer').hide();
+                } else {
+                    $('#tableBody').html('<tr><td colspan="3" class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadData()" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></td></tr>');
+                    $('#totalContainer').hide();
+                }
+            });
+        }
+
+        /**
+         * 渲染表格
+         * @param {Array} list - 统计数据列表
+         */
+        function renderTable(list) {
+            var $tbody = $('#tableBody');
+            $tbody.empty();
+
+            if (!list || list.length === 0) {
+                $tbody.html('<tr><td colspan="3" class="text-center py-4 text-muted"><i class="fas fa-inbox mr-2"></i>暂无统计数据</td></tr>');
+                $('#totalContainer').hide();
+                return;
+            }
+
+            var totalCount = 0;
+            list.forEach(function(item) {
+                totalCount += item.count || 0;
+                var row = '<tr>';
+                row += '<td>' + (item.buildingId || '-') + '</td>';
+                row += '<td>' + (item.buildingName || '-') + '</td>';
+                row += '<td><span class="badge bg-warning">' + (item.count || 0) + '</span></td>';
+                row += '</tr>';
+                $tbody.append(row);
+            });
+
+            // 显示合计
+            $('#totalCount').text(totalCount);
+            $('#totalContainer').show();
+        }
+
+        /**
+         * 重置查询
+         */
+        function resetSearch() {
+            var now = new Date();
+            var yearMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+            $('#searchMonth').val(yearMonth);
+            loadData();
+        }
+    </script>
+</body>
+</html>
