@@ -10,6 +10,7 @@ import com.huuc.dormitory.dto.CheckinDTO;
 import com.huuc.dormitory.entity.*;
 import com.huuc.dormitory.service.CheckinService;
 import com.huuc.dormitory.vo.CheckinVO;
+import com.huuc.dormitory.vo.RoommateVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,48 @@ public class CheckinServiceImpl implements CheckinService {
             return null;
         }
         return convertToVO(record);
+    }
+
+    @Override
+    public List<RoommateVO> getRoommatesByStudentId(Long studentId) {
+        List<RoommateVO> roommateList = new ArrayList<>();
+
+        // 查询学生在住记录
+        DormCheckinRecord record = checkinRecordMapper.selectActiveByStudentId(studentId);
+        if (record == null) {
+            return roommateList;
+        }
+
+        // 查询床位信息，获取房间ID
+        DormBed bed = bedMapper.selectById(record.getBedId());
+        if (bed == null) {
+            return roommateList;
+        }
+
+        // 查询同房间其他在住学生
+        List<DormCheckinRecord> roommates = checkinRecordMapper.selectActiveByRoomId(bed.getRoomId(), studentId);
+        for (DormCheckinRecord roommate : roommates) {
+            RoommateVO vo = new RoommateVO();
+            vo.setStudentId(roommate.getStudentId());
+
+            // 查询学生信息
+            SysUser student = userMapper.selectById(roommate.getStudentId());
+            if (student != null) {
+                vo.setStudentName(student.getRealName());
+                vo.setStudentNo(student.getUsername());
+                vo.setPhone(student.getPhone());
+            }
+
+            // 查询床位信息
+            DormBed roommateBed = bedMapper.selectById(roommate.getBedId());
+            if (roommateBed != null) {
+                vo.setBedNo(roommateBed.getBedNo());
+            }
+
+            roommateList.add(vo);
+        }
+
+        return roommateList;
     }
 
     @Override

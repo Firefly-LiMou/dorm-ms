@@ -5,6 +5,7 @@ import com.huuc.dormitory.common.enums.OperTypeEnum;
 import com.huuc.dormitory.common.result.Result;
 import com.huuc.dormitory.common.utils.SessionUtil;
 import com.huuc.dormitory.dto.PasswordDTO;
+import com.huuc.dormitory.dto.PhoneDTO;
 import com.huuc.dormitory.entity.SysUser;
 import com.huuc.dormitory.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +46,17 @@ public class StudentUserController {
 
     /**
      * 修改联系电话
+     *
+     * @param dto   联系电话参数
+     * @param session HttpSession
+     * @return 操作结果
      */
     @PostMapping("/updatePhone")
     @ResponseBody
     @OperLog(module = "个人信息", type = OperTypeEnum.UPDATE, desc = "修改联系电话")
-    public Result<Void> updatePhone(@RequestParam String phone, HttpSession session) {
+    public Result<Void> updatePhone(@RequestBody @Valid PhoneDTO dto, HttpSession session) {
         Long userId = SessionUtil.getCurrentUserId(session);
-        userService.updatePhone(phone, userId);
+        userService.updatePhone(dto.getPhone(), userId);
         return Result.success();
     }
 }

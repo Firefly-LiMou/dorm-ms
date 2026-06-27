@@ -4,6 +4,9 @@ import com.github.pagehelper.PageInfo;
 import com.huuc.dormitory.dto.CheckinDTO;
 import com.huuc.dormitory.entity.DormCheckinRecord;
 import com.huuc.dormitory.vo.CheckinVO;
+import com.huuc.dormitory.vo.RoommateVO;
+
+import java.util.List;
 
 /**
  * 入住服务接口
@@ -14,6 +17,14 @@ public interface CheckinService {
      * 根据学生ID获取在住记录
      */
     CheckinVO getCheckinByStudentId(Long studentId);
+
+    /**
+     * 根据学生ID获取舍友列表（同房间在住学生，排除本人）
+     *
+     * @param studentId 学生ID
+     * @return 舍友列表，若学生未入住则返回空列表
+     */
+    List<RoommateVO> getRoommatesByStudentId(Long studentId);
 
     /**
      * 分页查询入住记录

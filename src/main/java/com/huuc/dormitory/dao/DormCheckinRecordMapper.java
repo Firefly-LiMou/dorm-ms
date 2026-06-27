@@ -49,4 +49,9 @@ public interface DormCheckinRecordMapper {
      * 统计床位在住记录数
      */
     int countActiveByBedId(Long bedId);
+
+    /**
+     * 查询房间在住记录列表（排除指定学生）
+     */
+    List<DormCheckinRecord> selectActiveByRoomId(@Param("roomId") Long roomId, @Param("excludeStudentId") Long excludeStudentId);
 }

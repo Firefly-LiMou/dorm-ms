@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 新增用户
-     * 自动生成默认密码（年级+手机号）
+     * 自动生成默认密码（huuc+手机号）
      */
     @Override
     @Transactional
@@ -115,8 +115,8 @@ public class UserServiceImpl implements UserService {
         user.setClassName(dto.getClassName());
         user.setStatus(UserStatusEnum.NORMAL.getCode());
 
-        // 生成默认密码：年级+手机号
-        String defaultPassword = generateDefaultPassword(dto.getGrade(), dto.getPhone());
+        // 生成默认密码：huuc+手机号
+        String defaultPassword = generateDefaultPassword(dto.getPhone());
         user.setPassword(Md5Util.encrypt(defaultPassword));
 
         sysUserMapper.insert(user);
@@ -198,22 +198,22 @@ public class UserServiceImpl implements UserService {
         if (fullUser == null) {
             return false;
         }
-        // 生成默认密码
-        String defaultPassword = generateDefaultPassword(fullUser.getGrade(), fullUser.getPhone());
+        // 生成默认密码：huuc+手机号
+        String defaultPassword = generateDefaultPassword(fullUser.getPhone());
         // 比对密码是否等于默认密码
         return Md5Util.verify(defaultPassword, fullUser.getPassword());
     }
 
     /**
-     * 生成默认密码：年级+手机号
+     * 生成默认密码：huuc+手机号
+     *
+     * @param phone 手机号
+     * @return 默认密码明文
      */
-    private String generateDefaultPassword(String grade, String phone) {
-        if (grade == null) {
-            grade = "";
-        }
+    private String generateDefaultPassword(String phone) {
         if (phone == null) {
             phone = "";
         }
-        return grade + phone;
+        return "huuc" + phone;
     }
 }

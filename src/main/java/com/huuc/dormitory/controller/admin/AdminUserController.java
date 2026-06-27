@@ -35,6 +35,35 @@ public class AdminUserController {
     }
 
     /**
+     * 新增用户页面
+     */
+    @GetMapping("/addPage")
+    public String addPage() {
+        return "admin/user/add";
+    }
+
+    /**
+     * 编辑用户页面
+     */
+    @GetMapping("/editPage")
+    public String editPage() {
+        return "admin/user/edit";
+    }
+
+    /**
+     * 获取用户详情
+     *
+     * @param userId 用户ID
+     * @return 用户信息（密码字段已清空）
+     */
+    @GetMapping("/{userId}")
+    @ResponseBody
+    public Result<SysUser> getUserById(@PathVariable Long userId) {
+        SysUser user = userService.getUserById(userId);
+        return Result.success(user);
+    }
+
+    /**
      * 查询用户列表（分页）
      */
     @GetMapping("/page")

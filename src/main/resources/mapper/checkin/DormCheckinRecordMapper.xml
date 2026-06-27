@@ -86,4 +86,14 @@
         SELECT COUNT(*) FROM dorm_checkin_record
         WHERE bed_id = #{bedId} AND checkin_status = 1
     </select>
+
+    <!-- 查询房间在住记录列表（排除指定学生） -->
+    <select id="selectActiveByRoomId" resultMap="BaseResultMap">
+        SELECT cr.* FROM dorm_checkin_record cr
+        LEFT JOIN dorm_bed db ON cr.bed_id = db.bed_id
+        WHERE db.room_id = #{roomId}
+          AND cr.checkin_status = 1
+          AND cr.student_id != #{excludeStudentId}
+        ORDER BY cr.checkin_time ASC
+    </select>
 </mapper>
