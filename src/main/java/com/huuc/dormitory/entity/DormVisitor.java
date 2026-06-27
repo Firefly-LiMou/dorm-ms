@@ -1,5 +1,6 @@
 package com.huuc.dormitory.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,9 +33,11 @@ public class DormVisitor {
     private Long buildingId;
 
     /** 来访时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime visitTime;
 
     /** 离开时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime leaveTime;
 
     /** 来访事由 */
@@ -47,8 +50,10 @@ public class DormVisitor {
     private String remark;
 
     /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     /** 更新时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 }

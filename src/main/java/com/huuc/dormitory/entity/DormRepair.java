@@ -1,5 +1,6 @@
 package com.huuc.dormitory.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +36,7 @@ public class DormRepair {
     private String contactPhone;
 
     /** 提交时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime submitTime;
 
     /** 处理状态：0-待处理 1-处理中 2-已完成 */
@@ -47,14 +49,17 @@ public class DormRepair {
     private String handleResult;
 
     /** 处理完成时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime finishTime;
 
     /** 备注 */
     private String remark;
 
     /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     /** 更新时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 }

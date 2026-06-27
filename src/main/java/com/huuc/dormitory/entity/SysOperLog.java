@@ -1,5 +1,6 @@
 package com.huuc.dormitory.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,5 +39,6 @@ public class SysOperLog {
     private String requestParam;
 
     /** 操作时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime operTime;
 }
