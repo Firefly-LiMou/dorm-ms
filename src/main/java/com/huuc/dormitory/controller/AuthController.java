@@ -5,6 +5,7 @@ import com.huuc.dormitory.common.enums.OperTypeEnum;
 import com.huuc.dormitory.common.result.Result;
 import com.huuc.dormitory.common.utils.SessionUtil;
 import com.huuc.dormitory.dto.LoginDTO;
+import com.huuc.dormitory.dto.PasswordDTO;
 import com.huuc.dormitory.entity.SysUser;
 import com.huuc.dormitory.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,8 @@ public class AuthController {
 
         // 判断是否需要强制修改密码
         boolean needChangePassword = userService.needChangePassword(user);
+        // 将needChangePassword标记存入Session，供页面判断是否强制弹出修改密码框
+        session.setAttribute("needChangePassword", needChangePassword);
         user.setPassword(null);
 
         // 返回用户信息，通过extra字段传递needChangePassword标记
@@ -70,6 +73,20 @@ public class AuthController {
     @OperLog(module = "用户认证", type = OperTypeEnum.LOGOUT, desc = "用户登出")
     public Result<Void> logout(HttpSession session) {
         SessionUtil.removeCurrentUser(session);
+        return Result.success();
+    }
+
+    /**
+     * 修改密码（所有角色通用）
+     */
+    @PostMapping("/updatePassword")
+    @ResponseBody
+    @OperLog(module = "用户认证", type = OperTypeEnum.UPDATE, desc = "修改密码")
+    public Result<Void> updatePassword(@RequestBody @Valid PasswordDTO dto, HttpSession session) {
+        Long userId = SessionUtil.getCurrentUserId(session);
+        userService.updatePassword(dto, userId);
+        // 清除needChangePassword标记
+        session.setAttribute("needChangePassword", false);
         return Result.success();
     }
 

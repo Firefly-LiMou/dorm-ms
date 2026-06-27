@@ -54,16 +54,4 @@ public class StudentUserController {
         userService.updatePhone(phone, userId);
         return Result.success();
     }
-
-    /**
-     * 修改密码
-     */
-    @PostMapping("/updatePassword")
-    @ResponseBody
-    @OperLog(module = "个人信息", type = OperTypeEnum.UPDATE, desc = "修改密码")
-    public Result<Void> updatePassword(@RequestBody @Valid PasswordDTO dto, HttpSession session) {
-        Long userId = SessionUtil.getCurrentUserId(session);
-        userService.updatePassword(dto, userId);
-        return Result.success();
-    }
 }
