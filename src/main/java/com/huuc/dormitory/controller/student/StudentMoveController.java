@@ -35,6 +35,14 @@ public class StudentMoveController {
     }
 
     /**
+     * 提交调宿申请页面
+     */
+    @GetMapping("/applyPage")
+    public String applyPage() {
+        return "student/move/apply";
+    }
+
+    /**
      * 查询我的调宿申请（分页）
      */
     @GetMapping("/page")

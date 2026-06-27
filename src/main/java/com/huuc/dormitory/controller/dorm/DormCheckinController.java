@@ -42,6 +42,14 @@ public class DormCheckinController {
     }
 
     /**
+     * 办理入住页面
+     */
+    @GetMapping("/checkinPage")
+    public String checkinPage() {
+        return "dorm/checkin/checkin";
+    }
+
+    /**
      * 查询本楼栋入住记录（分页）
      */
     @GetMapping("/page")

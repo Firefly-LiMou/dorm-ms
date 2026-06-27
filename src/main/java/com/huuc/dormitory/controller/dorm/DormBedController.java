@@ -40,4 +40,14 @@ public class DormBedController {
         List<BedVO> list = bedService.getBedsByRoomId(roomId);
         return Result.success(list);
     }
+
+    /**
+     * 获取房间下空闲床位列表
+     */
+    @GetMapping("/free/{roomId}")
+    @ResponseBody
+    public Result<List<BedVO>> getFreeBedsByRoomId(@PathVariable Long roomId) {
+        List<BedVO> list = bedService.getFreeBedsByRoomId(roomId);
+        return Result.success(list);
+    }
 }

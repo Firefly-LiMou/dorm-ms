@@ -18,6 +18,11 @@ public interface BuildingService {
     BuildingVO getBuildingById(Long buildingId);
 
     /**
+     * 获取所有楼栋列表（只读）
+     */
+    List<BuildingVO> getAllBuildings();
+
+    /**
      * 分页查询楼栋列表
      */
     PageInfo<BuildingVO> getBuildingList(DormBuilding query, Integer pageNum, Integer pageSize);

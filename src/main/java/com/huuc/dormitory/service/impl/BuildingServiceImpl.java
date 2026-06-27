@@ -40,6 +40,13 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
+    public List<BuildingVO> getAllBuildings() {
+        DormBuilding query = new DormBuilding();
+        List<DormBuilding> buildings = dormBuildingMapper.selectList(query);
+        return convertToVOList(buildings);
+    }
+
+    @Override
     public PageInfo<BuildingVO> getBuildingList(DormBuilding query, Integer pageNum, Integer pageSize) {
         List<DormBuilding> buildings = dormBuildingMapper.selectList(query);
         PageInfo<DormBuilding> pageInfo = new PageInfo<>(buildings);

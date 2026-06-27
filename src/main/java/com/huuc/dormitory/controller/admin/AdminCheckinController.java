@@ -36,6 +36,14 @@ public class AdminCheckinController {
     }
 
     /**
+     * 办理入住页面
+     */
+    @GetMapping("/checkinPage")
+    public String checkinPage() {
+        return "admin/checkin/checkin";
+    }
+
+    /**
      * 查询入住记录列表（分页）
      */
     @GetMapping("/page")
