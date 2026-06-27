@@ -144,7 +144,7 @@
         if (typeof window.loadData === 'function') {
             window.loadData(queryParams);
         } else {
-            console.error('未定义 loadData 函数');
+            $.toast('error', '页面加载异常');
         }
     }
 
@@ -164,7 +164,7 @@
         if (typeof window.loadData === 'function') {
             window.loadData(queryParams);
         } else {
-            console.error('未定义 loadData 函数');
+            $.toast('error', '页面加载异常');
         }
     }
 </script>

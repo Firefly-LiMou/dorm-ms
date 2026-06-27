@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
@@ -158,6 +158,9 @@
     <script src="${pageContext.request.contextPath}/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- 公共JS -->
     <script src="${pageContext.request.contextPath}/static/js/common.js"></script>
+    <!-- 导航栏JS -->
+    <script>window.needChangePasswordFlag = '${sessionScope.needChangePassword}';</script>
+    <script src="${pageContext.request.contextPath}/static/js/header.js"></script>
 
     <script>
         $(function() {
@@ -168,38 +171,69 @@
                 $('#currentTime').text(timeStr);
             }
             updateTime();
-            setInterval(updateTime, 1000);
+            setInterval(updateTime, 60000);
 
             // 加载统计数据
             loadStatistics();
         });
 
         /**
+         * 设置统计卡片加载失败状态
+         * @param {string} elementId - 卡片元素ID
+         */
+        function setLoadError(elementId) {
+            $('#' + elementId).html('<a href="javascript:void(0)" onclick="loadStatistics()" style="color: #dc3545; font-size: 14px;">加载失败，点击重试</a>');
+        }
+
+        /**
          * 加载统计数据
          */
         function loadStatistics() {
             // 负责楼栋
+            $('#buildingCount').text('加载中...');
             $.ajaxRequest('/dorm/building/list', 'GET', {}, function(result) {
-                if (result.code === 200 && result.data) {
+                if (result.data) {
                     $('#buildingCount').text(result.data.length || 0);
+                } else {
+                    $('#buildingCount').text('0');
+                }
+            }, function(result) {
+                if (result.msg && result.msg.indexOf('未负责任何楼栋') !== -1) {
+                    $('#buildingCount').html('<span style="font-size: 14px; color: #ffc107;">未分配楼栋</span>');
+                } else {
+                    setLoadError('buildingCount');
                 }
             });
 
             // 待处理报修
+            $('#repairCount').text('加载中...');
             $.ajaxRequest('/dorm/repair/page', 'GET', { repairStatus: 0, pageSize: 1 }, function(result) {
-                if (result.code === 200) {
-                    $('#repairCount').text(result.data.total || 0);
+                $('#repairCount').text(result.data.total || 0);
+            }, function(result) {
+                if (result.msg && result.msg.indexOf('未负责任何楼栋') !== -1) {
+                    $('#repairCount').html('<span style="font-size: 14px; color: #ffc107;">-</span>');
+                } else {
+                    setLoadError('repairCount');
                 }
             });
 
             // 本月晚归
+            $('#lateReturnCount').text('加载中...');
             $.ajaxRequest('/dorm/late-return/stats', 'GET', {}, function(result) {
-                if (result.code === 200 && result.data) {
+                if (result.data) {
                     var total = 0;
                     result.data.forEach(function(item) {
                         total += item.count || 0;
                     });
                     $('#lateReturnCount').text(total);
+                } else {
+                    $('#lateReturnCount').text('0');
+                }
+            }, function(result) {
+                if (result.msg && result.msg.indexOf('未负责任何楼栋') !== -1) {
+                    $('#lateReturnCount').html('<span style="font-size: 14px; color: #ffc107;">-</span>');
+                } else {
+                    setLoadError('lateReturnCount');
                 }
             });
         }

@@ -9,12 +9,15 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
 <body>
     <div class="main-container">
+        <!-- 侧边栏 -->
+        <%@ include file="/WEB-INF/jsp/common/sidebar.jsp" %>
+
         <!-- 内容区域 -->
         <div class="content-wrapper">
             <!-- 导航栏 -->
@@ -168,6 +171,9 @@
     <script src="${pageContext.request.contextPath}/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- 公共JS -->
     <script src="${pageContext.request.contextPath}/static/js/common.js"></script>
+    <!-- 导航栏JS -->
+    <script>window.needChangePasswordFlag = '${sessionScope.needChangePassword}';</script>
+    <script src="${pageContext.request.contextPath}/static/js/header.js"></script>
 
     <script>
         $(function() {
@@ -178,7 +184,7 @@
                 $('#currentTime').text(timeStr);
             }
             updateTime();
-            setInterval(updateTime, 1000);
+            setInterval(updateTime, 60000);
 
             // 加载统计数据
             loadCheckinStatus();
@@ -188,12 +194,15 @@
          * 加载住宿状态
          */
         function loadCheckinStatus() {
+            $('#checkinStatus').text('加载中...');
             $.ajaxRequest('/student/checkin/info', 'GET', {}, function(result) {
-                if (result.code === 200 && result.data) {
+                if (result.data) {
                     $('#checkinStatus').html('<span class="badge bg-success">在住</span>');
                 } else {
                     $('#checkinStatus').html('<span class="badge bg-secondary">未入住</span>');
                 }
+            }, function() {
+                $('#checkinStatus').html('<a href="javascript:void(0)" onclick="loadCheckinStatus()" style="color: #dc3545; font-size: 14px;">加载失败，点击重试</a>');
             });
         }
     </script>

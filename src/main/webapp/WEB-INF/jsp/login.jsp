@@ -26,65 +26,36 @@
 </div>
 
 <script src="${pageContext.request.contextPath}/static/js/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/static/js/common.js"></script>
 <script>
     $(function () {
+        // 角色跳转路径映射
+        var rolePathMap = {
+            1: '/admin/index',
+            2: '/dorm/index',
+            3: '/student/index'
+        };
+
         $('#loginForm').submit(function (e) {
             e.preventDefault();
-            var username = $('#username').val();
-            var password = $('#password').val();
+            var username = $('#username').val().trim();
+            var password = $('#password').val().trim();
 
             if (!username || !password) {
                 $('#errorMsg').text('用户名和密码不能为空');
                 return;
             }
 
-            $.ajax({
-                url: '${pageContext.request.contextPath}/login',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({username: username, password: password}),
-                success: function (result) {
-                    if (result.code === 200) {
-                        // 判断是否需要强制修改密码
-                        checkNeedChangePassword(result.data);
-                    } else {
-                        $('#errorMsg').text(result.msg);
-                    }
-                },
-                error: function () {
-                    $('#errorMsg').text('登录失败，请稍后重试');
-                }
+            $.ajaxRequest('/login', 'POST', {username: username, password: password}, function (result) {
+                // 登录成功，根据角色跳转到对应首页
+                var roleType = result.data.roleType;
+                var targetUrl = rolePathMap[roleType] || '/login';
+                window.location.href = $.buildUrl(targetUrl);
+            }, function (result) {
+                // 登录失败，显示错误信息
+                $('#errorMsg').text(result.msg || '登录失败');
             });
         });
-
-        function checkNeedChangePassword(user) {
-            $.ajax({
-                url: '${pageContext.request.contextPath}/needChangePassword',
-                type: 'GET',
-                success: function (result) {
-                    if (result.code === 200 && result.data) {
-                        alert('首次登录请修改密码');
-                        // 跳转到修改密码页面（根据角色跳转不同页面）
-                        if (user.roleType === 1) {
-                            window.location.href = '${pageContext.request.contextPath}/admin/index';
-                        } else if (user.roleType === 2) {
-                            window.location.href = '${pageContext.request.contextPath}/dorm/index';
-                        } else {
-                            window.location.href = '${pageContext.request.contextPath}/student/index';
-                        }
-                    } else {
-                        // 跳转到首页（根据角色跳转不同页面）
-                        if (user.roleType === 1) {
-                            window.location.href = '${pageContext.request.contextPath}/admin/index';
-                        } else if (user.roleType === 2) {
-                            window.location.href = '${pageContext.request.contextPath}/dorm/index';
-                        } else {
-                            window.location.href = '${pageContext.request.contextPath}/student/index';
-                        }
-                    }
-                }
-            });
-        }
     });
 </script>
 </body>

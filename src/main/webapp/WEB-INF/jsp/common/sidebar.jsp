@@ -1,18 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%
-    // 获取当前用户角色
-    Integer roleType = (Integer) session.getAttribute("roleType");
-    if (roleType == null && session.getAttribute("loginUser") != null) {
-        roleType = ((com.huuc.dormitory.entity.SysUser) session.getAttribute("loginUser")).getRoleType();
-    }
-%>
+<!-- 角色类型常量 -->
+<c:set var="ROLE_ADMIN" value="1" />
+<c:set var="ROLE_DORM" value="2" />
+<c:set var="ROLE_STUDENT" value="3" />
+<c:set var="roleType" value="${sessionScope.loginUser.roleType}" />
 <!-- 侧边栏 -->
 <aside class="sidebar">
     <nav>
         <ul class="sidebar-menu">
             <%-- 管理员菜单 --%>
-            <% if (roleType != null && roleType == 1) { %>
+            <c:if test="${roleType == ROLE_ADMIN}">
                 <!-- 系统管理 -->
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link">
@@ -116,10 +114,10 @@
                         </li>
                     </ul>
                 </li>
-            <% } %>
+            </c:if>
 
             <%-- 宿管菜单 --%>
-            <% if (roleType != null && roleType == 2) { %>
+            <c:if test="${roleType == ROLE_DORM}">
                 <!-- 宿舍信息 -->
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link">
@@ -200,10 +198,10 @@
                         </li>
                     </ul>
                 </li>
-            <% } %>
+            </c:if>
 
             <%-- 学生菜单 --%>
-            <% if (roleType != null && roleType == 3) { %>
+            <c:if test="${roleType == ROLE_STUDENT}">
                 <!-- 个人中心 -->
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link">
@@ -219,7 +217,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="${pageContext.request.contextPath}/student/user/password" class="submenu-link">
+                            <a href="javascript:void(0)" class="submenu-link" onclick="showChangePasswordModal()">
                                 <i class="fas fa-key"></i>
                                 <span>修改密码</span>
                             </a>
@@ -272,7 +270,7 @@
                         </li>
                     </ul>
                 </li>
-            <% } %>
+            </c:if>
         </ul>
     </nav>
 
