@@ -87,6 +87,10 @@ public class LateReturnServiceImpl implements LateReturnService {
         return voPageInfo;
     }
 
+    /**
+     * 录入晚归记录
+     * 自动关联学生在住楼栋
+     */
     @Override
     @Transactional
     public void addRecord(LateReturnDTO dto, Long registrarId) {

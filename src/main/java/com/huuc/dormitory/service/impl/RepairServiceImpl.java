@@ -88,6 +88,10 @@ public class RepairServiceImpl implements RepairService {
         return voPageInfo;
     }
 
+    /**
+     * 提交报修
+     * 自动关联学生在住房间
+     */
     @Override
     @Transactional
     public void submitRepair(RepairDTO dto, Long studentId) {
@@ -115,6 +119,9 @@ public class RepairServiceImpl implements RepairService {
         repairMapper.insert(repair);
     }
 
+    /**
+     * 接单处理（状态：待处理 → 处理中）
+     */
     @Override
     @Transactional
     public void handleRepair(Long repairId, Long handlerId) {
@@ -133,6 +140,9 @@ public class RepairServiceImpl implements RepairService {
         repairMapper.update(repair);
     }
 
+    /**
+     * 完结报修（状态：处理中 → 已完成）
+     */
     @Override
     @Transactional
     public void completeRepair(Long repairId, RepairHandleDTO dto, Long handlerId) {

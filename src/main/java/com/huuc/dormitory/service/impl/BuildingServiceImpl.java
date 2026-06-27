@@ -58,6 +58,10 @@ public class BuildingServiceImpl implements BuildingService {
         return convertToVOList(buildings);
     }
 
+    /**
+     * 新增楼栋
+     * 校验楼栋编号唯一性
+     */
     @Override
     @Transactional
     public void addBuilding(BuildingDTO dto, Long operatorId) {
@@ -114,6 +118,10 @@ public class BuildingServiceImpl implements BuildingService {
         dormBuildingMapper.update(building);
     }
 
+    /**
+     * 删除楼栋（逻辑删除）
+     * 校验：楼栋存在、下无房间
+     */
     @Override
     @Transactional
     public void deleteBuilding(Long buildingId, Long operatorId) {

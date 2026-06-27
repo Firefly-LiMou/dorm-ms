@@ -57,6 +57,9 @@ public class BedServiceImpl implements BedService {
         return convertToVOList(beds);
     }
 
+    /**
+     * 新增床位
+     */
     @Override
     @Transactional
     public void addBed(BedDTO dto, Long operatorId) {
@@ -77,6 +80,9 @@ public class BedServiceImpl implements BedService {
         dormBedMapper.insert(bed);
     }
 
+    /**
+     * 批量初始化床位（自动生成N号床）
+     */
     @Override
     @Transactional
     public void batchAddBeds(BatchBedDTO dto, Long operatorId) {

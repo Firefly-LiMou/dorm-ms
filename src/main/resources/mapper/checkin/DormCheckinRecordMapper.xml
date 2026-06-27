@@ -48,7 +48,7 @@
         ORDER BY checkin_time DESC
     </select>
 
-    <!-- 根据楼栋ID查询入住记录 -->
+    <!-- 根据楼栋ID查询入住记录（关联床位、房间表，按入住时间倒序） -->
     <select id="selectByBuildingId" parameterType="Long" resultMap="BaseResultMap">
         SELECT cr.* FROM dorm_checkin_record cr
         LEFT JOIN dorm_bed db ON cr.bed_id = db.bed_id

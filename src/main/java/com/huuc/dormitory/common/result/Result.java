@@ -5,6 +5,9 @@ import java.util.Map;
 
 /**
  * 统一返回结果封装
+ * 所有Controller接口统一使用此类返回结果
+ *
+ * @param <T> 数据类型
  */
 public class Result<T> {
 
@@ -31,6 +34,9 @@ public class Result<T> {
 
     /**
      * 返回成功结果（无数据）
+     *
+     * @param <T> 数据类型
+     * @return 成功结果（code=200）
      */
     public static <T> Result<T> success() {
         return new Result<>(200, "操作成功", null);
@@ -38,6 +44,10 @@ public class Result<T> {
 
     /**
      * 返回成功结果（带数据）
+     *
+     * @param data 返回数据
+     * @param <T>  数据类型
+     * @return 成功结果（code=200）
      */
     public static <T> Result<T> success(T data) {
         return new Result<>(200, "操作成功", data);
@@ -52,6 +62,10 @@ public class Result<T> {
 
     /**
      * 返回失败结果
+     *
+     * @param msg 错误信息
+     * @param <T> 数据类型
+     * @return 失败结果（code=500）
      */
     public static <T> Result<T> fail(String msg) {
         return new Result<>(500, msg, null);
@@ -59,6 +73,11 @@ public class Result<T> {
 
     /**
      * 返回失败结果（自定义错误码）
+     *
+     * @param code 错误码
+     * @param msg  错误信息
+     * @param <T>  数据类型
+     * @return 失败结果
      */
     public static <T> Result<T> fail(Integer code, String msg) {
         return new Result<>(code, msg, null);
@@ -66,6 +85,10 @@ public class Result<T> {
 
     /**
      * 返回参数错误结果
+     *
+     * @param msg 错误信息
+     * @param <T> 数据类型
+     * @return 参数错误结果（code=400）
      */
     public static <T> Result<T> badRequest(String msg) {
         return new Result<>(400, msg, null);
@@ -73,6 +96,10 @@ public class Result<T> {
 
     /**
      * 返回未登录结果
+     *
+     * @param msg 错误信息
+     * @param <T> 数据类型
+     * @return 未登录结果（code=401）
      */
     public static <T> Result<T> unauthorized(String msg) {
         return new Result<>(401, msg, null);
@@ -80,6 +107,10 @@ public class Result<T> {
 
     /**
      * 返回无权限结果
+     *
+     * @param msg 错误信息
+     * @param <T> 数据类型
+     * @return 无权限结果（code=403）
      */
     public static <T> Result<T> forbidden(String msg) {
         return new Result<>(403, msg, null);
@@ -119,6 +150,10 @@ public class Result<T> {
 
     /**
      * 添加扩展数据
+     *
+     * @param key   键
+     * @param value 值
+     * @return 当前Result对象（支持链式调用）
      */
     public Result<T> putExtra(String key, Object value) {
         if (this.extra == null) {

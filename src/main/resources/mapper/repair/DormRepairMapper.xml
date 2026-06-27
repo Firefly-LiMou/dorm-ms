@@ -54,7 +54,7 @@
         ORDER BY submit_time DESC
     </select>
 
-    <!-- 根据楼栋ID查询报修列表 -->
+    <!-- 根据楼栋ID查询报修列表（关联房间表，按提交时间倒序） -->
     <select id="selectByBuildingId" parameterType="Long" resultMap="BaseResultMap">
         SELECT r.* FROM dorm_repair r
         LEFT JOIN dorm_room dr ON r.room_id = dr.room_id

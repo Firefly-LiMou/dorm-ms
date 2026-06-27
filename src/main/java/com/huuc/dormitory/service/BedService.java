@@ -28,16 +28,28 @@ public interface BedService {
 
     /**
      * 新增床位
+     *
+     * @param dto        床位信息
+     * @param operatorId 操作人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 房间不存在
      */
     void addBed(BedDTO dto, Long operatorId);
 
     /**
-     * 批量初始化床位
+     * 批量初始化床位（自动生成N号床）
+     *
+     * @param dto        批量参数（房间ID、床位数量）
+     * @param operatorId 操作人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 房间不存在、床位数量必须大于0
      */
     void batchAddBeds(BatchBedDTO dto, Long operatorId);
 
     /**
      * 修改床位状态
+     *
+     * @param bedId  床位ID
+     * @param status 目标状态（0空闲/1已入住/2维修禁用）
+     * @throws com.huuc.dormitory.common.exception.BusinessException 床位不存在、状态值无效
      */
     void updateBedStatus(Long bedId, Integer status);
 }

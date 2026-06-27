@@ -33,16 +33,29 @@ public interface RepairService {
 
     /**
      * 提交报修
+     *
+     * @param dto       报修参数（报修类型、内容、联系电话）
+     * @param studentId 学生ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 无在住记录、床位信息异常
      */
     void submitRepair(RepairDTO dto, Long studentId);
 
     /**
-     * 接单处理
+     * 接单处理（状态从待处理变为处理中）
+     *
+     * @param repairId  报修ID
+     * @param handlerId 处理人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 报修不存在、状态无法接单
      */
     void handleRepair(Long repairId, Long handlerId);
 
     /**
-     * 完结报修
+     * 完结报修（状态从处理中变为已完成）
+     *
+     * @param repairId  报修ID
+     * @param dto       处理结果参数
+     * @param handlerId 处理人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 报修不存在、状态无法完结
      */
     void completeRepair(Long repairId, RepairHandleDTO dto, Long handlerId);
 }

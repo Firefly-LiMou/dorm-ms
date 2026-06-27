@@ -14,6 +14,9 @@ public class SessionUtil {
 
     /**
      * 获取当前登录用户
+     *
+     * @param session HTTP会话
+     * @return 用户信息，未登录或session为null时返回null
      */
     public static SysUser getCurrentUser(HttpSession session) {
         if (session == null) {
@@ -24,6 +27,9 @@ public class SessionUtil {
 
     /**
      * 获取当前登录用户ID
+     *
+     * @param session HTTP会话
+     * @return 用户ID，未登录或session为null时返回null
      */
     public static Long getCurrentUserId(HttpSession session) {
         SysUser user = getCurrentUser(session);

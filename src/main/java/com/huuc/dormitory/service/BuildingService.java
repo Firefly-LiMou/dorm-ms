@@ -29,16 +29,28 @@ public interface BuildingService {
 
     /**
      * 新增楼栋
+     *
+     * @param dto        楼栋信息
+     * @param operatorId 操作人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 楼栋编号已存在
      */
     void addBuilding(BuildingDTO dto, Long operatorId);
 
     /**
      * 编辑楼栋
+     *
+     * @param dto        楼栋信息（必须包含buildingId）
+     * @param operatorId 操作人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 楼栋不存在、楼栋编号已存在
      */
     void updateBuilding(BuildingDTO dto, Long operatorId);
 
     /**
-     * 删除楼栋
+     * 删除楼栋（逻辑删除）
+     *
+     * @param buildingId 楼栋ID
+     * @param operatorId 操作人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 楼栋不存在、楼栋下存在房间
      */
     void deleteBuilding(Long buildingId, Long operatorId);
 }

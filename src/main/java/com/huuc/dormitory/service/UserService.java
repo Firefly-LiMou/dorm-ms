@@ -14,36 +14,60 @@ public interface UserService {
 
     /**
      * 用户登录
+     *
+     * @param dto 登录参数（用户名、密码）
+     * @return 用户信息（密码字段已清空）
+     * @throws com.huuc.dormitory.common.exception.BusinessException 用户名或密码错误、账号已被禁用
      */
     SysUser login(LoginDTO dto);
 
     /**
      * 根据ID获取用户
+     *
+     * @param userId 用户ID
+     * @return 用户信息（密码字段已清空）
+     * @throws com.huuc.dormitory.common.exception.BusinessException 用户不存在
      */
     SysUser getUserById(Long userId);
 
     /**
      * 修改密码
+     *
+     * @param dto    密码参数（新密码、确认密码）
+     * @param userId 当前用户ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 两次密码不一致、修改失败
      */
     void updatePassword(PasswordDTO dto, Long userId);
 
     /**
      * 修改个人联系电话
+     *
+     * @param phone  新手机号
+     * @param userId 当前用户ID
      */
     void updatePhone(String phone, Long userId);
 
     /**
      * 管理员新增用户
+     *
+     * @param dto 用户信息
+     * @throws com.huuc.dormitory.common.exception.BusinessException 用户名已存在、用户名为空
      */
     void addUser(UserDTO dto);
 
     /**
      * 管理员编辑用户
+     *
+     * @param dto 用户信息（必须包含userId）
+     * @throws com.huuc.dormitory.common.exception.BusinessException 用户不存在
      */
     void updateUser(UserDTO dto);
 
     /**
      * 管理员启用/禁用用户
+     *
+     * @param userId 目标用户ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 用户不存在
      */
     void toggleUserStatus(Long userId);
 

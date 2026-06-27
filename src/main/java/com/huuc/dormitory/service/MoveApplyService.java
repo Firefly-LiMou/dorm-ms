@@ -28,16 +28,30 @@ public interface MoveApplyService {
 
     /**
      * 提交调宿申请
+     *
+     * @param dto       申请参数（目标床位ID、申请原因）
+     * @param studentId 学生ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 无在住记录、已有待审批申请、目标床位已占用
      */
     void apply(MoveApplyDTO dto, Long studentId);
 
     /**
      * 审批调宿申请
+     * 审批通过时事务操作：释放原床位、占用目标床位、原记录退宿、创建新入住记录
+     *
+     * @param applyId   申请ID
+     * @param dto       审批参数（审批状态、审批意见）
+     * @param auditorId 审批人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 申请不存在、状态无法操作、目标床位已占用
      */
     void audit(Long applyId, MoveAuditDTO dto, Long auditorId);
 
     /**
-     * 撤销调宿申请
+     * 撤销调宿申请（学生主动撤销，状态变为已驳回）
+     *
+     * @param applyId   申请ID
+     * @param studentId 学生ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 申请不存在、无权操作、状态无法撤销
      */
     void cancel(Long applyId, Long studentId);
 }

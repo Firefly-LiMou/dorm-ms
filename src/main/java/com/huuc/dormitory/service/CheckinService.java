@@ -27,11 +27,21 @@ public interface CheckinService {
 
     /**
      * 办理入住
+     * 事务操作：插入入住记录 + 更新床位状态为已入住
+     *
+     * @param dto        入住参数（学生ID、床位ID）
+     * @param operatorId 操作人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 学生不存在、学生状态异常、已有在住记录、床位已占用
      */
     void checkin(CheckinDTO dto, Long operatorId);
 
     /**
      * 办理退宿
+     * 事务操作：更新入住记录状态为已退宿 + 释放床位为空闲
+     *
+     * @param checkinId  入住记录ID
+     * @param operatorId 操作人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 入住记录不存在、记录状态异常
      */
     void checkout(Long checkinId, Long operatorId);
 }

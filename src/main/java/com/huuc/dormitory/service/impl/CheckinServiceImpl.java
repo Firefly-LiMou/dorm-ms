@@ -73,6 +73,10 @@ public class CheckinServiceImpl implements CheckinService {
         return voPageInfo;
     }
 
+    /**
+     * 办理入住
+     * 事务操作：插入入住记录 + 更新床位状态为已入住
+     */
     @Override
     @Transactional
     public void checkin(CheckinDTO dto, Long operatorId) {
@@ -113,6 +117,10 @@ public class CheckinServiceImpl implements CheckinService {
         bedMapper.updateStatus(dto.getBedId(), BedStatusEnum.OCCUPIED.getCode());
     }
 
+    /**
+     * 办理退宿
+     * 事务操作：更新入住记录状态为已退宿 + 释放床位为空闲
+     */
     @Override
     @Transactional
     public void checkout(Long checkinId, Long operatorId) {

@@ -85,6 +85,10 @@ public class UserServiceImpl implements UserService {
         sysUserMapper.update(user);
     }
 
+    /**
+     * 新增用户
+     * 自动生成默认密码（年级+手机号）
+     */
     @Override
     @Transactional
     public void addUser(UserDTO dto) {
@@ -149,6 +153,9 @@ public class UserServiceImpl implements UserService {
         sysUserMapper.update(user);
     }
 
+    /**
+     * 启用/禁用用户（状态切换）
+     */
     @Override
     @Transactional
     public void toggleUserStatus(Long userId) {

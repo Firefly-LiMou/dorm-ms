@@ -46,7 +46,12 @@ public class OperLogAspect {
     }
 
     /**
-     * 环绕通知
+     * 环绕通知：拦截@OperLog注解方法，自动记录操作日志
+     * 成功和失败都记录，日志记录失败不影响主业务
+     *
+     * @param joinPoint 连接点
+     * @return 方法执行结果
+     * @throws Throwable 方法执行异常（继续向上传播）
      */
     @Around("operLogPointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -107,7 +112,11 @@ public class OperLogAspect {
     }
 
     /**
-     * 获取客户端IP
+     * 获取客户端真实IP地址
+     * 依次尝试X-Forwarded-For、Proxy-Client-IP、WL-Proxy-Client-IP、X-Real-IP、getRemoteAddr
+     *
+     * @param request HTTP请求对象
+     * @return IP地址，request为null时返回null
      */
     private String getClientIp(HttpServletRequest request) {
         if (request == null) {
@@ -134,7 +143,10 @@ public class OperLogAspect {
     }
 
     /**
-     * 获取请求参数
+     * 获取请求参数（JSON序列化，过滤不可序列化参数）
+     *
+     * @param joinPoint 连接点
+     * @return 参数JSON字符串，最大1000字符
      */
     private String getRequestParams(ProceedingJoinPoint joinPoint) {
         try {

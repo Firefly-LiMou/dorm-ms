@@ -63,6 +63,10 @@ public class RoomServiceImpl implements RoomService {
         return convertToVOList(rooms);
     }
 
+    /**
+     * 新增房间
+     * 校验：楼栋存在、楼层范围、房间号唯一
+     */
     @Override
     @Transactional
     public void addRoom(RoomDTO dto, Long operatorId) {
@@ -135,6 +139,10 @@ public class RoomServiceImpl implements RoomService {
         dormRoomMapper.update(room);
     }
 
+    /**
+     * 删除房间（逻辑删除）
+     * 校验：房间存在、下无床位
+     */
     @Override
     @Transactional
     public void deleteRoom(Long roomId, Long operatorId) {

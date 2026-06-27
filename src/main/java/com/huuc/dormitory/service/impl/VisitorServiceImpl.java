@@ -73,6 +73,10 @@ public class VisitorServiceImpl implements VisitorService {
         return voPageInfo;
     }
 
+    /**
+     * 录入访客
+     * 自动关联被访学生在住楼栋
+     */
     @Override
     @Transactional
     public void addVisitor(VisitorDTO dto, Long registrarId) {
@@ -110,6 +114,9 @@ public class VisitorServiceImpl implements VisitorService {
         visitorMapper.insert(visitor);
     }
 
+    /**
+     * 确认访客离开（记录离开时间）
+     */
     @Override
     @Transactional
     public void confirmLeave(Long visitorId) {

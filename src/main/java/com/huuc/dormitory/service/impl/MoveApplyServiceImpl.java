@@ -77,6 +77,10 @@ public class MoveApplyServiceImpl implements MoveApplyService {
         return voPageInfo;
     }
 
+    /**
+     * 提交调宿申请
+     * 校验：在住记录、无待审批申请、目标床位空闲
+     */
     @Override
     @Transactional
     public void apply(MoveApplyDTO dto, Long studentId) {
@@ -112,6 +116,10 @@ public class MoveApplyServiceImpl implements MoveApplyService {
         moveApplyMapper.insert(apply);
     }
 
+    /**
+     * 审批调宿申请
+     * 审批通过时事务操作：释放原床位、占用目标床位、原记录退宿、创建新入住记录
+     */
     @Override
     @Transactional
     public void audit(Long applyId, MoveAuditDTO dto, Long auditorId) {
@@ -137,6 +145,7 @@ public class MoveApplyServiceImpl implements MoveApplyService {
 
     /**
      * 审批通过
+     * 事务操作：释放原床位、占用目标床位、原记录退宿、创建新入住记录、更新申请状态
      */
     private void auditApproved(DormMoveApply apply, MoveAuditDTO dto, Long auditorId) {
         // 校验目标床位仍为空闲

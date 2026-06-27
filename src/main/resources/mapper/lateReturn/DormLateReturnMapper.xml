@@ -57,7 +57,7 @@
         VALUES (#{studentId}, #{buildingId}, #{lateTime}, #{lateReason}, #{registrarId}, #{recordTime})
     </insert>
 
-    <!-- 按楼栋月度统计晚归人次 -->
+    <!-- 按楼栋月度统计晚归人次（关联楼栋表，按楼栋分组统计，支持宿管过滤） -->
     <select id="selectMonthlyStats" resultType="com.huuc.dormitory.vo.LateReturnStatVO">
         SELECT
             db.building_id AS buildingId,

@@ -35,6 +35,11 @@ public interface LateReturnService {
 
     /**
      * 录入晚归记录
+     * 自动关联学生在住楼栋
+     *
+     * @param dto        晚归参数（学生ID、晚归时间、原因）
+     * @param registrarId 登记人ID
+     * @throws com.huuc.dormitory.common.exception.BusinessException 学生不存在、无在住记录
      */
     void addRecord(LateReturnDTO dto, Long registrarId);
 
