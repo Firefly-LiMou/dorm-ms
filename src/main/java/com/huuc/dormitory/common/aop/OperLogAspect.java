@@ -71,23 +71,36 @@ public class OperLogAspect {
         String requestParam = getRequestParams(joinPoint);
 
         // 执行目标方法
-        Object result = joinPoint.proceed();
-
-        // 记录操作日志
+        Object result = null;
+        boolean success = true;
+        String errorMsg = null;
         try {
-            SysOperLog log = new SysOperLog();
-            log.setOperatorId(operatorId);
-            log.setModuleName(operLog.module());
-            log.setOperType(operLog.type().getCode());
-            log.setOperDesc(operLog.desc());
-            log.setOperIp(operIp);
-            log.setRequestParam(requestParam);
-            log.setOperTime(LocalDateTime.now());
+            result = joinPoint.proceed();
+        } catch (Throwable e) {
+            success = false;
+            errorMsg = e.getMessage();
+            // 截取前500字符
+            if (errorMsg != null && errorMsg.length() > 500) {
+                errorMsg = errorMsg.substring(0, 500);
+            }
+            throw e;
+        } finally {
+            // 记录操作日志（成功或失败都记录）
+            try {
+                SysOperLog log = new SysOperLog();
+                log.setOperatorId(operatorId);
+                log.setModuleName(operLog.module());
+                log.setOperType(operLog.type().getCode());
+                log.setOperDesc(success ? operLog.desc() : operLog.desc() + "（失败：" + errorMsg + "）");
+                log.setOperIp(operIp);
+                log.setRequestParam(requestParam);
+                log.setOperTime(LocalDateTime.now());
 
-            sysOperLogMapper.insert(log);
-        } catch (Exception e) {
-            // 日志记录失败不影响主业务
-            logger.error("操作日志记录失败：", e);
+                sysOperLogMapper.insert(log);
+            } catch (Exception e) {
+                // 日志记录失败不影响主业务
+                logger.error("操作日志记录失败：", e);
+            }
         }
 
         return result;

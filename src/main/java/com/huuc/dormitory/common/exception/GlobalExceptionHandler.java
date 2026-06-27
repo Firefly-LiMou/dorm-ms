@@ -3,9 +3,13 @@ package com.huuc.dormitory.common.exception;
 import com.huuc.dormitory.common.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * 全局异常处理器
@@ -34,6 +38,42 @@ public class GlobalExceptionHandler {
                 : "参数校验失败";
         logger.warn("参数校验异常：{}", message);
         return Result.badRequest(message);
+    }
+
+    /**
+     * 处理请求体格式错误
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Result<Void> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        logger.warn("请求格式错误：{}", e.getMessage());
+        return Result.badRequest("请求格式错误");
+    }
+
+    /**
+     * 处理参数类型错误
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public Result<Void> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        logger.warn("参数类型错误：{}", e.getMessage());
+        return Result.badRequest("参数类型错误");
+    }
+
+    /**
+     * 处理缺少必需参数
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public Result<Void> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        logger.warn("缺少必需参数：{}", e.getParameterName());
+        return Result.badRequest("缺少必需参数：" + e.getParameterName());
+    }
+
+    /**
+     * 处理请求方法不支持
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public Result<Void> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        logger.warn("不支持的请求方法：{}", e.getMethod());
+        return Result.fail(405, "不支持的请求方法");
     }
 
     /**

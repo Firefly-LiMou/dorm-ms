@@ -23,6 +23,7 @@ public class SysUser {
     private String username;
 
     /** 登录密码 */
+    @ToString.Exclude
     private String password;
 
     /** 真实姓名 */
