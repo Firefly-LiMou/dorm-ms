@@ -46,14 +46,36 @@
                 return;
             }
 
-            $.ajaxRequest('/login', 'POST', {username: username, password: password}, function (result) {
-                // 登录成功，根据角色跳转到对应首页
-                var roleType = result.data.roleType;
-                var targetUrl = rolePathMap[roleType] || '/login';
-                window.location.href = $.buildUrl(targetUrl);
-            }, function (result) {
-                // 登录失败，显示错误信息
-                $('#errorMsg').text(result.msg || '登录失败');
+            // 登录接口使用$.ajax直接调用，不走$.ajaxRequest的401统一拦截
+            // 原因：登录失败返回401，应显示具体错误信息，而非跳转登录页
+            $.ajax({
+                url: $.buildUrl('/login'),
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({username: username, password: password}),
+                dataType: 'json',
+                timeout: 30000,
+                success: function (result) {
+                    if (result.code === 200) {
+                        var roleType = result.data.roleType;
+                        var targetUrl = rolePathMap[roleType] || '/login';
+                        window.location.href = $.buildUrl(targetUrl);
+                    } else {
+                        $('#errorMsg').text(result.msg || '登录失败');
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        try {
+                            var result = JSON.parse(xhr.responseText);
+                            $('#errorMsg').text(result.msg || '用户名或密码错误');
+                        } catch (e) {
+                            $('#errorMsg').text('用户名或密码错误');
+                        }
+                    } else {
+                        $('#errorMsg').text('登录失败，请稍后重试');
+                    }
+                }
             });
         });
     });
