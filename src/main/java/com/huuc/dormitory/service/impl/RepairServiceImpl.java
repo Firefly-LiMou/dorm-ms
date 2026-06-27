@@ -47,7 +47,7 @@ public class RepairServiceImpl implements RepairService {
     public RepairVO getRepairById(Long repairId) {
         DormRepair repair = repairMapper.selectById(repairId);
         if (repair == null) {
-            throw new BusinessException("报修记录不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "报修记录不存在");
         }
         return convertToVO(repair);
     }
@@ -94,13 +94,13 @@ public class RepairServiceImpl implements RepairService {
         // 校验学生当前有在住记录
         DormCheckinRecord checkinRecord = checkinRecordMapper.selectActiveByStudentId(studentId);
         if (checkinRecord == null) {
-            throw new BusinessException("您当前无在住记录，无法提交报修");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "您当前无在住记录，无法提交报修");
         }
 
         // 通过床位查询房间ID
         DormBed bed = bedMapper.selectById(checkinRecord.getBedId());
         if (bed == null) {
-            throw new BusinessException("床位信息异常");
+            throw new BusinessException(BusinessException.CODE_ERROR, "床位信息异常");
         }
 
         // 插入报修记录
@@ -121,10 +121,10 @@ public class RepairServiceImpl implements RepairService {
         // 校验报修记录存在且状态为待处理
         DormRepair repair = repairMapper.selectById(repairId);
         if (repair == null) {
-            throw new BusinessException("报修记录不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "报修记录不存在");
         }
         if (!RepairStatusEnum.PENDING.getCode().equals(repair.getRepairStatus())) {
-            throw new BusinessException("该报修状态无法接单");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "该报修状态无法接单");
         }
 
         // 更新状态为处理中，回填处理人ID
@@ -139,10 +139,10 @@ public class RepairServiceImpl implements RepairService {
         // 校验报修记录存在且状态为处理中
         DormRepair repair = repairMapper.selectById(repairId);
         if (repair == null) {
-            throw new BusinessException("报修记录不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "报修记录不存在");
         }
         if (!RepairStatusEnum.PROCESSING.getCode().equals(repair.getRepairStatus())) {
-            throw new BusinessException("该报修状态无法完结");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "该报修状态无法完结");
         }
 
         // 更新状态为已完成，回填处理结果、完成时间

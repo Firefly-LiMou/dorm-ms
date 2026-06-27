@@ -46,7 +46,7 @@ public class LateReturnServiceImpl implements LateReturnService {
     public LateReturnVO getRecordById(Long recordId) {
         DormLateReturn record = lateReturnMapper.selectById(recordId);
         if (record == null) {
-            throw new BusinessException("晚归记录不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "晚归记录不存在");
         }
         return convertToVO(record);
     }
@@ -93,23 +93,23 @@ public class LateReturnServiceImpl implements LateReturnService {
         // 校验学生存在
         SysUser student = userMapper.selectById(dto.getStudentId());
         if (student == null) {
-            throw new BusinessException("学生不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "学生不存在");
         }
 
         // 自动查询学生在住记录获取building_id
         DormCheckinRecord checkinRecord = checkinRecordMapper.selectActiveByStudentId(dto.getStudentId());
         if (checkinRecord == null) {
-            throw new BusinessException("该学生当前无在住记录");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "该学生当前无在住记录");
         }
 
         // 通过床位查询房间，再查询楼栋
         DormBed bed = bedMapper.selectById(checkinRecord.getBedId());
         if (bed == null) {
-            throw new BusinessException("床位信息异常");
+            throw new BusinessException(BusinessException.CODE_ERROR, "床位信息异常");
         }
         DormRoom room = roomMapper.selectById(bed.getRoomId());
         if (room == null) {
-            throw new BusinessException("房间信息异常");
+            throw new BusinessException(BusinessException.CODE_ERROR, "房间信息异常");
         }
 
         // 插入晚归记录

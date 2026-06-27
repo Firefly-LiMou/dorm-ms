@@ -40,7 +40,7 @@ public class BedServiceImpl implements BedService {
     public BedVO getBedById(Long bedId) {
         DormBed bed = dormBedMapper.selectById(bedId);
         if (bed == null) {
-            throw new BusinessException("床位不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "床位不存在");
         }
         return convertToVO(bed);
     }
@@ -63,7 +63,7 @@ public class BedServiceImpl implements BedService {
         // 校验房间存在
         DormRoom room = dormRoomMapper.selectById(dto.getRoomId());
         if (room == null) {
-            throw new BusinessException("房间不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "房间不存在");
         }
 
         // 构建床位对象
@@ -83,12 +83,12 @@ public class BedServiceImpl implements BedService {
         // 校验房间存在
         DormRoom room = dormRoomMapper.selectById(dto.getRoomId());
         if (room == null) {
-            throw new BusinessException("房间不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "房间不存在");
         }
 
         // 校验床位数是否合法
         if (dto.getBedCount() <= 0) {
-            throw new BusinessException("床位数量必须大于0");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "床位数量必须大于0");
         }
 
         // 生成床位列表
@@ -112,13 +112,13 @@ public class BedServiceImpl implements BedService {
         // 校验床位存在
         DormBed bed = dormBedMapper.selectById(bedId);
         if (bed == null) {
-            throw new BusinessException("床位不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "床位不存在");
         }
 
         // 校验状态值合法
         BedStatusEnum statusEnum = BedStatusEnum.getByCode(status);
         if (statusEnum == null) {
-            throw new BusinessException("无效的床位状态");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "无效的床位状态");
         }
 
         dormBedMapper.updateStatus(bedId, status);

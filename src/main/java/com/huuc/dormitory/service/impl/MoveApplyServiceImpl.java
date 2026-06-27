@@ -48,7 +48,7 @@ public class MoveApplyServiceImpl implements MoveApplyService {
     public MoveApplyVO getApplyById(Long applyId) {
         DormMoveApply apply = moveApplyMapper.selectById(applyId);
         if (apply == null) {
-            throw new BusinessException("调宿申请不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "调宿申请不存在");
         }
         return convertToVO(apply);
     }
@@ -83,22 +83,22 @@ public class MoveApplyServiceImpl implements MoveApplyService {
         // 校验学生当前有在住记录
         DormCheckinRecord currentRecord = checkinRecordMapper.selectActiveByStudentId(studentId);
         if (currentRecord == null) {
-            throw new BusinessException("您当前无在住记录，无法申请调宿");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "您当前无在住记录，无法申请调宿");
         }
 
         // 校验学生无待审批的调宿申请
         int pendingCount = moveApplyMapper.countPendingByStudentId(studentId);
         if (pendingCount > 0) {
-            throw new BusinessException("您已有待审批的调宿申请");
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "您已有待审批的调宿申请");
         }
 
         // 校验目标床位存在且状态为空闲
         DormBed targetBed = bedMapper.selectById(dto.getTargetBedId());
         if (targetBed == null) {
-            throw new BusinessException("目标床位不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "目标床位不存在");
         }
         if (!BedStatusEnum.FREE.getCode().equals(targetBed.getBedStatus())) {
-            throw new BusinessException("目标床位已被占用");
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "目标床位已被占用");
         }
 
         // 插入调宿申请
@@ -118,10 +118,10 @@ public class MoveApplyServiceImpl implements MoveApplyService {
         // 校验申请存在且状态为待审批
         DormMoveApply apply = moveApplyMapper.selectById(applyId);
         if (apply == null) {
-            throw new BusinessException("调宿申请不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "调宿申请不存在");
         }
         if (!AuditStatusEnum.PENDING.getCode().equals(apply.getAuditStatus())) {
-            throw new BusinessException("该申请状态无法操作");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "该申请状态无法操作");
         }
 
         if (AuditStatusEnum.APPROVED.getCode().equals(dto.getAuditStatus())) {
@@ -131,7 +131,7 @@ public class MoveApplyServiceImpl implements MoveApplyService {
             // 审批驳回
             auditRejected(apply, dto, auditorId);
         } else {
-            throw new BusinessException("无效的审批状态");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "无效的审批状态");
         }
     }
 
@@ -142,13 +142,13 @@ public class MoveApplyServiceImpl implements MoveApplyService {
         // 校验目标床位仍为空闲
         DormBed targetBed = bedMapper.selectById(apply.getTargetBedId());
         if (targetBed == null || !BedStatusEnum.FREE.getCode().equals(targetBed.getBedStatus())) {
-            throw new BusinessException("目标床位已被占用");
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "目标床位已被占用");
         }
 
         // 获取原入住记录
         DormCheckinRecord originalRecord = checkinRecordMapper.selectActiveByStudentId(apply.getStudentId());
         if (originalRecord == null) {
-            throw new BusinessException("原入住记录不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "原入住记录不存在");
         }
 
         // 事务内执行：
@@ -197,17 +197,17 @@ public class MoveApplyServiceImpl implements MoveApplyService {
         // 校验申请存在
         DormMoveApply apply = moveApplyMapper.selectById(applyId);
         if (apply == null) {
-            throw new BusinessException("调宿申请不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "调宿申请不存在");
         }
 
         // 校验申请属于当前学生
         if (!apply.getStudentId().equals(studentId)) {
-            throw new BusinessException("无权操作此申请");
+            throw new BusinessException(BusinessException.CODE_FORBIDDEN, "无权操作此申请");
         }
 
         // 校验申请状态为待审批
         if (!AuditStatusEnum.PENDING.getCode().equals(apply.getAuditStatus())) {
-            throw new BusinessException("该申请状态无法撤销");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "该申请状态无法撤销");
         }
 
         // 更新申请状态为已驳回

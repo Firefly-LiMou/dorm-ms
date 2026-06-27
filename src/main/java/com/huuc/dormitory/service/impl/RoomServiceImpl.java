@@ -39,7 +39,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomVO getRoomById(Long roomId) {
         DormRoom room = dormRoomMapper.selectById(roomId);
         if (room == null) {
-            throw new BusinessException("房间不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "房间不存在");
         }
         return convertToVO(room);
     }
@@ -69,18 +69,18 @@ public class RoomServiceImpl implements RoomService {
         // 校验楼栋存在
         DormBuilding building = dormBuildingMapper.selectById(dto.getBuildingId());
         if (building == null) {
-            throw new BusinessException("楼栋不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "楼栋不存在");
         }
 
         // 校验楼层是否在楼栋范围内
         if (dto.getFloorNum() > building.getFloorCount()) {
-            throw new BusinessException("楼层超出楼栋范围");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "楼层超出楼栋范围");
         }
 
         // 校验同一楼栋下房间号是否重复
         DormRoom existRoom = dormRoomMapper.selectByBuildingIdAndRoomNo(dto.getBuildingId(), dto.getRoomNo());
         if (existRoom != null) {
-            throw new BusinessException("该楼栋下已存在相同房间号");
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "该楼栋下已存在相同房间号");
         }
 
         // 构建房间对象
@@ -102,24 +102,24 @@ public class RoomServiceImpl implements RoomService {
         // 校验房间存在
         DormRoom existRoom = dormRoomMapper.selectById(dto.getRoomId());
         if (existRoom == null) {
-            throw new BusinessException("房间不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "房间不存在");
         }
 
         // 校验楼栋存在
         DormBuilding building = dormBuildingMapper.selectById(dto.getBuildingId());
         if (building == null) {
-            throw new BusinessException("楼栋不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "楼栋不存在");
         }
 
         // 校验楼层是否在楼栋范围内
         if (dto.getFloorNum() > building.getFloorCount()) {
-            throw new BusinessException("楼层超出楼栋范围");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "楼层超出楼栋范围");
         }
 
         // 校验同一楼栋下房间号是否重复（排除自身）
         DormRoom query = dormRoomMapper.selectByBuildingIdAndRoomNo(dto.getBuildingId(), dto.getRoomNo());
         if (query != null && !query.getRoomId().equals(dto.getRoomId())) {
-            throw new BusinessException("该楼栋下已存在相同房间号");
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "该楼栋下已存在相同房间号");
         }
 
         // 构建更新对象
@@ -141,13 +141,13 @@ public class RoomServiceImpl implements RoomService {
         // 校验房间存在
         DormRoom room = dormRoomMapper.selectById(roomId);
         if (room == null) {
-            throw new BusinessException("房间不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "房间不存在");
         }
 
         // 校验房间下是否存在床位
         int bedCount = dormRoomMapper.countBeds(roomId);
         if (bedCount > 0) {
-            throw new BusinessException("该房间下存在床位，无法删除");
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "该房间下存在床位，无法删除");
         }
 
         // 逻辑删除

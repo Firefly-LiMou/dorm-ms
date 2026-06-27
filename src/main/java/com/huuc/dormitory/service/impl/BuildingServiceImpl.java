@@ -34,7 +34,7 @@ public class BuildingServiceImpl implements BuildingService {
     public BuildingVO getBuildingById(Long buildingId) {
         DormBuilding building = dormBuildingMapper.selectById(buildingId);
         if (building == null) {
-            throw new BusinessException("楼栋不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "楼栋不存在");
         }
         return convertToVO(building);
     }
@@ -66,7 +66,7 @@ public class BuildingServiceImpl implements BuildingService {
         existBuilding.setBuildingNo(dto.getBuildingNo());
         List<DormBuilding> existList = dormBuildingMapper.selectList(existBuilding);
         if (!existList.isEmpty()) {
-            throw new BusinessException("楼栋编号已存在");
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "楼栋编号已存在");
         }
 
         // 构建楼栋对象
@@ -88,7 +88,7 @@ public class BuildingServiceImpl implements BuildingService {
         // 校验楼栋存在
         DormBuilding existBuilding = dormBuildingMapper.selectById(dto.getBuildingId());
         if (existBuilding == null) {
-            throw new BusinessException("楼栋不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "楼栋不存在");
         }
 
         // 校验楼栋编号唯一性（排除自身）
@@ -97,7 +97,7 @@ public class BuildingServiceImpl implements BuildingService {
         List<DormBuilding> existList = dormBuildingMapper.selectList(query);
         for (DormBuilding item : existList) {
             if (!item.getBuildingId().equals(dto.getBuildingId())) {
-                throw new BusinessException("楼栋编号已存在");
+                throw new BusinessException(BusinessException.CODE_CONFLICT, "楼栋编号已存在");
             }
         }
 
@@ -120,13 +120,13 @@ public class BuildingServiceImpl implements BuildingService {
         // 校验楼栋存在
         DormBuilding building = dormBuildingMapper.selectById(buildingId);
         if (building == null) {
-            throw new BusinessException("楼栋不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "楼栋不存在");
         }
 
         // 校验楼栋下是否存在房间
         int roomCount = dormBuildingMapper.countRooms(buildingId);
         if (roomCount > 0) {
-            throw new BusinessException("该楼栋下存在房间，无法删除");
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "该楼栋下存在房间，无法删除");
         }
 
         // 逻辑删除

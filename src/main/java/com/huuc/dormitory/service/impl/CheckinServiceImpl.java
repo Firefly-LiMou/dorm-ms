@@ -79,25 +79,25 @@ public class CheckinServiceImpl implements CheckinService {
         // 校验学生存在且状态正常
         SysUser student = userMapper.selectById(dto.getStudentId());
         if (student == null) {
-            throw new BusinessException("学生不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "学生不存在");
         }
         if (student.getStatus() == null || !UserStatusEnum.NORMAL.getCode().equals(student.getStatus())) {
-            throw new BusinessException("学生账号状态异常");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "学生账号状态异常");
         }
 
         // 校验学生当前无在住记录
         int activeCount = checkinRecordMapper.countActiveByStudentId(dto.getStudentId());
         if (activeCount > 0) {
-            throw new BusinessException("该学生已有在住记录");
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "该学生已有在住记录");
         }
 
         // 校验床位存在且状态为空闲
         DormBed bed = bedMapper.selectById(dto.getBedId());
         if (bed == null) {
-            throw new BusinessException("床位不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "床位不存在");
         }
         if (!BedStatusEnum.FREE.getCode().equals(bed.getBedStatus())) {
-            throw new BusinessException("该床位已被占用");
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "该床位已被占用");
         }
 
         // 事务内执行：插入入住记录 + 更新床位状态为已入住
@@ -119,10 +119,10 @@ public class CheckinServiceImpl implements CheckinService {
         // 校验入住记录存在且状态为在住
         DormCheckinRecord record = checkinRecordMapper.selectById(checkinId);
         if (record == null) {
-            throw new BusinessException("入住记录不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "入住记录不存在");
         }
         if (!CheckinStatusEnum.LIVING.getCode().equals(record.getCheckinStatus())) {
-            throw new BusinessException("该入住记录状态异常");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "该入住记录状态异常");
         }
 
         // 事务内执行：更新入住记录状态为已退宿 + 更新床位状态为空闲

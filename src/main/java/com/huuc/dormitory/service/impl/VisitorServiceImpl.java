@@ -44,7 +44,7 @@ public class VisitorServiceImpl implements VisitorService {
     public VisitorVO getVisitorById(Long visitorId) {
         DormVisitor visitor = visitorMapper.selectById(visitorId);
         if (visitor == null) {
-            throw new BusinessException("访客记录不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "访客记录不存在");
         }
         return convertToVO(visitor);
     }
@@ -79,23 +79,23 @@ public class VisitorServiceImpl implements VisitorService {
         // 校验被访学生存在
         SysUser student = userMapper.selectById(dto.getStudentId());
         if (student == null) {
-            throw new BusinessException("被访学生不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "被访学生不存在");
         }
 
         // 自动查询被访学生在住记录获取building_id
         DormCheckinRecord checkinRecord = checkinRecordMapper.selectActiveByStudentId(dto.getStudentId());
         if (checkinRecord == null) {
-            throw new BusinessException("被访学生当前无在住记录");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "被访学生当前无在住记录");
         }
 
         // 通过床位查询房间，再查询楼栋
         DormBed bed = bedMapper.selectById(checkinRecord.getBedId());
         if (bed == null) {
-            throw new BusinessException("床位信息异常");
+            throw new BusinessException(BusinessException.CODE_ERROR, "床位信息异常");
         }
         DormRoom room = roomMapper.selectById(bed.getRoomId());
         if (room == null) {
-            throw new BusinessException("房间信息异常");
+            throw new BusinessException(BusinessException.CODE_ERROR, "房间信息异常");
         }
 
         // 插入访客记录
@@ -116,10 +116,10 @@ public class VisitorServiceImpl implements VisitorService {
         // 校验访客记录存在且未离开
         DormVisitor visitor = visitorMapper.selectById(visitorId);
         if (visitor == null) {
-            throw new BusinessException("访客记录不存在");
+            throw new BusinessException(BusinessException.CODE_NOT_FOUND, "访客记录不存在");
         }
         if (visitor.getLeaveTime() != null) {
-            throw new BusinessException("该访客已离开");
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "该访客已离开");
         }
 
         // 更新离开时间为当前系统时间
