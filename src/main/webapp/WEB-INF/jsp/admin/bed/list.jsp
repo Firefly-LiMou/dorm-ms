@@ -88,13 +88,15 @@
                         <i class="fas fa-info-circle mr-2"></i>
                         将为房间 <strong id="batchRoomName"></strong> 自动生成床位，床位号格式为"1号床"、"2号床"...
                     </div>
-                    <form id="batchForm">
-                        <div class="mb-3">
-                            <label for="bedCount" class="form-label">床位数量 <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="bedCount" placeholder="请输入床位数量" min="1" max="20">
-                            <div class="invalid-feedback" id="bedCountError"></div>
-                        </div>
-                    </form>
+                    <div class="mb-3">
+                        <label class="form-label">房间类型</label>
+                        <input type="text" class="form-control" id="batchRoomType" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">初始化床位数</label>
+                        <input type="text" class="form-control" id="batchBedCount" readonly>
+                        <small class="form-text text-muted">根据房间类型自动确定</small>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
@@ -115,8 +117,9 @@
     <script src="${pageContext.request.contextPath}/static/js/header.js"></script>
 
     <script>
-        // 当前选中的房间ID
+        // 当前选中的房间ID和房间信息
         var currentRoomId = null;
+        var currentRoomInfo = null;
 
         $(function() {
             // 加载楼栋列表
@@ -132,6 +135,7 @@
                     $('#btnSearch').prop('disabled', true);
                     $('#btnBatch').prop('disabled', true);
                     currentRoomId = null;
+                    currentRoomInfo = null;
                 }
             });
 
@@ -141,12 +145,27 @@
                 if (currentRoomId) {
                     $('#btnSearch').prop('disabled', false);
                     $('#btnBatch').prop('disabled', false);
+                    // 获取房间信息
+                    loadRoomInfo(currentRoomId);
                 } else {
                     $('#btnSearch').prop('disabled', true);
                     $('#btnBatch').prop('disabled', true);
+                    currentRoomInfo = null;
                 }
             });
         });
+
+        /**
+         * 加载房间信息
+         * @param {number} roomId - 房间ID
+         */
+        function loadRoomInfo(roomId) {
+            $.ajaxRequest('/admin/room/' + roomId, 'GET', null, function(result) {
+                if (result.data) {
+                    currentRoomInfo = result.data;
+                }
+            });
+        }
 
         /**
          * 加载楼栋列表
@@ -269,10 +288,18 @@
                 return;
             }
 
+            if (!currentRoomInfo) {
+                $.toast('warning', '房间信息加载中，请稍后再试');
+                return;
+            }
+
             var roomName = $('#roomId option:selected').text();
+            var roomTypeText = currentRoomInfo.roomTypeText || '-';
+            var bedTotal = currentRoomInfo.bedTotal || 0;
+
             $('#batchRoomName').text(roomName);
-            $('#bedCount').val('').removeClass('is-invalid');
-            $('#bedCountError').text('');
+            $('#batchRoomType').val(roomTypeText);
+            $('#batchBedCount').val(bedTotal + ' 个床位');
             $('#batchModal').modal('show');
         }
 
@@ -280,24 +307,20 @@
          * 批量初始化提交
          */
         function batchSubmit() {
-            var bedCount = $('#bedCount').val();
-
-            if (!bedCount || bedCount < 1) {
-                $('#bedCount').addClass('is-invalid');
-                $('#bedCountError').text('请输入有效的床位数量');
+            if (!currentRoomInfo || !currentRoomInfo.bedTotal) {
+                $.toast('error', '无法获取房间额定床位数');
                 return;
             }
 
-            $('#bedCount').removeClass('is-invalid');
-            $('#bedCountError').text('');
+            var bedCount = currentRoomInfo.bedTotal;
 
             $('#btnBatchSubmit').prop('disabled', true).text('初始化中...');
 
             $.ajaxRequest('/admin/bed/batch', 'POST', {
                 roomId: parseInt(currentRoomId),
-                bedCount: parseInt(bedCount)
+                bedCount: bedCount
             }, function(result) {
-                $.toast('success', '批量初始化成功');
+                $.toast('success', '批量初始化成功，已创建' + bedCount + '个床位');
                 $('#batchModal').modal('hide');
                 $('#btnBatchSubmit').prop('disabled', false).text('确认初始化');
                 loadBedList();

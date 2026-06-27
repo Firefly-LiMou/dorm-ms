@@ -52,17 +52,17 @@
                     setTimeout(function() {
                         window.location.href = $.buildUrl('/login');
                     }, 1500);
+                    if (typeof errorCallback === 'function') {
+                        errorCallback(result);
+                    }
                 } else if (result.code === 403) {
                     // 无权限
                     $.toast('error', '无权限访问');
-                } else if (result.code === 404) {
-                    // 资源不存在
-                    $.toast('error', '请求的资源不存在');
-                } else if (result.code === 409) {
-                    // 状态冲突
-                    $.toast('error', result.msg || '操作冲突，请刷新后重试');
+                    if (typeof errorCallback === 'function') {
+                        errorCallback(result);
+                    }
                 } else {
-                    // 其他错误
+                    // 其他错误（400/404/409/500等）
                     if (typeof errorCallback === 'function') {
                         errorCallback(result);
                     } else {
