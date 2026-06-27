@@ -9,7 +9,9 @@ public enum OperTypeEnum {
     UPDATE("修改", "修改"),
     DELETE("删除", "删除"),
     AUDIT("审批", "审批"),
-    QUERY("查询", "查询");
+    QUERY("查询", "查询"),
+    LOGIN("登录", "登录"),
+    LOGOUT("登出", "登出");
 
     private final String code;
     private final String desc;
