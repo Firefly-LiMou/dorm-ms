@@ -66,20 +66,20 @@
                         alert('首次登录请修改密码');
                         // 跳转到修改密码页面（根据角色跳转不同页面）
                         if (user.roleType === 1) {
-                            window.location.href = '${pageContext.request.contextPath}/admin/user/list';
+                            window.location.href = '${pageContext.request.contextPath}/admin/index';
                         } else if (user.roleType === 2) {
-                            window.location.href = '${pageContext.request.contextPath}/dorm/building/list';
+                            window.location.href = '${pageContext.request.contextPath}/dorm/index';
                         } else {
-                            window.location.href = '${pageContext.request.contextPath}/student/user/info';
+                            window.location.href = '${pageContext.request.contextPath}/student/index';
                         }
                     } else {
                         // 跳转到首页（根据角色跳转不同页面）
                         if (user.roleType === 1) {
-                            window.location.href = '${pageContext.request.contextPath}/admin/user/list';
+                            window.location.href = '${pageContext.request.contextPath}/admin/index';
                         } else if (user.roleType === 2) {
-                            window.location.href = '${pageContext.request.contextPath}/dorm/building/list';
+                            window.location.href = '${pageContext.request.contextPath}/dorm/index';
                         } else {
-                            window.location.href = '${pageContext.request.contextPath}/student/user/info';
+                            window.location.href = '${pageContext.request.contextPath}/student/index';
                         }
                     }
                 }
