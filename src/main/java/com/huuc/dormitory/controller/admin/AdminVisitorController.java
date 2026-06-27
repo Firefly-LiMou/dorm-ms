@@ -84,7 +84,7 @@ public class AdminVisitorController {
     @PostMapping("/leave/{visitorId}")
     @ResponseBody
     @OperLog(module = "访客登记", type = OperTypeEnum.UPDATE, desc = "确认离开")
-    public Result<Void> confirmLeave(@PathVariable Long visitorId) {
+    public Result<Void> confirmLeave(@PathVariable Long visitorId, HttpSession session) {
         visitorService.confirmLeave(visitorId);
         return Result.success();
     }

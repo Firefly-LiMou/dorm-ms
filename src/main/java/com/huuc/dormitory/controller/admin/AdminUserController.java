@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class AdminUserController {
     @PostMapping("/add")
     @ResponseBody
     @OperLog(module = "用户管理", type = OperTypeEnum.ADD, desc = "新增用户")
-    public Result<Void> addUser(@RequestBody @Valid UserDTO dto) {
+    public Result<Void> addUser(@RequestBody @Valid UserDTO dto, HttpSession session) {
         userService.addUser(dto);
         return Result.success();
     }
@@ -76,7 +77,7 @@ public class AdminUserController {
     @PostMapping("/update")
     @ResponseBody
     @OperLog(module = "用户管理", type = OperTypeEnum.UPDATE, desc = "编辑用户")
-    public Result<Void> updateUser(@RequestBody @Valid UserDTO dto) {
+    public Result<Void> updateUser(@RequestBody @Valid UserDTO dto, HttpSession session) {
         userService.updateUser(dto);
         return Result.success();
     }
@@ -87,7 +88,7 @@ public class AdminUserController {
     @PostMapping("/toggleStatus/{userId}")
     @ResponseBody
     @OperLog(module = "用户管理", type = OperTypeEnum.UPDATE, desc = "切换用户状态")
-    public Result<Void> toggleUserStatus(@PathVariable Long userId) {
+    public Result<Void> toggleUserStatus(@PathVariable Long userId, HttpSession session) {
         userService.toggleUserStatus(userId);
         return Result.success();
     }

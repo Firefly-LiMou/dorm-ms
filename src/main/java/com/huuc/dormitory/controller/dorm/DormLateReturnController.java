@@ -57,9 +57,10 @@ public class DormLateReturnController {
         if (buildingId == null) {
             Long managerId = SessionUtil.getCurrentUserId(session);
             List<BuildingVO> buildings = buildingService.getBuildingsByManagerId(managerId);
-            if (!buildings.isEmpty()) {
-                buildingId = buildings.get(0).getBuildingId();
+            if (buildings.isEmpty()) {
+                return Result.fail("您暂未负责任何楼栋，请联系管理员");
             }
+            buildingId = buildings.get(0).getBuildingId();
         }
 
         PageHelper.startPage(pageNum, pageSize);

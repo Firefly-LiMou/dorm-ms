@@ -39,7 +39,7 @@ public class AuthController {
      */
     @PostMapping("/login")
     @ResponseBody
-    @OperLog(module = "用户认证", type = OperTypeEnum.QUERY, desc = "用户登录")
+    @OperLog(module = "用户认证", type = OperTypeEnum.LOGIN, desc = "用户登录")
     public Result<SysUser> login(@RequestBody @Valid LoginDTO dto, HttpSession session) {
         SysUser user = userService.login(dto);
 
@@ -59,7 +59,7 @@ public class AuthController {
      */
     @PostMapping("/logout")
     @ResponseBody
-    @OperLog(module = "用户认证", type = OperTypeEnum.QUERY, desc = "用户登出")
+    @OperLog(module = "用户认证", type = OperTypeEnum.LOGOUT, desc = "用户登出")
     public Result<Void> logout(HttpSession session) {
         SessionUtil.removeCurrentUser(session);
         return Result.success();
