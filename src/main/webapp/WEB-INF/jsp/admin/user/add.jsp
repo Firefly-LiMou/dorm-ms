@@ -158,6 +158,11 @@
                 }
             });
 
+            // 自定义手机号验证方法（允许为空，有值时验证格式）
+            $.validator.addMethod('phonePattern', function(value, element) {
+                return this.optional(element) || /^1[3-9]\d{9}$/.test(value);
+            }, '请输入正确的手机号码');
+
             // 表单验证
             $('#userForm').validate({
                 rules: {
@@ -174,7 +179,7 @@
                         required: true
                     },
                     phone: {
-                        pattern: /^1[3-9]\d{9}$/
+                        phonePattern: true
                     }
                 },
                 messages: {
@@ -189,9 +194,6 @@
                     },
                     roleType: {
                         required: '请选择角色类型'
-                    },
-                    phone: {
-                        pattern: '请输入正确的手机号码'
                     }
                 },
                 submitHandler: function(form) {
