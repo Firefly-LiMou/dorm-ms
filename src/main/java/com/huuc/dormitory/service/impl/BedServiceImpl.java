@@ -92,6 +92,12 @@ public class BedServiceImpl implements BedService {
             throw new BusinessException(BusinessException.CODE_NOT_FOUND, "房间不存在");
         }
 
+        // 校验房间是否已有床位
+        int existCount = dormBedMapper.countByRoomId(dto.getRoomId());
+        if (existCount > 0) {
+            throw new BusinessException(BusinessException.CODE_CONFLICT, "该房间已有床位，请先删除后再初始化");
+        }
+
         // 校验床位数是否合法
         if (dto.getBedCount() <= 0) {
             throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "床位数量必须大于0");

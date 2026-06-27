@@ -37,6 +37,22 @@ public class AdminBuildingController {
     }
 
     /**
+     * 新增楼栋页面
+     */
+    @GetMapping("/addPage")
+    public String addPage() {
+        return "admin/building/add";
+    }
+
+    /**
+     * 编辑楼栋页面
+     */
+    @GetMapping("/editPage")
+    public String editPage() {
+        return "admin/building/edit";
+    }
+
+    /**
      * 查询楼栋列表（分页）
      */
     @GetMapping("/page")

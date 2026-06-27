@@ -37,6 +37,22 @@ public class AdminRoomController {
     }
 
     /**
+     * 新增房间页面
+     */
+    @GetMapping("/addPage")
+    public String addPage() {
+        return "admin/room/add";
+    }
+
+    /**
+     * 编辑房间页面
+     */
+    @GetMapping("/editPage")
+    public String editPage() {
+        return "admin/room/edit";
+    }
+
+    /**
      * 查询房间列表（分页）
      */
     @GetMapping("/page")
