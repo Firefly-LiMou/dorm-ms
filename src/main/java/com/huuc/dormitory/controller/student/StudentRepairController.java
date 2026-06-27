@@ -35,6 +35,22 @@ public class StudentRepairController {
     }
 
     /**
+     * 报修详情页面
+     */
+    @GetMapping("/detailPage")
+    public String detailPage() {
+        return "student/repair/detail";
+    }
+
+    /**
+     * 提交报修页面
+     */
+    @GetMapping("/submitPage")
+    public String submitPage() {
+        return "student/repair/submit";
+    }
+
+    /**
      * 查询我的报修（分页）
      */
     @GetMapping("/page")

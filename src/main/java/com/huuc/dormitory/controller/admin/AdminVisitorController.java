@@ -36,6 +36,22 @@ public class AdminVisitorController {
     }
 
     /**
+     * 访客详情页面
+     */
+    @GetMapping("/detailPage")
+    public String detailPage() {
+        return "admin/visitor/detail";
+    }
+
+    /**
+     * 录入访客页面
+     */
+    @GetMapping("/addPage")
+    public String addPage() {
+        return "admin/visitor/add";
+    }
+
+    /**
      * 查询访客记录列表（分页）
      */
     @GetMapping("/page")

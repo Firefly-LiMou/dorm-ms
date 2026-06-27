@@ -36,6 +36,14 @@ public class AdminRepairController {
     }
 
     /**
+     * 报修详情页面
+     */
+    @GetMapping("/detailPage")
+    public String detailPage() {
+        return "admin/repair/detail";
+    }
+
+    /**
      * 查询报修列表（分页）
      */
     @GetMapping("/page")

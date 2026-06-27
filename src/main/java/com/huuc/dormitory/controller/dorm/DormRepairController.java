@@ -42,6 +42,14 @@ public class DormRepairController {
     }
 
     /**
+     * 报修详情页面
+     */
+    @GetMapping("/detailPage")
+    public String detailPage() {
+        return "dorm/repair/detail";
+    }
+
+    /**
      * 查询本楼栋报修列表（分页）
      */
     @GetMapping("/page")

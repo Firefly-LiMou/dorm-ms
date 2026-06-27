@@ -38,6 +38,22 @@ public class AdminLateReturnController {
     }
 
     /**
+     * 录入晚归页面
+     */
+    @GetMapping("/addPage")
+    public String addPage() {
+        return "admin/lateReturn/add";
+    }
+
+    /**
+     * 晚归统计页面
+     */
+    @GetMapping("/statsPage")
+    public String statsPage() {
+        return "admin/lateReturn/stats";
+    }
+
+    /**
      * 查询晚归记录列表（分页）
      */
     @GetMapping("/page")

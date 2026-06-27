@@ -43,6 +43,22 @@ public class DormLateReturnController {
     }
 
     /**
+     * 录入晚归页面
+     */
+    @GetMapping("/addPage")
+    public String addPage() {
+        return "dorm/lateReturn/add";
+    }
+
+    /**
+     * 晚归统计页面
+     */
+    @GetMapping("/statsPage")
+    public String statsPage() {
+        return "dorm/lateReturn/stats";
+    }
+
+    /**
      * 查询本楼栋晚归记录（分页）
      */
     @GetMapping("/page")

@@ -42,6 +42,22 @@ public class DormVisitorController {
     }
 
     /**
+     * 访客详情页面
+     */
+    @GetMapping("/detailPage")
+    public String detailPage() {
+        return "dorm/visitor/detail";
+    }
+
+    /**
+     * 录入访客页面
+     */
+    @GetMapping("/addPage")
+    public String addPage() {
+        return "dorm/visitor/add";
+    }
+
+    /**
      * 查询本楼栋访客记录（分页）
      */
     @GetMapping("/page")
