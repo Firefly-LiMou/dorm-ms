@@ -1,5 +1,6 @@
 package com.huuc.dormitory.service.impl;
 
+import com.huuc.dormitory.common.constant.CommonConstants;
 import com.huuc.dormitory.common.enums.BedStatusEnum;
 import com.huuc.dormitory.common.exception.BusinessException;
 import com.huuc.dormitory.dao.DormBedMapper;
@@ -71,7 +72,7 @@ public class BedServiceImpl implements BedService {
         bed.setRoomId(dto.getRoomId());
         bed.setBedStatus(BedStatusEnum.FREE.getCode());
         bed.setRemark(dto.getRemark());
-        bed.setIsDeleted(0);
+        bed.setIsDeleted(CommonConstants.IS_DELETED_NO);
 
         dormBedMapper.insert(bed);
     }
@@ -97,7 +98,7 @@ public class BedServiceImpl implements BedService {
             bed.setBedNo(i + "号床");
             bed.setRoomId(dto.getRoomId());
             bed.setBedStatus(BedStatusEnum.FREE.getCode());
-            bed.setIsDeleted(0);
+            bed.setIsDeleted(CommonConstants.IS_DELETED_NO);
             beds.add(bed);
         }
 

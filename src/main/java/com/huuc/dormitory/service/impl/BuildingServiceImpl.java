@@ -1,6 +1,7 @@
 package com.huuc.dormitory.service.impl;
 
 import com.github.pagehelper.PageInfo;
+import com.huuc.dormitory.common.constant.CommonConstants;
 import com.huuc.dormitory.common.exception.BusinessException;
 import com.huuc.dormitory.dao.DormBuildingMapper;
 import com.huuc.dormitory.dao.SysUserMapper;
@@ -76,7 +77,7 @@ public class BuildingServiceImpl implements BuildingService {
         building.setArea(dto.getArea());
         building.setManagerId(dto.getManagerId());
         building.setRemark(dto.getRemark());
-        building.setIsDeleted(0);
+        building.setIsDeleted(CommonConstants.IS_DELETED_NO);
 
         dormBuildingMapper.insert(building);
     }
@@ -129,7 +130,7 @@ public class BuildingServiceImpl implements BuildingService {
         }
 
         // 逻辑删除
-        dormBuildingMapper.updateDeleted(buildingId, 1);
+        dormBuildingMapper.updateDeleted(buildingId, CommonConstants.IS_DELETED_YES);
     }
 
     /**

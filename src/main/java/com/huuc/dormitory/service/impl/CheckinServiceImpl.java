@@ -3,6 +3,7 @@ package com.huuc.dormitory.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.huuc.dormitory.common.enums.BedStatusEnum;
 import com.huuc.dormitory.common.enums.CheckinStatusEnum;
+import com.huuc.dormitory.common.enums.UserStatusEnum;
 import com.huuc.dormitory.common.exception.BusinessException;
 import com.huuc.dormitory.dao.*;
 import com.huuc.dormitory.dto.CheckinDTO;
@@ -80,7 +81,7 @@ public class CheckinServiceImpl implements CheckinService {
         if (student == null) {
             throw new BusinessException("学生不存在");
         }
-        if (student.getStatus() == null || student.getStatus() != 1) {
+        if (student.getStatus() == null || !UserStatusEnum.NORMAL.getCode().equals(student.getStatus())) {
             throw new BusinessException("学生账号状态异常");
         }
 

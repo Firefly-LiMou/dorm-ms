@@ -32,6 +32,9 @@ public class RepairServiceImpl implements RepairService {
     private DormCheckinRecordMapper checkinRecordMapper;
 
     @Autowired
+    private DormBedMapper bedMapper;
+
+    @Autowired
     private DormRoomMapper roomMapper;
 
     @Autowired
@@ -94,10 +97,16 @@ public class RepairServiceImpl implements RepairService {
             throw new BusinessException("您当前无在住记录，无法提交报修");
         }
 
+        // 通过床位查询房间ID
+        DormBed bed = bedMapper.selectById(checkinRecord.getBedId());
+        if (bed == null) {
+            throw new BusinessException("床位信息异常");
+        }
+
         // 插入报修记录
         DormRepair repair = new DormRepair();
         repair.setStudentId(studentId);
-        repair.setRoomId(checkinRecord.getBedId()); // 这里需要通过床位查询房间ID
+        repair.setRoomId(bed.getRoomId());
         repair.setRepairType(dto.getRepairType());
         repair.setRepairContent(dto.getRepairContent());
         repair.setContactPhone(dto.getContactPhone());

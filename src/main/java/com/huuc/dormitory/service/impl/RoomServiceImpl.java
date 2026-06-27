@@ -1,6 +1,7 @@
 package com.huuc.dormitory.service.impl;
 
 import com.github.pagehelper.PageInfo;
+import com.huuc.dormitory.common.constant.CommonConstants;
 import com.huuc.dormitory.common.enums.RoomTypeEnum;
 import com.huuc.dormitory.common.exception.BusinessException;
 import com.huuc.dormitory.dao.DormBedMapper;
@@ -90,7 +91,7 @@ public class RoomServiceImpl implements RoomService {
         room.setBedTotal(dto.getBedTotal());
         room.setRoomType(dto.getRoomType());
         room.setRemark(dto.getRemark());
-        room.setIsDeleted(0);
+        room.setIsDeleted(CommonConstants.IS_DELETED_NO);
 
         dormRoomMapper.insert(room);
     }
@@ -150,7 +151,7 @@ public class RoomServiceImpl implements RoomService {
         }
 
         // 逻辑删除
-        dormRoomMapper.updateDeleted(roomId, 1);
+        dormRoomMapper.updateDeleted(roomId, CommonConstants.IS_DELETED_YES);
     }
 
     /**
