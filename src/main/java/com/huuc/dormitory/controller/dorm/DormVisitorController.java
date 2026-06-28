@@ -63,20 +63,17 @@ public class DormVisitorController {
     @GetMapping("/page")
     @ResponseBody
     public Result<PageInfo<VisitorVO>> getVisitorPage(
-            @RequestParam(required = false) Long buildingId,
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             HttpSession session) {
 
-        // 如果未指定楼栋，使用宿管负责的第一个楼栋
-        if (buildingId == null) {
-            Long managerId = SessionUtil.getCurrentUserId(session);
-            List<BuildingVO> buildings = buildingService.getBuildingsByManagerId(managerId);
-            if (buildings.isEmpty()) {
-                return Result.fail("您暂未负责任何楼栋，请联系管理员");
-            }
-            buildingId = buildings.get(0).getBuildingId();
+        // 从Session获取宿管负责的楼栋，禁止前端传入buildingId防止越权
+        Long managerId = SessionUtil.getCurrentUserId(session);
+        List<BuildingVO> buildings = buildingService.getBuildingsByManagerId(managerId);
+        if (buildings.isEmpty()) {
+            return Result.fail("您暂未负责任何楼栋，请联系管理员");
         }
+        Long buildingId = buildings.get(0).getBuildingId();
 
         PageHelper.startPage(pageNum, pageSize);
         PageInfo<VisitorVO> pageInfo = visitorService.getVisitorsByBuildingId(buildingId, pageNum, pageSize);

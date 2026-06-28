@@ -82,13 +82,19 @@ public class DormMoveController {
     @ResponseBody
     public Result<PageInfo<MoveApplyVO>> getPendingPage(
             @RequestParam(defaultValue = "1") Integer pageNum,
-            @RequestParam(defaultValue = "10") Integer pageSize) {
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            HttpSession session) {
 
-        DormMoveApply query = new DormMoveApply();
-        query.setAuditStatus(AuditStatusEnum.PENDING.getCode());
+        // 从Session获取宿管负责的楼栋，仅查询本楼栋待审批申请
+        Long managerId = SessionUtil.getCurrentUserId(session);
+        List<BuildingVO> buildings = buildingService.getBuildingsByManagerId(managerId);
+        if (buildings.isEmpty()) {
+            return Result.fail("您暂未负责任何楼栋，请联系管理员");
+        }
+        Long buildingId = buildings.get(0).getBuildingId();
 
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<MoveApplyVO> pageInfo = moveApplyService.getApplyList(query, pageNum, pageSize);
+        PageInfo<MoveApplyVO> pageInfo = moveApplyService.getApplyListByBuildingId(buildingId, AuditStatusEnum.PENDING.getCode(), pageNum, pageSize);
 
         return Result.success(pageInfo);
     }
