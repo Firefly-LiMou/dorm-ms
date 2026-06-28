@@ -31,6 +31,14 @@
         LIMIT 1
     </select>
 
+    <!-- 查询床位在住记录 -->
+    <select id="selectActiveByBedId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM dorm_checkin_record
+        WHERE bed_id = #{bedId} AND checkin_status = 1
+        ORDER BY checkin_time DESC
+        LIMIT 1
+    </select>
+
     <!-- 查询入住记录列表 -->
     <select id="selectList" parameterType="DormCheckinRecord" resultMap="BaseResultMap">
         SELECT * FROM dorm_checkin_record

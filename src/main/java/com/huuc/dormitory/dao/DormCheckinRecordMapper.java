@@ -21,6 +21,11 @@ public interface DormCheckinRecordMapper {
     DormCheckinRecord selectActiveByStudentId(Long studentId);
 
     /**
+     * 查询床位在住记录
+     */
+    DormCheckinRecord selectActiveByBedId(Long bedId);
+
+    /**
      * 查询入住记录列表
      */
     List<DormCheckinRecord> selectList(DormCheckinRecord query);

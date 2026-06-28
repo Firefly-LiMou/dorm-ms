@@ -42,14 +42,15 @@
                             <label for="searchModuleName" class="form-label">操作模块</label>
                             <select class="form-control" id="searchModuleName">
                                 <option value="">全部</option>
+                                <option value="用户管理">用户管理</option>
                                 <option value="楼栋管理">楼栋管理</option>
                                 <option value="房间管理">房间管理</option>
                                 <option value="床位管理">床位管理</option>
                                 <option value="入住管理">入住管理</option>
                                 <option value="调宿管理">调宿管理</option>
                                 <option value="报修管理">报修管理</option>
-                                <option value="晚归管理">晚归管理</option>
-                                <option value="访客管理">访客管理</option>
+                                <option value="晚归登记">晚归登记</option>
+                                <option value="访客登记">访客登记</option>
                                 <option value="用户认证">用户认证</option>
                                 <option value="个人信息">个人信息</option>
                             </select>

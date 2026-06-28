@@ -157,7 +157,7 @@ public class OperLogAspect {
             // 过滤掉HttpServletRequest等不可序列化的参数
             StringBuilder sb = new StringBuilder();
             for (Object arg : args) {
-                if (arg instanceof HttpServletRequest) {
+                if (arg instanceof HttpServletRequest || arg instanceof HttpSession) {
                     continue;
                 }
                 if (sb.length() > 0) {

@@ -5,12 +5,16 @@ import com.huuc.dormitory.common.enums.BedStatusEnum;
 import com.huuc.dormitory.common.exception.BusinessException;
 import com.huuc.dormitory.dao.DormBedMapper;
 import com.huuc.dormitory.dao.DormBuildingMapper;
+import com.huuc.dormitory.dao.DormCheckinRecordMapper;
 import com.huuc.dormitory.dao.DormRoomMapper;
+import com.huuc.dormitory.dao.SysUserMapper;
 import com.huuc.dormitory.dto.BedDTO;
 import com.huuc.dormitory.dto.BatchBedDTO;
 import com.huuc.dormitory.entity.DormBed;
 import com.huuc.dormitory.entity.DormBuilding;
+import com.huuc.dormitory.entity.DormCheckinRecord;
 import com.huuc.dormitory.entity.DormRoom;
+import com.huuc.dormitory.entity.SysUser;
 import com.huuc.dormitory.service.BedService;
 import com.huuc.dormitory.vo.BedVO;
 import org.springframework.beans.BeanUtils;
@@ -35,6 +39,12 @@ public class BedServiceImpl implements BedService {
 
     @Autowired
     private DormBuildingMapper dormBuildingMapper;
+
+    @Autowired
+    private DormCheckinRecordMapper dormCheckinRecordMapper;
+
+    @Autowired
+    private SysUserMapper userMapper;
 
     @Override
     public BedVO getBedById(Long bedId) {
@@ -159,6 +169,17 @@ public class BedServiceImpl implements BedService {
         BedStatusEnum statusEnum = BedStatusEnum.getByCode(bed.getBedStatus());
         if (statusEnum != null) {
             vo.setBedStatusText(statusEnum.getDesc());
+        }
+
+        // 查询入住学生姓名（仅已入住状态）
+        if (BedStatusEnum.OCCUPIED.getCode().equals(bed.getBedStatus())) {
+            DormCheckinRecord checkinRecord = dormCheckinRecordMapper.selectActiveByBedId(bed.getBedId());
+            if (checkinRecord != null) {
+                SysUser student = userMapper.selectById(checkinRecord.getStudentId());
+                if (student != null) {
+                    vo.setStudentName(student.getRealName());
+                }
+            }
         }
 
         return vo;
