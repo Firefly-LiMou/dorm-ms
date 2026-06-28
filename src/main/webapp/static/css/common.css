@@ -53,7 +53,7 @@ img {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    margin-left: 250px;
+    margin-left: 220px;
 }
 
 /* 内容主体 */
@@ -163,7 +163,7 @@ img {
     position: fixed;
     top: 0;
     left: 0;
-    width: 250px;
+    width: 220px;
     height: 100vh;
     background-color: #fff;
     border-right: 1px solid #e0e0e0;
@@ -631,7 +631,7 @@ img {
 @media (max-width: 768px) {
     .sidebar {
         position: fixed;
-        left: -250px;
+        left: -220px;
         top: 60px;
         bottom: 0;
         z-index: 999;
@@ -640,6 +640,10 @@ img {
 
     .sidebar.show {
         left: 0;
+    }
+
+    .content-wrapper {
+        margin-left: 0;
     }
 
     .content-body {
