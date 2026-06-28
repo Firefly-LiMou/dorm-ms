@@ -49,19 +49,24 @@ public class AdminRepairController {
     @GetMapping("/page")
     @ResponseBody
     public Result<PageInfo<RepairVO>> getRepairPage(
-            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String studentNo,
             @RequestParam(required = false) Integer repairType,
             @RequestParam(required = false) Integer repairStatus,
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        DormRepair query = new DormRepair();
-        query.setStudentId(studentId);
-        query.setRepairType(repairType);
-        query.setRepairStatus(repairStatus);
-
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<RepairVO> pageInfo = repairService.getRepairList(query, pageNum, pageSize);
+        PageInfo<RepairVO> pageInfo;
+
+        // 如果传入学号，按学号模糊查询
+        if (studentNo != null && !studentNo.trim().isEmpty()) {
+            pageInfo = repairService.getRepairListByStudentNo(studentNo.trim(), repairType, repairStatus, pageNum, pageSize);
+        } else {
+            DormRepair query = new DormRepair();
+            query.setRepairType(repairType);
+            query.setRepairStatus(repairStatus);
+            pageInfo = repairService.getRepairList(query, pageNum, pageSize);
+        }
 
         return Result.success(pageInfo);
     }

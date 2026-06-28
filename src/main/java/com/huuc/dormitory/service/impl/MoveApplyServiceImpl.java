@@ -77,6 +77,18 @@ public class MoveApplyServiceImpl implements MoveApplyService {
         return voPageInfo;
     }
 
+    @Override
+    public PageInfo<MoveApplyVO> getApplyListByStudentNo(String studentNo, Integer auditStatus, Integer pageNum, Integer pageSize) {
+        List<DormMoveApply> applies = moveApplyMapper.selectListByStudentNo(studentNo, auditStatus);
+        PageInfo<DormMoveApply> pageInfo = new PageInfo<>(applies);
+
+        PageInfo<MoveApplyVO> voPageInfo = new PageInfo<>();
+        BeanUtils.copyProperties(pageInfo, voPageInfo);
+        voPageInfo.setList(convertToVOList(applies));
+
+        return voPageInfo;
+    }
+
     /**
      * 提交调宿申请
      * 校验：在住记录、无待审批申请、目标床位空闲

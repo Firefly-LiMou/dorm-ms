@@ -76,6 +76,18 @@ public class LateReturnServiceImpl implements LateReturnService {
     }
 
     @Override
+    public PageInfo<LateReturnVO> getRecordListByStudentNo(String studentNo, Long buildingId, Integer pageNum, Integer pageSize) {
+        List<DormLateReturn> records = lateReturnMapper.selectListByStudentNo(studentNo, buildingId);
+        PageInfo<DormLateReturn> pageInfo = new PageInfo<>(records);
+
+        PageInfo<LateReturnVO> voPageInfo = new PageInfo<>();
+        BeanUtils.copyProperties(pageInfo, voPageInfo);
+        voPageInfo.setList(convertToVOList(records));
+
+        return voPageInfo;
+    }
+
+    @Override
     public PageInfo<LateReturnVO> getRecordsByBuildingId(Long buildingId, Integer pageNum, Integer pageSize) {
         List<DormLateReturn> records = lateReturnMapper.selectByBuildingId(buildingId);
         PageInfo<DormLateReturn> pageInfo = new PageInfo<>(records);

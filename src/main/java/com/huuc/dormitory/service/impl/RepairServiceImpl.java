@@ -77,6 +77,18 @@ public class RepairServiceImpl implements RepairService {
     }
 
     @Override
+    public PageInfo<RepairVO> getRepairListByStudentNo(String studentNo, Integer repairType, Integer repairStatus, Integer pageNum, Integer pageSize) {
+        List<DormRepair> repairs = repairMapper.selectListByStudentNo(studentNo, repairType, repairStatus);
+        PageInfo<DormRepair> pageInfo = new PageInfo<>(repairs);
+
+        PageInfo<RepairVO> voPageInfo = new PageInfo<>();
+        BeanUtils.copyProperties(pageInfo, voPageInfo);
+        voPageInfo.setList(convertToVOList(repairs));
+
+        return voPageInfo;
+    }
+
+    @Override
     public PageInfo<RepairVO> getRepairsByBuildingId(Long buildingId, Integer pageNum, Integer pageSize) {
         List<DormRepair> repairs = repairMapper.selectByBuildingId(buildingId);
         PageInfo<DormRepair> pageInfo = new PageInfo<>(repairs);

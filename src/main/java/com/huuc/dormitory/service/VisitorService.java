@@ -21,6 +21,11 @@ public interface VisitorService {
     PageInfo<VisitorVO> getVisitorList(DormVisitor query, Integer pageNum, Integer pageSize);
 
     /**
+     * 按学号模糊查询访客列表
+     */
+    PageInfo<VisitorVO> getVisitorListByStudentNo(String studentNo, Long buildingId, Integer pageNum, Integer pageSize);
+
+    /**
      * 分页查询楼栋访客列表
      */
     PageInfo<VisitorVO> getVisitorsByBuildingId(Long buildingId, Integer pageNum, Integer pageSize);

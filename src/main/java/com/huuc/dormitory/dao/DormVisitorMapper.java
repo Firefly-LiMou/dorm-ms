@@ -35,4 +35,9 @@ public interface DormVisitorMapper {
      * 更新离开时间
      */
     int updateLeaveTime(@Param("visitorId") Long visitorId, @Param("leaveTime") LocalDateTime leaveTime);
+
+    /**
+     * 按学号模糊查询访客列表
+     */
+    List<DormVisitor> selectListByStudentNo(@Param("studentNo") String studentNo, @Param("buildingId") Long buildingId);
 }

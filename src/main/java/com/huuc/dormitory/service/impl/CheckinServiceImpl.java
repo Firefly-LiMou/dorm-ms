@@ -116,6 +116,18 @@ public class CheckinServiceImpl implements CheckinService {
         return voPageInfo;
     }
 
+    @Override
+    public PageInfo<CheckinVO> getCheckinListByStudentNo(String studentNo, Integer checkinStatus, Integer pageNum, Integer pageSize) {
+        List<DormCheckinRecord> records = checkinRecordMapper.selectListByStudentNo(studentNo, checkinStatus);
+        PageInfo<DormCheckinRecord> pageInfo = new PageInfo<>(records);
+
+        PageInfo<CheckinVO> voPageInfo = new PageInfo<>();
+        BeanUtils.copyProperties(pageInfo, voPageInfo);
+        voPageInfo.setList(convertToVOList(records));
+
+        return voPageInfo;
+    }
+
     /**
      * 办理入住
      * 事务操作：插入入住记录 + 更新床位状态为已入住

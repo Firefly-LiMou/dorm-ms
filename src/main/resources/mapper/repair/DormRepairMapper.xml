@@ -80,4 +80,23 @@
         </set>
         WHERE repair_id = #{repairId}
     </update>
+
+    <!-- 按学号模糊查询报修列表 -->
+    <select id="selectListByStudentNo" parameterType="DormRepair" resultMap="BaseResultMap">
+        SELECT r.* FROM dorm_repair r
+        LEFT JOIN sys_user su ON r.student_id = su.user_id
+        <where>
+            su.is_deleted = 0
+            <if test="studentNo != null and studentNo != ''">
+                AND su.username LIKE CONCAT('%', #{studentNo}, '%')
+            </if>
+            <if test="repairType != null">
+                AND r.repair_type = #{repairType}
+            </if>
+            <if test="repairStatus != null">
+                AND r.repair_status = #{repairStatus}
+            </if>
+        </where>
+        ORDER BY r.submit_time DESC
+    </select>
 </mapper>

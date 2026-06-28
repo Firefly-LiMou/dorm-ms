@@ -42,17 +42,22 @@ public class AdminMoveController {
     @GetMapping("/page")
     @ResponseBody
     public Result<PageInfo<MoveApplyVO>> getApplyPage(
-            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String studentNo,
             @RequestParam(required = false) Integer auditStatus,
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        DormMoveApply query = new DormMoveApply();
-        query.setStudentId(studentId);
-        query.setAuditStatus(auditStatus);
-
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<MoveApplyVO> pageInfo = moveApplyService.getApplyList(query, pageNum, pageSize);
+        PageInfo<MoveApplyVO> pageInfo;
+
+        // 如果传入学号，按学号模糊查询
+        if (studentNo != null && !studentNo.trim().isEmpty()) {
+            pageInfo = moveApplyService.getApplyListByStudentNo(studentNo.trim(), auditStatus, pageNum, pageSize);
+        } else {
+            DormMoveApply query = new DormMoveApply();
+            query.setAuditStatus(auditStatus);
+            pageInfo = moveApplyService.getApplyList(query, pageNum, pageSize);
+        }
 
         return Result.success(pageInfo);
     }

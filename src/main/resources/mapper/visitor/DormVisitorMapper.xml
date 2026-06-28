@@ -61,4 +61,20 @@
         SET leave_time = #{leaveTime}
         WHERE visitor_id = #{visitorId}
     </update>
+
+    <!-- 按学号模糊查询访客列表 -->
+    <select id="selectListByStudentNo" parameterType="DormVisitor" resultMap="BaseResultMap">
+        SELECT dv.* FROM dorm_visitor dv
+        LEFT JOIN sys_user su ON dv.student_id = su.user_id
+        <where>
+            su.is_deleted = 0
+            <if test="studentNo != null and studentNo != ''">
+                AND su.username LIKE CONCAT('%', #{studentNo}, '%')
+            </if>
+            <if test="buildingId != null">
+                AND dv.building_id = #{buildingId}
+            </if>
+        </where>
+        ORDER BY dv.visit_time DESC
+    </select>
 </mapper>

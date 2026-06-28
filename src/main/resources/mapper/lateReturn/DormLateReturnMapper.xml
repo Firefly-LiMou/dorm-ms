@@ -74,4 +74,20 @@
         GROUP BY db.building_id, db.building_name
         ORDER BY db.building_name
     </select>
+
+    <!-- 按学号模糊查询晚归记录列表 -->
+    <select id="selectListByStudentNo" parameterType="DormLateReturn" resultMap="BaseResultMap">
+        SELECT dlr.* FROM dorm_late_return dlr
+        LEFT JOIN sys_user su ON dlr.student_id = su.user_id
+        <where>
+            su.is_deleted = 0
+            <if test="studentNo != null and studentNo != ''">
+                AND su.username LIKE CONCAT('%', #{studentNo}, '%')
+            </if>
+            <if test="buildingId != null">
+                AND dlr.building_id = #{buildingId}
+            </if>
+        </where>
+        ORDER BY dlr.late_time DESC
+    </select>
 </mapper>

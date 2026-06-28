@@ -49,17 +49,22 @@ public class AdminCheckinController {
     @GetMapping("/page")
     @ResponseBody
     public Result<PageInfo<CheckinVO>> getCheckinPage(
-            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String studentNo,
             @RequestParam(required = false) Integer checkinStatus,
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        DormCheckinRecord query = new DormCheckinRecord();
-        query.setStudentId(studentId);
-        query.setCheckinStatus(checkinStatus);
-
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<CheckinVO> pageInfo = checkinService.getCheckinList(query, pageNum, pageSize);
+        PageInfo<CheckinVO> pageInfo;
+
+        // 如果传入学号，按学号模糊查询
+        if (studentNo != null && !studentNo.trim().isEmpty()) {
+            pageInfo = checkinService.getCheckinListByStudentNo(studentNo.trim(), checkinStatus, pageNum, pageSize);
+        } else {
+            DormCheckinRecord query = new DormCheckinRecord();
+            query.setCheckinStatus(checkinStatus);
+            pageInfo = checkinService.getCheckinList(query, pageNum, pageSize);
+        }
 
         return Result.success(pageInfo);
     }

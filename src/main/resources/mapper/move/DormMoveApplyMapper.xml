@@ -80,4 +80,20 @@
         SELECT COUNT(*) FROM dorm_move_apply
         WHERE student_id = #{studentId} AND audit_status = 0
     </select>
+
+    <!-- 按学号模糊查询调宿申请列表 -->
+    <select id="selectListByStudentNo" parameterType="DormMoveApply" resultMap="BaseResultMap">
+        SELECT ma.* FROM dorm_move_apply ma
+        LEFT JOIN sys_user su ON ma.student_id = su.user_id
+        <where>
+            su.is_deleted = 0
+            <if test="studentNo != null and studentNo != ''">
+                AND su.username LIKE CONCAT('%', #{studentNo}, '%')
+            </if>
+            <if test="auditStatus != null">
+                AND ma.audit_status = #{auditStatus}
+            </if>
+        </where>
+        ORDER BY ma.apply_time DESC
+    </select>
 </mapper>

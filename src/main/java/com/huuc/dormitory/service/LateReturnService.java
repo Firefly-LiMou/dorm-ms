@@ -24,6 +24,11 @@ public interface LateReturnService {
     PageInfo<LateReturnVO> getRecordList(DormLateReturn query, Integer pageNum, Integer pageSize);
 
     /**
+     * 按学号模糊查询晚归记录列表
+     */
+    PageInfo<LateReturnVO> getRecordListByStudentNo(String studentNo, Long buildingId, Integer pageNum, Integer pageSize);
+
+    /**
      * 分页查询我的晚归记录
      */
     PageInfo<LateReturnVO> getMyRecords(Long studentId, Integer pageNum, Integer pageSize);

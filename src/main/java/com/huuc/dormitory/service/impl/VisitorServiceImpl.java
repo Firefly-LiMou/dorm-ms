@@ -73,6 +73,18 @@ public class VisitorServiceImpl implements VisitorService {
         return voPageInfo;
     }
 
+    @Override
+    public PageInfo<VisitorVO> getVisitorListByStudentNo(String studentNo, Long buildingId, Integer pageNum, Integer pageSize) {
+        List<DormVisitor> visitors = visitorMapper.selectListByStudentNo(studentNo, buildingId);
+        PageInfo<DormVisitor> pageInfo = new PageInfo<>(visitors);
+
+        PageInfo<VisitorVO> voPageInfo = new PageInfo<>();
+        BeanUtils.copyProperties(pageInfo, voPageInfo);
+        voPageInfo.setList(convertToVOList(visitors));
+
+        return voPageInfo;
+    }
+
     /**
      * 录入访客
      * 自动关联被访学生在住楼栋

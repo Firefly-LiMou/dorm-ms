@@ -22,6 +22,11 @@ public interface RepairService {
     PageInfo<RepairVO> getRepairList(DormRepair query, Integer pageNum, Integer pageSize);
 
     /**
+     * 按学号模糊查询报修列表
+     */
+    PageInfo<RepairVO> getRepairListByStudentNo(String studentNo, Integer repairType, Integer repairStatus, Integer pageNum, Integer pageSize);
+
+    /**
      * 分页查询我的报修
      */
     PageInfo<RepairVO> getMyRepairs(Long studentId, Integer pageNum, Integer pageSize);

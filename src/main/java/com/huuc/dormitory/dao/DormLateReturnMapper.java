@@ -40,4 +40,9 @@ public interface DormLateReturnMapper {
      * 按楼栋月度统计晚归人次
      */
     List<LateReturnStatVO> selectMonthlyStats(@Param("managerId") Long managerId, @Param("yearMonth") String yearMonth);
+
+    /**
+     * 按学号模糊查询晚归记录列表
+     */
+    List<DormLateReturn> selectListByStudentNo(@Param("studentNo") String studentNo, @Param("buildingId") Long buildingId);
 }

@@ -57,17 +57,22 @@ public class AdminVisitorController {
     @GetMapping("/page")
     @ResponseBody
     public Result<PageInfo<VisitorVO>> getVisitorPage(
-            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String studentNo,
             @RequestParam(required = false) Long buildingId,
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        DormVisitor query = new DormVisitor();
-        query.setStudentId(studentId);
-        query.setBuildingId(buildingId);
-
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<VisitorVO> pageInfo = visitorService.getVisitorList(query, pageNum, pageSize);
+        PageInfo<VisitorVO> pageInfo;
+
+        // 如果传入学号，按学号模糊查询
+        if (studentNo != null && !studentNo.trim().isEmpty()) {
+            pageInfo = visitorService.getVisitorListByStudentNo(studentNo.trim(), buildingId, pageNum, pageSize);
+        } else {
+            DormVisitor query = new DormVisitor();
+            query.setBuildingId(buildingId);
+            pageInfo = visitorService.getVisitorList(query, pageNum, pageSize);
+        }
 
         return Result.success(pageInfo);
     }

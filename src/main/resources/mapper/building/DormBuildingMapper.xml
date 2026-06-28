@@ -35,7 +35,7 @@
                 AND building_name LIKE CONCAT('%', #{buildingName}, '%')
             </if>
             <if test="area != null and area != ''">
-                AND area = #{area}
+                AND area LIKE CONCAT('%', #{area}, '%')
             </if>
             <if test="managerId != null">
                 AND manager_id = #{managerId}

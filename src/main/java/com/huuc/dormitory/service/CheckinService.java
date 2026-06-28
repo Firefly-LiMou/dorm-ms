@@ -37,6 +37,11 @@ public interface CheckinService {
     PageInfo<CheckinVO> getCheckinListByBuildingId(Long buildingId, Integer pageNum, Integer pageSize);
 
     /**
+     * 按学号模糊查询入住记录
+     */
+    PageInfo<CheckinVO> getCheckinListByStudentNo(String studentNo, Integer checkinStatus, Integer pageNum, Integer pageSize);
+
+    /**
      * 办理入住
      * 事务操作：插入入住记录 + 更新床位状态为已入住
      *

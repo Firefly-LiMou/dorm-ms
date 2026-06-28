@@ -44,4 +44,9 @@ public interface DormMoveApplyMapper {
      * 统计学生待审批申请数
      */
     int countPendingByStudentId(Long studentId);
+
+    /**
+     * 按学号模糊查询调宿申请列表
+     */
+    List<DormMoveApply> selectListByStudentNo(@Param("studentNo") String studentNo, @Param("auditStatus") Integer auditStatus);
 }

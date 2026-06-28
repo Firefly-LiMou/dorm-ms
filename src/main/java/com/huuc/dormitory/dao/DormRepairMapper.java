@@ -39,4 +39,9 @@ public interface DormRepairMapper {
      * 更新报修
      */
     int update(DormRepair repair);
+
+    /**
+     * 按学号模糊查询报修列表
+     */
+    List<DormRepair> selectListByStudentNo(@Param("studentNo") String studentNo, @Param("repairType") Integer repairType, @Param("repairStatus") Integer repairStatus);
 }

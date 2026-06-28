@@ -96,4 +96,20 @@
           AND cr.student_id != #{excludeStudentId}
         ORDER BY cr.checkin_time ASC
     </select>
+
+    <!-- 按学号模糊查询入住记录列表 -->
+    <select id="selectListByStudentNo" parameterType="DormCheckinRecord" resultMap="BaseResultMap">
+        SELECT cr.* FROM dorm_checkin_record cr
+        LEFT JOIN sys_user su ON cr.student_id = su.user_id
+        <where>
+            su.is_deleted = 0
+            <if test="studentNo != null and studentNo != ''">
+                AND su.username LIKE CONCAT('%', #{studentNo}, '%')
+            </if>
+            <if test="checkinStatus != null">
+                AND cr.checkin_status = #{checkinStatus}
+            </if>
+        </where>
+        ORDER BY cr.checkin_time DESC
+    </select>
 </mapper>

@@ -59,17 +59,22 @@ public class AdminLateReturnController {
     @GetMapping("/page")
     @ResponseBody
     public Result<PageInfo<LateReturnVO>> getRecordPage(
-            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String studentNo,
             @RequestParam(required = false) Long buildingId,
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        DormLateReturn query = new DormLateReturn();
-        query.setStudentId(studentId);
-        query.setBuildingId(buildingId);
-
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<LateReturnVO> pageInfo = lateReturnService.getRecordList(query, pageNum, pageSize);
+        PageInfo<LateReturnVO> pageInfo;
+
+        // 如果传入学号，按学号模糊查询
+        if (studentNo != null && !studentNo.trim().isEmpty()) {
+            pageInfo = lateReturnService.getRecordListByStudentNo(studentNo.trim(), buildingId, pageNum, pageSize);
+        } else {
+            DormLateReturn query = new DormLateReturn();
+            query.setBuildingId(buildingId);
+            pageInfo = lateReturnService.getRecordList(query, pageNum, pageSize);
+        }
 
         return Result.success(pageInfo);
     }
