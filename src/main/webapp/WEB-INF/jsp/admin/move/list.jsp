@@ -186,7 +186,7 @@
          */
         function loadData(params) {
             var queryParams = $.extend({}, params, {
-                studentId: $('#searchStudentId').val().trim() || null,
+                studentNo: $('#searchStudentId').val().trim() || null,
                 auditStatus: $('#searchStatus').val() || null
             });
 

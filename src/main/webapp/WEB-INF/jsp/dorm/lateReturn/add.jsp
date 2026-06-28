@@ -227,9 +227,12 @@
             // 禁用提交按钮
             $('#btnSubmit').prop('disabled', true).text('保存中...');
 
+            // 格式化lateTime：将 "yyyy-MM-ddTHH:mm" 转换为 "yyyy-MM-dd HH:mm:ss"
+            var formattedLateTime = lateTime ? lateTime.replace('T', ' ') + ':00' : null;
+
             var formData = {
                 studentId: parseInt(studentId),
-                lateTime: lateTime,
+                lateTime: formattedLateTime,
                 lateReason: lateReason || null
             };
 

@@ -275,11 +275,14 @@
             // 禁用提交按钮
             $('#btnSubmit').prop('disabled', true).text('保存中...');
 
+            // 格式化visitTime：将 "yyyy-MM-ddTHH:mm" 转换为 "yyyy-MM-dd HH:mm:ss"
+            var formattedVisitTime = visitTime ? visitTime.replace('T', ' ') + ':00' : null;
+
             var formData = {
                 studentId: parseInt(studentId),
                 visitorName: visitorName,
                 idCard: idCard,
-                visitTime: visitTime,
+                visitTime: formattedVisitTime,
                 visitReason: visitReason || null
             };
 

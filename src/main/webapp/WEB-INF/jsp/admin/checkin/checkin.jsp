@@ -49,17 +49,36 @@
                             </div>
                         </div>
                     </div>
-                    <!-- 学生信息展示区 -->
-                    <div id="studentInfo" style="display: none;" class="mt-3">
-                        <div class="alert alert-success">
-                            <div class="row">
-                                <div class="col-md-3"><strong>姓名：</strong><span id="sName"></span></div>
-                                <div class="col-md-3"><strong>学号：</strong><span id="sNo"></span></div>
-                                <div class="col-md-3"><strong>年级：</strong><span id="sGrade"></span></div>
-                                <div class="col-md-3"><strong>专业：</strong><span id="sMajor"></span></div>
-                            </div>
+                    <!-- 查询结果列表 -->
+                    <div id="studentResult" style="display: none;" class="mt-3">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>学号</th>
+                                        <th>姓名</th>
+                                        <th>年级</th>
+                                        <th>专业</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentTableBody">
+                                </tbody>
+                            </table>
                         </div>
-                        <input type="hidden" id="studentId">
+                    </div>
+                    <!-- 已选学生信息 -->
+                    <div id="selectedStudent" style="display: none;" class="mt-3">
+                        <div class="alert alert-success d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="fas fa-user-check mr-2"></i>
+                                已选学生：<strong id="selectedStudentInfo"></strong>
+                                <input type="hidden" id="studentId">
+                            </span>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearSelectedStudent()">
+                                <i class="fas fa-times mr-1"></i>重新选择
+                            </button>
+                        </div>
                     </div>
                     <!-- 错误提示 -->
                     <div id="studentError" style="display: none;" class="mt-3">
@@ -167,7 +186,7 @@
         });
 
         /**
-         * 查询学生
+         * 查询学生（支持模糊查询）
          */
         function searchStudent() {
             var studentNo = $('#studentNo').val().trim();
@@ -183,18 +202,18 @@
                 username: studentNo,
                 roleType: 3,
                 pageNum: 1,
-                pageSize: 1
+                pageSize: 10
             }, function(result) {
                 if (result.data && result.data.list && result.data.list.length > 0) {
-                    var student = result.data.list[0];
-                    // 检查学号是否完全匹配
-                    if (student.username === studentNo) {
-                        showStudentInfo(student);
+                    // 如果只有一个结果，直接选中
+                    if (result.data.list.length === 1) {
+                        showStudentInfo(result.data.list[0]);
                     } else {
-                        showStudentError('未找到学号为 ' + studentNo + ' 的学生');
+                        // 多个结果，显示列表供选择
+                        showStudentList(result.data.list);
                     }
                 } else {
-                    showStudentError('未找到学号为 ' + studentNo + ' 的学生');
+                    showStudentError('未找到学号包含 "' + studentNo + '" 的学生');
                 }
             }, function() {
                 showStudentError('查询失败，请重试');
@@ -202,19 +221,79 @@
         }
 
         /**
-         * 显示学生信息
+         * 显示学生列表供选择
+         * @param {Array} students - 学生列表
+         */
+        function showStudentList(students) {
+            var $tbody = $('#studentTableBody');
+            $tbody.empty();
+
+            students.forEach(function(student) {
+                var grade = (student.grade || '-').replace(/'/g, "\\'");
+                var major = (student.major || '-').replace(/'/g, "\\'");
+                var row = '<tr>';
+                row += '<td>' + (student.username || '-') + '</td>';
+                row += '<td>' + (student.realName || '-') + '</td>';
+                row += '<td>' + (student.grade || '-') + '</td>';
+                row += '<td>' + (student.major || '-') + '</td>';
+                row += '<td><button class="btn btn-sm btn-primary" onclick="selectStudent(' + student.userId + ', \'' + student.username + '\', \'' + student.realName + '\', \'' + grade + '\', \'' + major + '\')"><i class="fas fa-check mr-1"></i>选择</button></td>';
+                row += '</tr>';
+                $tbody.append(row);
+            });
+
+            $('#studentError').hide();
+            $('#studentResult').show();
+            $('#selectedStudent').hide();
+            $('#bedSection').hide();
+            $('#submitSection').hide();
+        }
+
+        /**
+         * 从列表中选择学生
+         * @param {number} userId - 学生ID
+         * @param {string} username - 学号
+         * @param {string} realName - 姓名
+         * @param {string} grade - 年级
+         * @param {string} major - 专业
+         */
+        function selectStudent(userId, username, realName, grade, major) {
+            selectedStudentId = userId;
+            $('#studentId').val(userId);
+            $('#selectedStudentInfo').text(username + ' - ' + realName);
+            $('#selectedStudent').show();
+            $('#studentResult').hide();
+            $('#bedSection').show();
+            $('#submitSection').show();
+            $('#studentNo').val('');
+            hideStudentError();
+        }
+
+        /**
+         * 显示学生信息（只有一个结果时直接选中）
          * @param {object} student - 学生信息
          */
         function showStudentInfo(student) {
             selectedStudentId = student.userId;
             $('#studentId').val(student.userId);
-            $('#sName').text(student.realName || '-');
-            $('#sNo').text(student.username || '-');
-            $('#sGrade').text(student.grade || '-');
-            $('#sMajor').text(student.major || '-');
-            $('#studentInfo').show();
+            $('#selectedStudentInfo').text(student.username + ' - ' + student.realName);
+            $('#selectedStudent').show();
+            $('#studentResult').hide();
             $('#bedSection').show();
             $('#submitSection').show();
+            $('#studentNo').val('');
+            hideStudentError();
+        }
+
+        /**
+         * 清除已选学生
+         */
+        function clearSelectedStudent() {
+            selectedStudentId = null;
+            $('#studentId').val('');
+            $('#selectedStudentInfo').text('');
+            $('#selectedStudent').hide();
+            $('#bedSection').hide();
+            $('#submitSection').hide();
         }
 
         /**
@@ -223,7 +302,8 @@
         function hideStudentInfo() {
             selectedStudentId = null;
             $('#studentId').val('');
-            $('#studentInfo').hide();
+            $('#selectedStudent').hide();
+            $('#studentResult').hide();
             $('#bedSection').hide();
             $('#submitSection').hide();
         }
