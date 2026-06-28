@@ -346,12 +346,6 @@
      * 初始化页面公共功能
      */
     $(document).ready(function() {
-        // 侧边栏折叠功能
-        $('.sidebar-toggle').on('click', function() {
-            $('.sidebar').toggleClass('collapsed');
-            $('.content-wrapper').toggleClass('sidebar-collapsed');
-        });
-
         // 移动端侧边栏切换
         $('.navbar-toggler').on('click', function() {
             $('.sidebar').toggleClass('show');
@@ -364,22 +358,15 @@
             }
         });
 
-        // 菜单项展开/收起
-        $('.menu-link').on('click', function() {
-            var $parent = $(this).parent();
-            if ($parent.find('.submenu').length > 0) {
-                $parent.toggleClass('expanded');
-            }
-        });
-
-        // 高亮当前页面菜单
+        // 高亮当前页面菜单，使用前缀匹配支持非列表页面
         var currentPath = window.location.pathname;
-        $('.sidebar-menu a').each(function() {
+        $('.sidebar-menu .menu-link').each(function() {
             var href = $(this).attr('href');
-            if (href && currentPath.indexOf(href) !== -1) {
+            if (!href || href === 'javascript:void(0)' || href === '#') return;
+            // 提取模块前缀（去掉末段页面名），如 /admin/building/list → /admin/building/
+            var prefix = href.replace(/\/[^\/]+$/, '/');
+            if (currentPath.indexOf(prefix) !== -1) {
                 $(this).addClass('active');
-                // 展开父菜单
-                $(this).closest('.menu-item').addClass('expanded');
             }
         });
 
