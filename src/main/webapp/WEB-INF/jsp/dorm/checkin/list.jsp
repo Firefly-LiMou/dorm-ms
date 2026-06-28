@@ -40,6 +40,10 @@
                 <div class="form-container mb-4">
                     <form id="searchForm" class="row g-3">
                         <div class="col-md-3">
+                            <label for="searchStudentNo" class="form-label">学号</label>
+                            <input type="text" class="form-control" id="searchStudentNo" placeholder="请输入学号">
+                        </div>
+                        <div class="col-md-3">
                             <label for="searchStatus" class="form-label">入住状态</label>
                             <select class="form-control" id="searchStatus">
                                 <option value="">全部</option>
@@ -121,9 +125,20 @@
          * @param {object} params - 查询参数
          */
         function loadData(params) {
-            var queryParams = $.extend({}, params, {
-                checkinStatus: $('#searchStatus').val() || null
-            });
+            var studentNo = $('#searchStudentNo').val().trim();
+            var checkinStatus = $('#searchStatus').val();
+
+            var queryParams = {
+                pageNum: params.pageNum || 1,
+                pageSize: params.pageSize || 10
+            };
+
+            if (studentNo) {
+                queryParams.studentNo = studentNo;
+            }
+            if (checkinStatus) {
+                queryParams.checkinStatus = checkinStatus;
+            }
 
             $.ajaxRequest('/dorm/checkin/page', 'GET', queryParams, function(result) {
                 if (result.data) {
@@ -243,6 +258,7 @@
         }
 
         function resetSearch() {
+            $('#searchStudentNo').val('');
             $('#searchStatus').val('');
             search();
         }
