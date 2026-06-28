@@ -207,8 +207,12 @@
                     pageQueryParams.pageNum = result.data.pageNum;
                     pageQueryParams.pageSize = result.data.pageSize;
                 }
-            }, function() {
-                $('#tableBody').html('<tr><td colspan="8" class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadData(pageQueryParams)" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></td></tr>');
+            }, function(result) {
+                if (result.msg && result.msg.indexOf('未负责任何楼栋') !== -1) {
+                    $('#tableBody').html('<tr><td colspan="8" class="text-center py-4 text-warning"><i class="fas fa-exclamation-triangle mr-2"></i>您暂未负责任何楼栋，请联系管理员</td></tr>');
+                } else {
+                    $('#tableBody').html('<tr><td colspan="8" class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadData(pageQueryParams)" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></td></tr>');
+                }
             });
         }
 
