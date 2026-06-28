@@ -49,4 +49,14 @@ public interface DormMoveApplyMapper {
      * 按学号模糊查询调宿申请列表
      */
     List<DormMoveApply> selectListByStudentNo(@Param("studentNo") String studentNo, @Param("auditStatus") Integer auditStatus);
+
+    /**
+     * 按学号模糊查询本楼栋调宿申请列表
+     */
+    List<DormMoveApply> selectListByStudentNoAndBuildingId(@Param("studentNo") String studentNo, @Param("buildingId") Long buildingId, @Param("auditStatus") Integer auditStatus);
+
+    /**
+     * 按楼栋查询调宿申请列表
+     */
+    List<DormMoveApply> selectListByBuildingId(@Param("buildingId") Long buildingId, @Param("auditStatus") Integer auditStatus);
 }

@@ -27,6 +27,16 @@ public interface MoveApplyService {
     PageInfo<MoveApplyVO> getApplyListByStudentNo(String studentNo, Integer auditStatus, Integer pageNum, Integer pageSize);
 
     /**
+     * 按学号模糊查询本楼栋调宿申请列表
+     */
+    PageInfo<MoveApplyVO> getApplyListByStudentNoAndBuildingId(String studentNo, Long buildingId, Integer auditStatus, Integer pageNum, Integer pageSize);
+
+    /**
+     * 按楼栋查询调宿申请列表
+     */
+    PageInfo<MoveApplyVO> getApplyListByBuildingId(Long buildingId, Integer auditStatus, Integer pageNum, Integer pageSize);
+
+    /**
      * 分页查询我的调宿申请
      */
     PageInfo<MoveApplyVO> getMyApplies(Long studentId, Integer pageNum, Integer pageSize);

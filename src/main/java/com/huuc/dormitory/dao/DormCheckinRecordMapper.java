@@ -59,4 +59,14 @@ public interface DormCheckinRecordMapper {
      * 按学号模糊查询入住记录列表
      */
     List<DormCheckinRecord> selectListByStudentNo(@Param("studentNo") String studentNo, @Param("checkinStatus") Integer checkinStatus);
+
+    /**
+     * 按学号模糊查询本楼栋入住记录列表
+     */
+    List<DormCheckinRecord> selectListByStudentNoAndBuildingId(@Param("studentNo") String studentNo, @Param("buildingId") Long buildingId, @Param("checkinStatus") Integer checkinStatus);
+
+    /**
+     * 按楼栋和状态查询入住记录列表
+     */
+    List<DormCheckinRecord> selectListByBuildingIdAndStatus(@Param("buildingId") Long buildingId, @Param("checkinStatus") Integer checkinStatus);
 }

@@ -112,4 +112,37 @@
         </where>
         ORDER BY cr.checkin_time DESC
     </select>
+
+    <!-- 按学号模糊查询本楼栋入住记录列表 -->
+    <select id="selectListByStudentNoAndBuildingId" resultMap="BaseResultMap">
+        SELECT cr.* FROM dorm_checkin_record cr
+        LEFT JOIN sys_user su ON cr.student_id = su.user_id
+        LEFT JOIN dorm_bed db ON cr.bed_id = db.bed_id
+        LEFT JOIN dorm_room dr ON db.room_id = dr.room_id
+        <where>
+            su.is_deleted = 0
+            AND dr.building_id = #{buildingId}
+            <if test="studentNo != null and studentNo != ''">
+                AND su.username LIKE CONCAT('%', #{studentNo}, '%')
+            </if>
+            <if test="checkinStatus != null">
+                AND cr.checkin_status = #{checkinStatus}
+            </if>
+        </where>
+        ORDER BY cr.checkin_time DESC
+    </select>
+
+    <!-- 按楼栋和状态查询入住记录列表 -->
+    <select id="selectListByBuildingIdAndStatus" resultMap="BaseResultMap">
+        SELECT cr.* FROM dorm_checkin_record cr
+        LEFT JOIN dorm_bed db ON cr.bed_id = db.bed_id
+        LEFT JOIN dorm_room dr ON db.room_id = dr.room_id
+        <where>
+            dr.building_id = #{buildingId}
+            <if test="checkinStatus != null">
+                AND cr.checkin_status = #{checkinStatus}
+            </if>
+        </where>
+        ORDER BY cr.checkin_time DESC
+    </select>
 </mapper>

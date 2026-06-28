@@ -96,4 +96,37 @@
         </where>
         ORDER BY ma.apply_time DESC
     </select>
+
+    <!-- 按学号模糊查询本楼栋调宿申请列表 -->
+    <select id="selectListByStudentNoAndBuildingId" resultMap="BaseResultMap">
+        SELECT ma.* FROM dorm_move_apply ma
+        LEFT JOIN sys_user su ON ma.student_id = su.user_id
+        LEFT JOIN dorm_bed db ON ma.original_bed_id = db.bed_id
+        LEFT JOIN dorm_room dr ON db.room_id = dr.room_id
+        <where>
+            su.is_deleted = 0
+            AND dr.building_id = #{buildingId}
+            <if test="studentNo != null and studentNo != ''">
+                AND su.username LIKE CONCAT('%', #{studentNo}, '%')
+            </if>
+            <if test="auditStatus != null">
+                AND ma.audit_status = #{auditStatus}
+            </if>
+        </where>
+        ORDER BY ma.apply_time DESC
+    </select>
+
+    <!-- 按楼栋查询调宿申请列表 -->
+    <select id="selectListByBuildingId" resultMap="BaseResultMap">
+        SELECT ma.* FROM dorm_move_apply ma
+        LEFT JOIN dorm_bed db ON ma.original_bed_id = db.bed_id
+        LEFT JOIN dorm_room dr ON db.room_id = dr.room_id
+        <where>
+            dr.building_id = #{buildingId}
+            <if test="auditStatus != null">
+                AND ma.audit_status = #{auditStatus}
+            </if>
+        </where>
+        ORDER BY ma.apply_time DESC
+    </select>
 </mapper>

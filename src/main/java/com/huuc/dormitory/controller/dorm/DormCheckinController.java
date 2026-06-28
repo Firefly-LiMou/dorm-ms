@@ -55,23 +55,29 @@ public class DormCheckinController {
     @GetMapping("/page")
     @ResponseBody
     public Result<PageInfo<CheckinVO>> getCheckinPage(
-            @RequestParam(required = false) Long buildingId,
+            @RequestParam(required = false) String studentNo,
+            @RequestParam(required = false) Integer checkinStatus,
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             HttpSession session) {
 
-        // 如果未指定楼栋，使用宿管负责的第一个楼栋
-        if (buildingId == null) {
-            Long managerId = SessionUtil.getCurrentUserId(session);
-            List<BuildingVO> buildings = buildingService.getBuildingsByManagerId(managerId);
-            if (buildings.isEmpty()) {
-                return Result.fail("您暂未负责任何楼栋，请联系管理员");
-            }
-            buildingId = buildings.get(0).getBuildingId();
+        // 获取宿管负责的楼栋
+        Long managerId = SessionUtil.getCurrentUserId(session);
+        List<BuildingVO> buildings = buildingService.getBuildingsByManagerId(managerId);
+        if (buildings.isEmpty()) {
+            return Result.fail("您暂未负责任何楼栋，请联系管理员");
         }
+        Long buildingId = buildings.get(0).getBuildingId();
 
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<CheckinVO> pageInfo = checkinService.getCheckinListByBuildingId(buildingId, pageNum, pageSize);
+        PageInfo<CheckinVO> pageInfo;
+
+        // 如果传入学号，按学号模糊查询本楼栋
+        if (studentNo != null && !studentNo.trim().isEmpty()) {
+            pageInfo = checkinService.getCheckinListByStudentNoAndBuildingId(studentNo.trim(), buildingId, checkinStatus, pageNum, pageSize);
+        } else {
+            pageInfo = checkinService.getCheckinListByBuildingIdAndStatus(buildingId, checkinStatus, pageNum, pageSize);
+        }
 
         return Result.success(pageInfo);
     }
