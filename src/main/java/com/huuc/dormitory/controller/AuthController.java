@@ -28,11 +28,11 @@ public class AuthController {
     private UserService userService;
 
     /**
-     * 根路径重定向到登录页
+     * 根路径返回项目展示页
      */
     @GetMapping("/")
     public String index() {
-        return "redirect:/login";
+        return "index";
     }
 
     /**
