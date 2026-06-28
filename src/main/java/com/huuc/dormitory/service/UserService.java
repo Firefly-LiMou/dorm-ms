@@ -1,9 +1,11 @@
 package com.huuc.dormitory.service;
 
+import com.huuc.dormitory.dto.ImportResultDTO;
 import com.huuc.dormitory.dto.LoginDTO;
 import com.huuc.dormitory.dto.PasswordDTO;
 import com.huuc.dormitory.dto.UserDTO;
 import com.huuc.dormitory.entity.SysUser;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -85,4 +87,12 @@ public interface UserService {
      * 判断是否需要强制修改密码（密码等于默认密码）
      */
     boolean needChangePassword(SysUser user);
+
+    /**
+     * 批量导入用户（CSV文件）
+     *
+     * @param file CSV文件
+     * @return 导入结果
+     */
+    ImportResultDTO importUsers(MultipartFile file);
 }

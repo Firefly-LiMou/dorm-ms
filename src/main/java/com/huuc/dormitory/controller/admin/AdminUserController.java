@@ -4,13 +4,16 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.huuc.dormitory.common.aop.OperLog;
 import com.huuc.dormitory.common.enums.OperTypeEnum;
+import com.huuc.dormitory.common.exception.BusinessException;
 import com.huuc.dormitory.common.result.Result;
+import com.huuc.dormitory.dto.ImportResultDTO;
 import com.huuc.dormitory.dto.UserDTO;
 import com.huuc.dormitory.entity.SysUser;
 import com.huuc.dormitory.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -130,5 +133,27 @@ public class AdminUserController {
     public Result<List<SysUser>> getUsersByRoleType(@PathVariable Integer roleType) {
         List<SysUser> users = userService.getUsersByRoleType(roleType);
         return Result.success(users);
+    }
+
+    /**
+     * 批量导入用户
+     */
+    @PostMapping("/import")
+    @ResponseBody
+    @OperLog(module = "用户管理", type = OperTypeEnum.ADD, desc = "批量导入用户")
+    public Result<ImportResultDTO> importUsers(@RequestParam("file") MultipartFile file) {
+        // 校验文件非空
+        if (file.isEmpty()) {
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "请选择要导入的文件");
+        }
+
+        // 校验文件扩展名
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || !originalFilename.toLowerCase().endsWith(".csv")) {
+            throw new BusinessException(BusinessException.CODE_BAD_REQUEST, "仅支持CSV格式文件");
+        }
+
+        ImportResultDTO result = userService.importUsers(file);
+        return Result.success(result);
     }
 }
