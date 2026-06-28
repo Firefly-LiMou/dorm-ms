@@ -31,9 +31,14 @@
                         <h4 style="color: #333; margin-bottom: 8px;">用户管理</h4>
                         <p style="color: #666; margin: 0;">管理系统中的所有用户账号</p>
                     </div>
-                    <a href="${pageContext.request.contextPath}/admin/user/addPage" class="btn btn-primary">
-                        <i class="fas fa-plus mr-2"></i>新增用户
-                    </a>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-success" onclick="showImportModal()">
+                            <i class="fas fa-file-import mr-1"></i>批量导入
+                        </button>
+                        <a href="${pageContext.request.contextPath}/admin/user/addPage" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i>新增用户
+                        </a>
+                    </div>
                 </div>
 
                 <!-- 查询区域 -->
@@ -108,6 +113,41 @@
 
             <!-- 底部 -->
             <%@ include file="/WEB-INF/jsp/common/footer.jsp" %>
+        </div>
+    </div>
+
+    <!-- 批量导入模态框 -->
+    <div class="modal fade" id="importModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">批量导入用户</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">选择CSV文件</label>
+                        <input type="file" class="form-control" id="importFile" accept=".csv">
+                        <div class="form-text">
+                            仅支持CSV格式文件，最大1MB。
+                            <a href="${pageContext.request.contextPath}/static/template/用户导入模板.csv" download>下载模板</a>
+                        </div>
+                    </div>
+                    <!-- 导入结果展示区 -->
+                    <div id="importResult" style="display: none;">
+                        <div class="alert" id="importResultAlert">
+                            <div id="importResultMsg"></div>
+                            <div id="importResultDetails" style="margin-top: 10px; max-height: 200px; overflow-y: auto;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="btnImport" onclick="doImport()">
+                        <i class="fas fa-upload mr-1"></i>开始导入
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -324,6 +364,105 @@
         function getRoleBadge(roleType) {
             var badgeMap = {1: 'bg-primary', 2: 'bg-success', 3: 'bg-info'};
             return badgeMap[roleType] || 'bg-secondary';
+        }
+
+        /**
+         * 显示导入模态框
+         */
+        function showImportModal() {
+            $('#importFile').val('');
+            $('#importResult').hide();
+            $('#importResultDetails').empty();
+            $('#btnImport').prop('disabled', false).html('<i class="fas fa-upload mr-1"></i>开始导入');
+            $('#importModal').modal('show');
+        }
+
+        /**
+         * 执行导入
+         */
+        function doImport() {
+            var fileInput = document.getElementById('importFile');
+            var file = fileInput.files[0];
+
+            if (!file) {
+                $.toast('warning', '请选择要导入的文件');
+                return;
+            }
+
+            // 校验文件扩展名
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                $.toast('error', '仅支持CSV格式文件');
+                return;
+            }
+
+            // 校验文件大小（1MB）
+            if (file.size > 1048576) {
+                $.toast('error', '文件大小不能超过1MB');
+                return;
+            }
+
+            // 禁用按钮
+            $('#btnImport').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>导入中...');
+
+            var formData = new FormData();
+            formData.append('file', file);
+
+            $.ajax({
+                url: $.buildUrl('/admin/user/import'),
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                timeout: 60000,
+                success: function(result) {
+                    if (result.code === 200) {
+                        showImportResult(result.data);
+                        loadData(pageQueryParams);
+                    } else if (result.code === 401) {
+                        window.location.href = $.buildUrl('/login');
+                    } else {
+                        $.toast('error', result.msg || '导入失败');
+                    }
+                    $('#btnImport').prop('disabled', false).html('<i class="fas fa-upload mr-1"></i>开始导入');
+                },
+                error: function(xhr, status, error) {
+                    $.toast('error', '请求失败：' + error);
+                    $('#btnImport').prop('disabled', false).html('<i class="fas fa-upload mr-1"></i>开始导入');
+                }
+            });
+        }
+
+        /**
+         * 显示导入结果
+         * @param {object} data - 导入结果
+         */
+        function showImportResult(data) {
+            var $result = $('#importResult');
+            var $alert = $('#importResultAlert');
+            var $msg = $('#importResultMsg');
+            var $details = $('#importResultDetails');
+
+            $details.empty();
+
+            if (data.failCount === 0) {
+                $alert.attr('class', 'alert alert-success');
+                $msg.html('<i class="fas fa-check-circle mr-2"></i>导入成功！共导入 <strong>' + data.successCount + '</strong> 条记录。');
+            } else {
+                $alert.attr('class', 'alert alert-warning');
+                $msg.html('<i class="fas fa-exclamation-triangle mr-2"></i>导入完成！成功 <strong>' + data.successCount + '</strong> 条，失败 <strong>' + data.failCount + '</strong> 条。');
+
+                if (data.failDetails && data.failDetails.length > 0) {
+                    var detailHtml = '<ul class="mb-0" style="padding-left: 20px;">';
+                    data.failDetails.forEach(function(detail) {
+                        detailHtml += '<li>第' + detail.row + '行：' + detail.reason + '</li>';
+                    });
+                    detailHtml += '</ul>';
+                    $details.html(detailHtml);
+                }
+            }
+
+            $result.show();
         }
     </script>
 </body>
