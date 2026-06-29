@@ -1,6 +1,6 @@
 /**
  * 高校公寓管理系统 - 公共JS工具函数
- * 版本：v1.0
+ * 版本：v2.0
  * 说明：封装公共工具函数，提供统一的AJAX请求、错误处理、提示消息等功能
  */
 
@@ -47,7 +47,6 @@
                         successCallback(result);
                     }
                 } else if (result.code === 401) {
-                    // 未登录，跳转登录页
                     $.toast('warning', '未登录或登录已过期，请重新登录');
                     setTimeout(function() {
                         window.location.href = $.buildUrl('/login');
@@ -56,13 +55,11 @@
                         errorCallback(result);
                     }
                 } else if (result.code === 403) {
-                    // 无权限
                     $.toast('error', '无权限访问');
                     if (typeof errorCallback === 'function') {
                         errorCallback(result);
                     }
                 } else {
-                    // 其他错误（400/404/409/500等）
                     if (typeof errorCallback === 'function') {
                         errorCallback(result);
                     } else {
@@ -78,7 +75,6 @@
             }
         };
 
-        // POST请求设置contentType
         if (method.toUpperCase() === 'POST') {
             ajaxOptions.contentType = 'application/json';
             if (data && typeof data === 'object') {
@@ -93,9 +89,6 @@
 
     /**
      * 统一错误处理
-     * @param {object} xhr - XMLHttpRequest对象
-     * @param {string} status - 状态
-     * @param {string} error - 错误信息
      */
     $.handleError = function(xhr, status, error) {
         var message = '请求失败，请稍后重试';
@@ -125,57 +118,46 @@
     };
 
     /**
-     * 提示消息
+     * 提示消息（Toast）
      * @param {string} type - 消息类型（success/warning/error/info）
      * @param {string} message - 消息内容
      * @param {number} duration - 显示时长（毫秒），默认3000
      */
     $.toast = function(type, message, duration) {
         duration = duration || 3000;
-
-        // 移除已存在的toast
         $('.custom-toast').remove();
 
-        // 创建toast元素
         var iconMap = {
-            success: 'fas fa-check-circle',
-            warning: 'fas fa-exclamation-circle',
-            error: 'fas fa-times-circle',
-            info: 'fas fa-info-circle'
+            success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+            warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+            error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+            info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+        };
+
+        var bgMap = {
+            success: 'color-mix(in oklch, #2E7D6F 12%, white)',
+            warning: 'color-mix(in oklch, #D4845A 12%, white)',
+            error: 'color-mix(in oklch, #C4453A 10%, white)',
+            info: 'color-mix(in oklch, #7A7067 12%, white)'
         };
 
         var colorMap = {
-            success: '#28a745',
-            warning: '#ffc107',
-            error: '#dc3545',
-            info: '#17a2b8'
+            success: '#2E7D6F',
+            warning: '#9A5D2E',
+            error: '#C4453A',
+            info: '#7A7067'
         };
 
         var toastHtml = '<div class="custom-toast" style="' +
-            'position: fixed;' +
-            'top: 20px;' +
-            'left: 50%;' +
-            'transform: translateX(-50%);' +
-            'z-index: 9999;' +
-            'padding: 12px 24px;' +
-            'border-radius: 4px;' +
-            'background-color: ' + colorMap[type] + ';' +
-            'color: #fff;' +
-            'font-size: 14px;' +
-            'box-shadow: 0 4px 12px rgba(0,0,0,0.15);' +
-            'display: flex;' +
-            'align-items: center;' +
-            'gap: 8px;' +
-            'animation: toastSlideIn 0.3s ease;' +
-            '">' +
-            '<i class="' + iconMap[type] + '"></i>' +
+            'background: ' + bgMap[type] + ';' +
+            'color: ' + colorMap[type] + ';' +
+            'border: 1px solid ' + colorMap[type] + '33;">' +
+            (iconMap[type] || '') +
             '<span>' + message + '</span>' +
             '</div>';
 
-        // 添加到页面
         $('body').append(toastHtml);
 
-        // 自动消失
         setTimeout(function() {
             $('.custom-toast').fadeOut(300, function() {
                 $(this).remove();
@@ -192,71 +174,41 @@
      */
     $.confirm = function(message, onConfirm, onCancel, title) {
         title = title || '确认操作';
-
-        // 移除已存在的confirm
         $('.custom-confirm').remove();
 
-        var confirmHtml = '<div class="custom-confirm" style="' +
-            'position: fixed;' +
-            'top: 0;' +
-            'left: 0;' +
-            'right: 0;' +
-            'bottom: 0;' +
-            'background-color: rgba(0,0,0,0.5);' +
-            'z-index: 9999;' +
-            'display: flex;' +
-            'align-items: center;' +
-            'justify-content: center;' +
-            '">' +
-            '<div style="' +
-            'background-color: #fff;' +
-            'border-radius: 8px;' +
-            'padding: 24px;' +
-            'max-width: 400px;' +
-            'width: 90%;' +
-            'box-shadow: 0 4px 20px rgba(0,0,0,0.2);' +
-            '">' +
-            '<h4 style="margin: 0 0 16px 0; font-size: 18px; color: #333;">' + title + '</h4>' +
-            '<p style="margin: 0 0 24px 0; font-size: 14px; color: #666; line-height: 1.5;">' + message + '</p>' +
-            '<div style="display: flex; justify-content: flex-end; gap: 10px;">' +
-            '<button class="btn btn-secondary btn-cancel" style="min-width: 80px;">取消</button>' +
-            '<button class="btn btn-primary btn-confirm" style="min-width: 80px;">确认</button>' +
+        var confirmHtml = '<div class="custom-confirm">' +
+            '<div class="confirm-dialog">' +
+            '<h4>' + title + '</h4>' +
+            '<p>' + message + '</p>' +
+            '<div class="confirm-actions">' +
+            '<button class="btn btn-secondary btn-cancel">取消</button>' +
+            '<button class="btn btn-primary btn-confirm">确认</button>' +
             '</div>' +
             '</div>' +
             '</div>';
 
-        // 添加到页面
         $('body').append(confirmHtml);
 
-        // 绑定事件
         $('.custom-confirm .btn-confirm').on('click', function() {
             $('.custom-confirm').remove();
-            if (typeof onConfirm === 'function') {
-                onConfirm();
-            }
+            if (typeof onConfirm === 'function') { onConfirm(); }
         });
 
         $('.custom-confirm .btn-cancel').on('click', function() {
             $('.custom-confirm').remove();
-            if (typeof onCancel === 'function') {
-                onCancel();
-            }
+            if (typeof onCancel === 'function') { onCancel(); }
         });
 
-        // 点击背景关闭
         $('.custom-confirm').on('click', function(e) {
             if ($(e.target).hasClass('custom-confirm')) {
                 $('.custom-confirm').remove();
-                if (typeof onCancel === 'function') {
-                    onCancel();
-                }
+                if (typeof onCancel === 'function') { onCancel(); }
             }
         });
     };
 
     /**
      * 跳转页面
-     * @param {string} url - 目标URL
      */
     $.navigate = function(url) {
         window.location.href = $.buildUrl(url);
@@ -264,29 +216,20 @@
 
     /**
      * 分页参数构建
-     * @param {number} pageNum - 页码
-     * @param {number} pageSize - 每页条数
-     * @returns {object} 分页参数对象
      */
     $.buildPageParams = function(pageNum, pageSize) {
-        return {
-            pageNum: pageNum || 1,
-            pageSize: pageSize || 10
-        };
+        return { pageNum: pageNum || 1, pageSize: pageSize || 10 };
     };
 
     /**
      * 表单序列化为JSON
-     * @returns {object} 表单数据对象
      */
     $.fn.serializeJSON = function() {
         var obj = {};
         var arr = this.serializeArray();
         $.each(arr, function() {
             if (obj[this.name] !== undefined) {
-                if (!obj[this.name].push) {
-                    obj[this.name] = [obj[this.name]];
-                }
+                if (!obj[this.name].push) { obj[this.name] = [obj[this.name]]; }
                 obj[this.name].push(this.value || '');
             } else {
                 obj[this.name] = this.value || '';
@@ -297,49 +240,153 @@
 
     /**
      * 日期格式化
-     * @param {Date|string|number} date - 日期对象、日期字符串或时间戳
-     * @param {string} format - 格式化模式（默认：yyyy-MM-dd HH:mm:ss）
-     * @returns {string} 格式化后的日期字符串
      */
     $.formatDate = function(date, format) {
         format = format || 'yyyy-MM-dd HH:mm:ss';
-
-        if (!date) {
-            return '';
-        }
-
-        if (typeof date === 'string') {
-            date = new Date(date);
-        } else if (typeof date === 'number') {
-            date = new Date(date);
-        }
-
-        if (!(date instanceof Date) || isNaN(date.getTime())) {
-            return '';
-        }
+        if (!date) return '';
+        if (typeof date === 'string' || typeof date === 'number') { date = new Date(date); }
+        if (!(date instanceof Date) || isNaN(date.getTime())) return '';
 
         var o = {
-            'M+': date.getMonth() + 1,
-            'd+': date.getDate(),
-            'H+': date.getHours(),
-            'h+': date.getHours() % 12 || 12,
-            'm+': date.getMinutes(),
-            's+': date.getSeconds(),
-            'q+': Math.floor((date.getMonth() + 3) / 3),
-            'S': date.getMilliseconds()
+            'M+': date.getMonth() + 1, 'd+': date.getDate(),
+            'H+': date.getHours(), 'h+': date.getHours() % 12 || 12,
+            'm+': date.getMinutes(), 's+': date.getSeconds(),
+            'q+': Math.floor((date.getMonth() + 3) / 3), 'S': date.getMilliseconds()
         };
 
         if (/(y+)/.test(format)) {
             format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
         }
-
         for (var k in o) {
             if (new RegExp('(' + k + ')').test(format)) {
                 format = format.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
             }
         }
-
         return format;
+    };
+
+    /**
+     * 渲染分页组件（新DOM结构）
+     * @param {object} pageInfo - 分页信息对象
+     * @param {string} containerId - 容器ID
+     * @param {function} onPageChange - 页码变更回调
+     */
+    $.renderPagination = function(pageInfo, containerId, onPageChange) {
+        var container = document.getElementById(containerId);
+        if (!container || !pageInfo) return;
+
+        var totalPages = pageInfo.pages || 1;
+        var currentPage = pageInfo.pageNum || 1;
+        var total = pageInfo.total || 0;
+
+        // 信息文字
+        var html = '<div class="pagination-container">';
+        html += '<span class="pagination-info">共 <strong>' + total + '</strong> 条记录，第 <strong>' + currentPage + '</strong> / <strong>' + totalPages + '</strong> 页</span>';
+        html += '<div class="pagination-pages">';
+
+        // 首页
+        html += '<button class="page-btn" ' + (currentPage === 1 ? 'disabled' : '') + ' data-page="1">&laquo;</button>';
+        // 上一页
+        html += '<button class="page-btn" ' + (currentPage === 1 ? 'disabled' : '') + ' data-page="' + (currentPage - 1) + '">&lsaquo;</button>';
+
+        // 页码
+        var startPage = Math.max(1, currentPage - 2);
+        var endPage = Math.min(totalPages, currentPage + 2);
+        if (startPage > 1) {
+            html += '<button class="page-btn" data-page="1">1</button>';
+            if (startPage > 2) html += '<span style="padding:0 4px;color:var(--muted)">...</span>';
+        }
+        for (var i = startPage; i <= endPage; i++) {
+            html += '<button class="page-btn' + (i === currentPage ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
+        }
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += '<span style="padding:0 4px;color:var(--muted)">...</span>';
+            html += '<button class="page-btn" data-page="' + totalPages + '">' + totalPages + '</button>';
+        }
+
+        // 下一页
+        html += '<button class="page-btn" ' + (currentPage === totalPages ? 'disabled' : '') + ' data-page="' + (currentPage + 1) + '">&rsaquo;</button>';
+        // 末页
+        html += '<button class="page-btn" ' + (currentPage === totalPages ? 'disabled' : '') + ' data-page="' + totalPages + '">&raquo;</button>';
+
+        html += '</div></div>';
+        container.innerHTML = html;
+
+        // 绑定事件
+        $(container).find('.page-btn').on('click', function() {
+            var page = parseInt($(this).data('page'));
+            if (page && page !== currentPage && typeof onPageChange === 'function') {
+                onPageChange(page);
+            }
+        });
+    };
+
+    /**
+     * 初始化自定义下拉选择框
+     * 在页面加载后调用，将所有 .cselect 元素初始化为自定义下拉框
+     */
+    $.initCustomSelect = function() {
+        document.querySelectorAll('.cselect').forEach(function(cs) {
+            if (cs.dataset.initialized) return;
+            cs.dataset.initialized = 'true';
+
+            var trigger = cs.querySelector('.cselect-trigger');
+            var panel = cs.querySelector('.cselect-panel');
+            var valEl = cs.querySelector('.cselect-val');
+            if (!trigger || !panel) return;
+
+            trigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.cselect.open').forEach(function(o) {
+                    if (o !== cs) o.classList.remove('open');
+                });
+                cs.classList.toggle('open');
+            });
+
+            panel.querySelectorAll('.cselect-option').forEach(function(opt) {
+                opt.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    panel.querySelectorAll('.cselect-option').forEach(function(o) { o.classList.remove('selected'); });
+                    opt.classList.add('selected');
+                    if (valEl) {
+                        valEl.textContent = opt.textContent;
+                        valEl.classList.remove('placeholder');
+                    }
+                    cs.classList.remove('open');
+                    cs.dataset.value = opt.dataset.value;
+
+                    // 触发自定义事件
+                    var event = new CustomEvent('cselect:change', {
+                        detail: { value: opt.dataset.value, text: opt.textContent }
+                    });
+                    cs.dispatchEvent(event);
+                });
+            });
+
+            // 键盘可访问性
+            trigger.setAttribute('tabindex', '0');
+            trigger.setAttribute('role', 'combobox');
+            trigger.setAttribute('aria-expanded', 'false');
+
+            trigger.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    trigger.click();
+                } else if (e.key === 'Escape') {
+                    cs.classList.remove('open');
+                    trigger.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+
+        // 点击外部关闭所有下拉框
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.cselect.open').forEach(function(o) {
+                o.classList.remove('open');
+                var trigger = o.querySelector('.cselect-trigger');
+                if (trigger) trigger.setAttribute('aria-expanded', 'false');
+            });
+        });
     };
 
     /**
@@ -358,12 +405,11 @@
             }
         });
 
-        // 高亮当前页面菜单，使用前缀匹配支持非列表页面
+        // 高亮当前页面菜单，使用前缀匹配
         var currentPath = window.location.pathname;
         $('.sidebar-menu .menu-link').each(function() {
             var href = $(this).attr('href');
             if (!href || href === 'javascript:void(0)' || href === '#') return;
-            // 提取模块前缀（去掉末段页面名），如 /admin/building/list → /admin/building/
             var prefix = href.replace(/\/[^\/]+$/, '/');
             if (currentPath.indexOf(prefix) !== -1) {
                 $(this).addClass('active');
@@ -384,7 +430,7 @@
         });
 
         // 全局AJAX错误处理
-        $(document).ajaxError(function(event, xhr, settings, thrownError) {
+        $(document).ajaxError(function(event, xhr, settings) {
             if (xhr.status === 401 && settings.url.indexOf('/login') === -1) {
                 $.toast('warning', '未登录或登录已过期，请重新登录');
                 setTimeout(function() {
@@ -392,11 +438,11 @@
                 }, 1500);
             }
         });
-    });
 
-    // 添加toast动画样式
-    var style = document.createElement('style');
-    style.textContent = '@keyframes toastSlideIn { from { transform: translateX(-50%) translateY(-100%); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }';
-    document.head.appendChild(style);
+        // 初始化自定义下拉选择框
+        if (typeof $.initCustomSelect === 'function') {
+            $.initCustomSelect();
+        }
+    });
 
 })(jQuery);
