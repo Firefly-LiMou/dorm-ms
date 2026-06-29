@@ -94,7 +94,7 @@
                     <!-- 申请详情 -->
                     <div class="mb-3">
                         <h6>申请信息</h6>
-                        <table class="table table-bordered">
+                        <table class="table">
                             <tr>
                                 <td class="bg-light" style="width: 120px;">申请人</td>
                                 <td id="auditStudentName"></td>
@@ -121,7 +121,7 @@
                     <form id="auditForm">
                         <input type="hidden" id="auditApplyId">
                         <div class="mb-3">
-                            <label class="form-label">审批结果 <span class="text-danger">*</span></label>
+                            <label class="form-label">审批结果 <span class="required">*</span></label>
                             <div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="auditStatus" id="auditPass" value="1" checked>

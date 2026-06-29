@@ -38,7 +38,7 @@
                     <h5 class="mb-3">完结报修</h5>
                     <form id="completeForm">
                         <div class="mb-3">
-                            <label for="handleResult" class="form-label">处理结果 <span class="text-danger">*</span></label>
+                            <label for="handleResult" class="form-label">处理结果 <span class="required">*</span></label>
                             <textarea class="form-control" id="handleResult" rows="4" placeholder="请输入处理结果（如维修内容、更换配件等）" maxlength="500"></textarea>
                             <div class="invalid-feedback" id="handleResultError"></div>
                             <div class="form-text">最多500个字符</div>
@@ -68,7 +68,7 @@
             currentRepairId = urlParams.get('repairId');
 
             if (!currentRepairId) {
-                $('#repairInfo').html('<div class="text-center" style="padding: 40px 0; color: var(--danger, #dc3545);">参数错误，未指定报修ID</div>');
+                $('#repairInfo').html('<div class="text-center" style="padding: 40px 0; color: var(--accent);">参数错误，未指定报修ID</div>');
                 return;
             }
 
@@ -102,7 +102,7 @@
             // 左侧：基本信息
             html += '<div class="col-md-6">';
             html += '<h6 class="mb-3">基本信息</h6>';
-            html += '<table class="table table-bordered">';
+            html += '<table class="table">';
             html += '<tr><td class="bg-light" style="width: 120px;">报修ID</td><td>' + repair.repairId + '</td></tr>';
             html += '<tr><td class="bg-light">学生姓名</td><td>' + (repair.studentName || '-') + '</td></tr>';
             html += '<tr><td class="bg-light">学号</td><td>' + (repair.studentNo || '-') + '</td></tr>';
@@ -115,7 +115,7 @@
             // 右侧：报修信息
             html += '<div class="col-md-6">';
             html += '<h6 class="mb-3">报修信息</h6>';
-            html += '<table class="table table-bordered">';
+            html += '<table class="table">';
             html += '<tr><td class="bg-light" style="width: 120px;">报修类型</td><td>' + typeText + '</td></tr>';
             html += '<tr><td class="bg-light">报修内容</td><td>' + (repair.repairContent || '-') + '</td></tr>';
             html += '<tr><td class="bg-light">提交时间</td><td>' + $.formatDate(repair.submitTime) + '</td></tr>';

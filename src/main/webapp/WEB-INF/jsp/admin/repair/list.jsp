@@ -139,7 +139,7 @@
             list.forEach(function(item) {
                 var statusPill = getStatusPill(item.repairStatus);
                 var typeText = getRepairTypeText(item.repairType);
-                var timeoutStyle = item.isTimeout ? ' style="background-color: rgb(255, 243, 205);"' : '';
+                var timeoutClass = item.isTimeout ? ' class="timeout-row"' : '';
                 var timeoutPill = item.isTimeout ? ' <span class="pill pill-danger">超时</span>' : '';
                 var content = item.repairContent || '-';
                 var contentDisplay = content.length > 20 ? content.substring(0, 20) + '...' : content;
@@ -151,7 +151,7 @@
                     actionBtn = '<a href="${pageContext.request.contextPath}/admin/repair/detailPage?repairId=' + item.repairId + '" class="btn btn-ghost btn-sm">详情</a>';
                 }
 
-                var row = '<tr' + timeoutStyle + '>';
+                var row = '<tr' + timeoutClass + '>';
                 row += '<td>' + (item.studentName || '-') + '</td>';
                 row += '<td class="num">' + (item.studentNo || '-') + '</td>';
                 row += '<td>' + (item.buildingName || '-') + '</td>';
