@@ -41,20 +41,36 @@
                             </div>
                             <div class="form-field">
                                 <label>角色类型 <span class="required">*</span></label>
-                                <select class="form-control" id="roleType" name="roleType">
-                                    <option value="">请选择角色</option>
-                                    <option value="1">管理员</option>
-                                    <option value="2">宿管</option>
-                                    <option value="3">学生</option>
-                                </select>
+                                <div class="cselect" id="roleTypeCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val placeholder">请选择角色</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择角色</div>
+                                        <div class="cselect-option" data-value="1">管理员</div>
+                                        <div class="cselect-option" data-value="2">宿管</div>
+                                        <div class="cselect-option" data-value="3">学生</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-field">
                                 <label>性别</label>
-                                <select class="form-control" id="gender" name="gender">
-                                    <option value="">请选择性别</option>
-                                    <option value="1">男</option>
-                                    <option value="2">女</option>
-                                </select>
+                                <div class="cselect" id="genderCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val placeholder">请选择性别</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择性别</div>
+                                        <div class="cselect-option" data-value="1">男</div>
+                                        <div class="cselect-option" data-value="2">女</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-field">
                                 <label>联系电话</label>
@@ -106,8 +122,11 @@
 
     <script>
         $(function() {
-            $('#roleType').on('change', function() {
-                if ($(this).val() === '3') {
+            $.initCustomSelect();
+
+            // 角色类型变化事件
+            document.querySelector('#roleTypeCselect').addEventListener('cselect:change', function(e) {
+                if (e.detail.value === '3') {
                     $('#studentFields').show();
                 } else {
                     $('#studentFields').hide();
@@ -138,8 +157,8 @@
             var formData = {
                 username: $('#username').val().trim(),
                 realName: $('#realName').val().trim(),
-                roleType: parseInt($('#roleType').val()),
-                gender: $('#gender').val() ? parseInt($('#gender').val()) : null,
+                roleType: parseInt(document.querySelector('#roleTypeCselect').dataset.value),
+                gender: document.querySelector('#genderCselect').dataset.value ? parseInt(document.querySelector('#genderCselect').dataset.value) : null,
                 phone: $('#phone').val().trim() || null,
                 grade: $('#grade').val().trim() || null,
                 major: $('#major').val().trim() || null,
