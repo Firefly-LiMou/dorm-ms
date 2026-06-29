@@ -6,71 +6,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>床位管理 - 高校公寓管理系统</title>
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
-    <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
 <body>
     <div class="main-container">
-        <!-- 侧边栏 -->
         <%@ include file="/WEB-INF/jsp/common/sidebar.jsp" %>
 
-        <!-- 内容区域 -->
         <div class="content-wrapper">
-            <!-- 导航栏 -->
             <%@ include file="/WEB-INF/jsp/common/header.jsp" %>
 
-            <!-- 内容主体 -->
             <div class="content-body">
-                <!-- 页面标题 -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="page-header">
                     <div>
-                        <h4 style="color: #333; margin-bottom: 8px;">床位管理</h4>
-                        <p style="color: #666; margin: 0;">管理公寓床位信息</p>
+                        <h1>床位管理</h1>
+                        <p class="page-meta">管理公寓床位信息</p>
                     </div>
                     <button type="button" class="btn btn-primary" onclick="showBatchModal()" id="btnBatch" disabled>
-                        <i class="fas fa-plus mr-2"></i>批量初始化
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        批量初始化
                     </button>
                 </div>
 
-                <!-- 房间选择区域 -->
-                <div class="form-container mb-4">
-                    <div class="row g-3">
-                        <div class="col-md-5">
-                            <label for="buildingId" class="form-label">选择楼栋</label>
-                            <select class="form-control" id="buildingId">
+                <div class="filter-bar">
+                    <div class="filter-field">
+                        <label>选择楼栋</label>
+                        <div class="cselect">
+                            <select id="buildingId">
                                 <option value="">请选择楼栋</option>
                             </select>
                         </div>
-                        <div class="col-md-5">
-                            <label for="roomId" class="form-label">选择房间</label>
-                            <select class="form-control" id="roomId" disabled>
+                    </div>
+                    <div class="filter-field">
+                        <label>选择房间</label>
+                        <div class="cselect">
+                            <select id="roomId" disabled>
                                 <option value="">请先选择楼栋</option>
                             </select>
                         </div>
-                        <div class="col-md-2 d-flex align-items-end">
-                            <button type="button" class="btn btn-primary w-100" onclick="loadBedList()" id="btnSearch" disabled>
-                                <i class="fas fa-search mr-1"></i>查询床位
-                            </button>
-                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="loadBedList()" id="btnSearch" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            查询床位
+                        </button>
                     </div>
                 </div>
 
-                <!-- 床位列表 -->
-                <div class="form-container">
-                    <h6 class="mb-3"><i class="fas fa-bed mr-2"></i>床位列表</h6>
+                <div class="data-panel">
                     <div id="bedListContainer">
-                        <div class="text-center py-4 text-muted">
-                            <i class="fas fa-info-circle mr-2"></i>请先选择楼栋和房间
-                        </div>
+                        <div class="text-center" style="padding: 40px 0; color: var(--muted);">请先选择楼栋和房间</div>
                     </div>
                 </div>
             </div>
 
-            <!-- 底部 -->
             <%@ include file="/WEB-INF/jsp/common/footer.jsp" %>
         </div>
     </div>
@@ -85,7 +75,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle mr-2"></i>
                         将为房间 <strong id="batchRoomName"></strong> 自动生成床位，床位号格式为"1号床"、"2号床"...
                     </div>
                     <div class="mb-3">
@@ -106,13 +95,9 @@
         </div>
     </div>
 
-    <!-- jQuery -->
     <script src="${pageContext.request.contextPath}/static/js/jquery.min.js"></script>
-    <!-- Bootstrap JS -->
     <script src="${pageContext.request.contextPath}/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- 公共JS -->
     <script src="${pageContext.request.contextPath}/static/js/common.js"></script>
-    <!-- 导航栏JS -->
     <script>window.needChangePasswordFlag = '${sessionScope.needChangePassword}';</script>
     <script src="${pageContext.request.contextPath}/static/js/header.js"></script>
 
@@ -122,7 +107,7 @@
         var currentRoomInfo = null;
 
         $(function() {
-            // 加载楼栋列表
+            $.initCustomSelect();
             loadBuildingList();
 
             // 楼栋选择变化事件
@@ -145,7 +130,6 @@
                 if (currentRoomId) {
                     $('#btnSearch').prop('disabled', false);
                     $('#btnBatch').prop('disabled', false);
-                    // 获取房间信息
                     loadRoomInfo(currentRoomId);
                 } else {
                     $('#btnSearch').prop('disabled', true);
@@ -208,16 +192,16 @@
             }
 
             var $container = $('#bedListContainer');
-            $container.html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>加载中...</div>');
+            $container.html('<div class="text-center" style="padding: 40px 0; color: var(--muted);">加载中...</div>');
 
             $.ajaxRequest('/admin/bed/room/' + currentRoomId, 'GET', null, function(result) {
                 if (result.data && result.data.length > 0) {
                     renderBedList(result.data);
                 } else {
-                    $container.html('<div class="text-center py-4 text-muted"><i class="fas fa-bed mr-2"></i>该房间暂无床位，请点击"批量初始化"创建床位</div>');
+                    $container.html('<div class="text-center" style="padding: 40px 0; color: var(--muted);">该房间暂无床位，请点击"批量初始化"创建床位</div>');
                 }
             }, function() {
-                $container.html('<div class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadBedList()" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></div>');
+                $container.html('<div class="text-center" style="padding: 40px 0;"><a href="javascript:void(0)" onclick="loadBedList()" style="color: var(--accent);">加载失败，点击重试</a></div>');
             });
         }
 
@@ -227,13 +211,13 @@
          */
         function renderBedList(bedList) {
             var $container = $('#bedListContainer');
-            var html = '<div class="table-container"><table class="table">';
+            var html = '<table>';
             html += '<thead><tr>';
             html += '<th>床位编号</th>';
             html += '<th>状态</th>';
             html += '<th>入住学生</th>';
             html += '<th>备注</th>';
-            html += '<th>操作</th>';
+            html += '<th style="width: 120px;">操作</th>';
             html += '</tr></thead>';
             html += '<tbody>';
 
@@ -242,13 +226,10 @@
                 var actionBtn = '';
 
                 if (bed.bedStatus === 0) {
-                    // 空闲状态，可以设为维修
-                    actionBtn = '<button class="btn btn-sm btn-warning" onclick="updateStatus(' + bed.bedId + ', 2)"><i class="fas fa-tools mr-1"></i>设为维修</button>';
+                    actionBtn = '<button class="btn btn-ghost btn-sm" onclick="updateStatus(' + bed.bedId + ', 2)">设为维修</button>';
                 } else if (bed.bedStatus === 2) {
-                    // 维修状态，可以设为空闲
-                    actionBtn = '<button class="btn btn-sm btn-success" onclick="updateStatus(' + bed.bedId + ', 0)"><i class="fas fa-check mr-1"></i>设为空闲</button>';
+                    actionBtn = '<button class="btn btn-ghost btn-sm" onclick="updateStatus(' + bed.bedId + ', 0)">设为空闲</button>';
                 } else {
-                    // 已入住状态
                     actionBtn = '<span class="text-muted">-</span>';
                 }
 
@@ -256,12 +237,12 @@
                 html += '<td>' + (bed.bedNo || '-') + '</td>';
                 html += '<td>' + statusBadge + '</td>';
                 html += '<td>' + (bed.studentName || '-') + '</td>';
-                html += '<td>' + (bed.remark || '-') + '</td>';
-                html += '<td>' + actionBtn + '</td>';
+                html += '<td class="text-muted">' + (bed.remark || '-') + '</td>';
+                html += '<td class="actions">' + actionBtn + '</td>';
                 html += '</tr>';
             });
 
-            html += '</tbody></table></div>';
+            html += '</tbody></table>';
             $container.html(html);
         }
 
@@ -272,11 +253,11 @@
          */
         function getStatusBadge(status) {
             var map = {
-                0: '<span class="badge bg-success">空闲</span>',
-                1: '<span class="badge bg-primary">已入住</span>',
-                2: '<span class="badge bg-warning">维修禁用</span>'
+                0: '<span class="pill pill-done">空闲</span>',
+                1: '<span class="pill pill-active">已入住</span>',
+                2: '<span class="pill pill-pending">维修禁用</span>'
             };
-            return map[status] || '<span class="badge bg-secondary">未知</span>';
+            return map[status] || '<span class="pill pill-quiet">未知</span>';
         }
 
         /**
