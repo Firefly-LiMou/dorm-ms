@@ -43,20 +43,36 @@
                             </div>
                             <div class="form-field">
                                 <label>角色类型 <span class="required">*</span></label>
-                                <select class="form-control" id="roleType" name="roleType">
-                                    <option value="">请选择角色</option>
-                                    <option value="1">管理员</option>
-                                    <option value="2">宿管</option>
-                                    <option value="3">学生</option>
-                                </select>
+                                <div class="cselect" id="roleTypeCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val placeholder">请选择角色</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择角色</div>
+                                        <div class="cselect-option" data-value="1">管理员</div>
+                                        <div class="cselect-option" data-value="2">宿管</div>
+                                        <div class="cselect-option" data-value="3">学生</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-field">
                                 <label>性别</label>
-                                <select class="form-control" id="gender" name="gender">
-                                    <option value="">请选择性别</option>
-                                    <option value="1">男</option>
-                                    <option value="2">女</option>
-                                </select>
+                                <div class="cselect" id="genderCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val placeholder">请选择性别</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择性别</div>
+                                        <div class="cselect-option" data-value="1">男</div>
+                                        <div class="cselect-option" data-value="2">女</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-field">
                                 <label>联系电话</label>
@@ -64,10 +80,18 @@
                             </div>
                             <div class="form-field">
                                 <label>账号状态</label>
-                                <select class="form-control" id="status" name="status">
-                                    <option value="1">正常</option>
-                                    <option value="0">禁用</option>
-                                </select>
+                                <div class="cselect" id="statusCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val">正常</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option selected" data-value="1">正常</div>
+                                        <div class="cselect-option" data-value="0">禁用</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -129,9 +153,12 @@
             // 加载用户数据
             loadUserData(userId);
 
-            // 角色类型变化时显示/隐藏学生字段
-            $('#roleType').on('change', function() {
-                if ($(this).val() === '3') {
+            // 初始化自定义下拉框
+            $.initCustomSelect();
+
+            // 角色类型变化事件
+            document.querySelector('#roleTypeCselect').addEventListener('cselect:change', function(e) {
+                if (e.detail.value === '3') {
                     $('#studentFields').show();
                 } else {
                     $('#studentFields').hide();
@@ -183,13 +210,32 @@
                     $('#userId').val(user.userId);
                     $('#username').val(user.username);
                     $('#realName').val(user.realName);
-                    $('#roleType').val(user.roleType);
-                    $('#gender').val(user.gender || '');
                     $('#phone').val(user.phone || '');
-                    $('#status').val(user.status);
                     $('#grade').val(user.grade || '');
                     $('#major').val(user.major || '');
                     $('#className').val(user.className || '');
+
+                    // 设置角色类型 cselect
+                    var roleTypeEl = document.querySelector('#roleTypeCselect');
+                    var roleTypeText = {1: '管理员', 2: '宿管', 3: '学生'}[user.roleType] || '请选择角色';
+                    roleTypeEl.dataset.value = user.roleType;
+                    roleTypeEl.querySelector('.cselect-val').textContent = roleTypeText;
+                    roleTypeEl.querySelector('.cselect-val').classList.remove('placeholder');
+
+                    // 设置性别 cselect
+                    var genderEl = document.querySelector('#genderCselect');
+                    var genderText = {1: '男', 2: '女'}[user.gender] || '请选择性别';
+                    genderEl.dataset.value = user.gender || '';
+                    genderEl.querySelector('.cselect-val').textContent = genderText;
+                    if (user.gender) {
+                        genderEl.querySelector('.cselect-val').classList.remove('placeholder');
+                    }
+
+                    // 设置状态 cselect
+                    var statusEl = document.querySelector('#statusCselect');
+                    var statusText = {1: '正常', 0: '禁用'}[user.status] || '正常';
+                    statusEl.dataset.value = user.status;
+                    statusEl.querySelector('.cselect-val').textContent = statusText;
 
                     // 显示学生字段
                     if (user.roleType === 3) {
@@ -212,10 +258,10 @@
                 userId: parseInt($('#userId').val()),
                 username: $('#username').val().trim(),
                 realName: $('#realName').val().trim(),
-                roleType: parseInt($('#roleType').val()),
-                gender: $('#gender').val() ? parseInt($('#gender').val()) : null,
+                roleType: parseInt(document.querySelector('#roleTypeCselect').dataset.value),
+                gender: document.querySelector('#genderCselect').dataset.value ? parseInt(document.querySelector('#genderCselect').dataset.value) : null,
                 phone: $('#phone').val().trim() || null,
-                status: parseInt($('#status').val()),
+                status: parseInt(document.querySelector('#statusCselect').dataset.value),
                 grade: $('#grade').val().trim() || null,
                 major: $('#major').val().trim() || null,
                 className: $('#className').val().trim() || null

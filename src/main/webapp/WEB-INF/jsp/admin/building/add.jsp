@@ -47,9 +47,17 @@
                             </div>
                             <div class="form-field">
                                 <label>负责宿管</label>
-                                <select class="form-control" id="managerId" name="managerId">
-                                    <option value="">请选择宿管</option>
-                                </select>
+                                <div class="cselect" id="managerIdCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val placeholder">请选择宿管</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择宿管</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-field">
                                 <label>备注</label>
@@ -79,6 +87,7 @@
 
     <script>
         $(function() {
+            $.initCustomSelect();
             loadManagerList();
 
             $('#buildingForm').validate({
@@ -99,10 +108,14 @@
         function loadManagerList() {
             $.ajaxRequest('/admin/user/list/2', 'GET', null, function(result) {
                 if (result.data) {
-                    var $select = $('#managerId');
+                    var options = [{value: '', text: '请选择宿管'}];
                     result.data.forEach(function(user) {
-                        $select.append('<option value="' + user.userId + '">' + user.realName + ' (' + user.username + ')</option>');
+                        options.push({value: user.userId, text: user.realName + ' (' + user.username + ')'});
                     });
+                    $.updateCselectOptions(
+                        document.querySelector('#managerIdCselect'),
+                        options
+                    );
                 }
             });
         }
@@ -113,7 +126,7 @@
                 buildingName: $('#buildingName').val().trim(),
                 floorCount: parseInt($('#floorCount').val()),
                 area: $('#area').val().trim() || null,
-                managerId: $('#managerId').val() ? parseInt($('#managerId').val()) : null,
+                managerId: document.querySelector('#managerIdCselect').dataset.value ? parseInt(document.querySelector('#managerIdCselect').dataset.value) : null,
                 remark: $('#remark').val().trim() || null
             };
 
