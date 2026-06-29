@@ -1031,7 +1031,95 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ============================================= */
-/* 十九、页脚                                     */
+/* 十九、统计卡片与模块卡片                         */
+/* ============================================= */
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--gap-lg) var(--gap-lg) var(--gap-md);
+    transition: border-color 0.15s, box-shadow 0.2s, transform 0.2s;
+}
+
+.stat-card:hover {
+    border-color: color-mix(in oklch, var(--accent) 30%, transparent);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+}
+
+.stat-card-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--gap-sm);
+}
+
+.stat-card-value {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.stat-card-value.accent { color: var(--accent); }
+.stat-card-value.accent2 { color: var(--accent-2); }
+
+.stat-card-sub {
+    font-size: var(--fs-meta);
+    color: var(--muted);
+    margin-top: var(--gap-xs);
+}
+
+.module-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--gap-lg);
+    transition: border-color 0.15s, box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.module-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+    color: inherit;
+}
+
+.module-icon {
+    width: 36px; height: 36px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--accent);
+}
+
+.module-icon svg { width: 18px; height: 18px; }
+
+.module-card h3 {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    margin: 0;
+}
+
+.module-card p {
+    font-size: var(--fs-meta);
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ============================================= */
+/* 二十、页脚                                     */
 /* ============================================= */
 .app-footer {
     margin-top: var(--gap-xl);
