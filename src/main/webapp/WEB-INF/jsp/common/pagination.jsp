@@ -18,7 +18,7 @@
     </span>
 
     <!-- 分页控件 -->
-    <div class="d-flex align-items-center" style="gap: var(--gap-sm);">
+    <div class="d-flex align-items-center pagination-controls">
         <!-- 每页条数选择 -->
         <div class="page-size-select">
             <label>每页</label>
@@ -51,23 +51,23 @@
                             <c:forEach begin="1" end="5" var="i">
                                 <button class="page-btn ${pageInfo.pageNum == i ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>
                             </c:forEach>
-                            <span style="padding: 0 4px; color: var(--muted);">...</span>
+                            <span class="page-ellipsis">...</span>
                             <button class="page-btn" onclick="goToPage(${pageInfo.pages})">${pageInfo.pages}</button>
                         </c:when>
                         <c:when test="${pageInfo.pageNum >= pageInfo.pages - 3}">
                             <button class="page-btn" onclick="goToPage(1)">1</button>
-                            <span style="padding: 0 4px; color: var(--muted);">...</span>
+                            <span class="page-ellipsis">...</span>
                             <c:forEach begin="${pageInfo.pages - 4}" end="${pageInfo.pages}" var="i">
                                 <button class="page-btn ${pageInfo.pageNum == i ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
                             <button class="page-btn" onclick="goToPage(1)">1</button>
-                            <span style="padding: 0 4px; color: var(--muted);">...</span>
+                            <span class="page-ellipsis">...</span>
                             <c:forEach begin="${pageInfo.pageNum - 1}" end="${pageInfo.pageNum + 1}" var="i">
                                 <button class="page-btn ${pageInfo.pageNum == i ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>
                             </c:forEach>
-                            <span style="padding: 0 4px; color: var(--muted);">...</span>
+                            <span class="page-ellipsis">...</span>
                             <button class="page-btn" onclick="goToPage(${pageInfo.pages})">${pageInfo.pages}</button>
                         </c:otherwise>
                     </c:choose>

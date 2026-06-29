@@ -169,6 +169,8 @@ img { max-width: 100%; height: auto; }
     text-transform: uppercase;
     color: var(--accent);
 }
+.header-role--secondary { color: var(--accent-2); }
+.brand-link { gap: var(--gap-md); text-decoration: none; color: inherit; }
 
 .navbar-nav {
     display: flex;
@@ -770,6 +772,8 @@ img { max-width: 100%; height: auto; }
 .page-btn:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.08); }
 .page-btn.active { background: var(--accent); color: var(--surface); border-color: var(--accent); }
 .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.pagination-controls { gap: var(--gap-sm); }
+.page-ellipsis { padding: 0 4px; color: var(--muted); }
 
 /* 兼容 Bootstrap pagination */
 .pagination { display: flex; list-style: none; gap: 2px; margin: 0; padding: 0; }

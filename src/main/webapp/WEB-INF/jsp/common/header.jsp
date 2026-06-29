@@ -8,7 +8,7 @@
 <nav class="navbar">
     <!-- 左侧：Logo和标题 -->
     <div class="navbar-brand">
-        <a href="${pageContext.request.contextPath}/" class="d-flex align-items-center" style="gap: var(--gap-md); text-decoration: none; color: inherit;">
+        <a href="${pageContext.request.contextPath}/" class="d-flex align-items-center brand-link">
             <span>寓<span>管理</span></span>
         </a>
         <div class="header-divider"></div>
@@ -17,10 +17,10 @@
                 <span class="header-role">系统管理员</span>
             </c:when>
             <c:when test="${sessionScope.loginUser.roleType == ROLE_DORM}">
-                <span class="header-role" style="color: var(--accent-2);">宿管</span>
+                <span class="header-role header-role--secondary">宿管</span>
             </c:when>
             <c:otherwise>
-                <span class="header-role" style="color: var(--accent-2);">学生</span>
+                <span class="header-role header-role--secondary">学生</span>
             </c:otherwise>
         </c:choose>
         <!-- 移动端侧边栏切换按钮 -->
