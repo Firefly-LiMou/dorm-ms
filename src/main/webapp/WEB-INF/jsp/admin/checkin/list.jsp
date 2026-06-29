@@ -36,12 +36,18 @@
                     </div>
                     <div class="filter-field">
                         <label>入住状态</label>
-                        <div class="cselect">
-                            <select id="searchStatus">
-                                <option value="">全部</option>
-                                <option value="1">在住</option>
-                                <option value="2">已退宿</option>
-                            </select>
+                        <div class="cselect" id="searchStatusCselect">
+                            <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="cselect-val placeholder">全部</span>
+                                <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="cselect-panel" role="listbox">
+                                <div class="cselect-option selected" data-value="">全部</div>
+                                <div class="cselect-option" data-value="1">在住</div>
+                                <div class="cselect-option" data-value="2">已退宿</div>
+                            </div>
                         </div>
                     </div>
                     <div class="filter-actions">
@@ -105,7 +111,7 @@
         function loadData(params) {
             var queryParams = $.extend({}, params, {
                 studentNo: $('#searchStudentId').val().trim() || null,
-                checkinStatus: $('#searchStatus').val() || null
+                checkinStatus: document.querySelector('#searchStatusCselect').dataset.value || null
             });
 
             $.ajaxRequest('/admin/checkin/page', 'GET', queryParams, function(result) {
@@ -169,7 +175,15 @@
 
         function resetSearch() {
             $('#searchStudentId').val('');
-            $('#searchStatus').val('');
+            // 重置状态下拉框
+            $.updateCselectOptions(
+                document.querySelector('#searchStatusCselect'),
+                [
+                    {value: '', text: '全部', selected: true},
+                    {value: '1', text: '在住'},
+                    {value: '2', text: '已退宿'}
+                ]
+            );
             search();
         }
 

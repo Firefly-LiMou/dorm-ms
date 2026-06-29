@@ -135,17 +135,16 @@
         };
 
         var bgMap = {
-            success: 'color-mix(in oklch, #2E7D6F 12%, white)',
-            warning: 'color-mix(in oklch, #D4845A 12%, white)',
-            error: 'color-mix(in oklch, #C4453A 10%, white)',
-            info: 'color-mix(in oklch, #7A7067 12%, white)'
+            success: 'rgb(46, 125, 111)',
+            error: 'rgb(196, 69, 58)',
+            warning: 'rgb(212, 132, 90)',
+            info: 'rgb(122, 112, 103)'
         };
-
         var colorMap = {
-            success: '#2E7D6F',
-            warning: '#9A5D2E',
-            error: '#C4453A',
-            info: '#7A7067'
+            success: 'rgb(255, 255, 255)',
+            error: 'rgb(255, 255, 255)',
+            warning: 'rgb(45, 36, 28)',
+            info: 'rgb(255, 255, 255)'
         };
 
         var toastHtml = '<div class="custom-toast" style="' +
@@ -341,6 +340,7 @@
                     if (o !== cs) o.classList.remove('open');
                 });
                 cs.classList.toggle('open');
+                trigger.setAttribute('aria-expanded', cs.classList.contains('open'));
             });
 
             panel.querySelectorAll('.cselect-option').forEach(function(opt) {
@@ -387,6 +387,38 @@
                 if (trigger) trigger.setAttribute('aria-expanded', 'false');
             });
         });
+    };
+
+    /**
+     * 动态更新自定义下拉框选项
+     * @param {HTMLElement} cselectEl - .cselect 元素
+     * @param {Array} options - 选项数组 [{value, text, selected}]
+     */
+    $.updateCselectOptions = function(cselectEl, options) {
+        var panel = cselectEl.querySelector('.cselect-panel');
+        var valEl = cselectEl.querySelector('.cselect-val');
+        if (!panel) return;
+
+        // 清空并重建选项
+        panel.innerHTML = '';
+        options.forEach(function(opt) {
+            var div = document.createElement('div');
+            div.className = 'cselect-option' + (opt.selected ? ' selected' : '');
+            div.dataset.value = opt.value;
+            div.textContent = opt.text;
+            panel.appendChild(div);
+        });
+
+        // 重置显示文本
+        if (valEl) {
+            valEl.textContent = options[0] ? options[0].text : '请选择';
+            valEl.classList.toggle('placeholder', !options[0] || !options[0].value);
+        }
+        cselectEl.dataset.value = options[0] ? options[0].value : '';
+
+        // 重新绑定事件（移除已初始化标记）
+        delete cselectEl.dataset.initialized;
+        $.initCustomSelect();
     };
 
     /**

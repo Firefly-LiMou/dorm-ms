@@ -32,35 +32,47 @@
                     </div>
                     <div class="filter-field">
                         <label>操作模块</label>
-                        <div class="cselect">
-                            <select id="searchModuleName">
-                                <option value="">全部</option>
-                                <option value="用户管理">用户管理</option>
-                                <option value="楼栋管理">楼栋管理</option>
-                                <option value="房间管理">房间管理</option>
-                                <option value="床位管理">床位管理</option>
-                                <option value="入住管理">入住管理</option>
-                                <option value="调宿管理">调宿管理</option>
-                                <option value="报修管理">报修管理</option>
-                                <option value="晚归登记">晚归登记</option>
-                                <option value="访客登记">访客登记</option>
-                                <option value="用户认证">用户认证</option>
-                                <option value="个人信息">个人信息</option>
-                            </select>
+                        <div class="cselect" id="searchModuleNameCselect">
+                            <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="cselect-val placeholder">全部</span>
+                                <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="cselect-panel" role="listbox">
+                                <div class="cselect-option selected" data-value="">全部</div>
+                                <div class="cselect-option" data-value="用户管理">用户管理</div>
+                                <div class="cselect-option" data-value="楼栋管理">楼栋管理</div>
+                                <div class="cselect-option" data-value="房间管理">房间管理</div>
+                                <div class="cselect-option" data-value="床位管理">床位管理</div>
+                                <div class="cselect-option" data-value="入住管理">入住管理</div>
+                                <div class="cselect-option" data-value="调宿管理">调宿管理</div>
+                                <div class="cselect-option" data-value="报修管理">报修管理</div>
+                                <div class="cselect-option" data-value="晚归登记">晚归登记</div>
+                                <div class="cselect-option" data-value="访客登记">访客登记</div>
+                                <div class="cselect-option" data-value="用户认证">用户认证</div>
+                                <div class="cselect-option" data-value="个人信息">个人信息</div>
+                            </div>
                         </div>
                     </div>
                     <div class="filter-field">
                         <label>操作类型</label>
-                        <div class="cselect">
-                            <select id="searchOperType">
-                                <option value="">全部</option>
-                                <option value="新增">新增</option>
-                                <option value="修改">修改</option>
-                                <option value="删除">删除</option>
-                                <option value="审批">审批</option>
-                                <option value="登录">登录</option>
-                                <option value="登出">登出</option>
-                            </select>
+                        <div class="cselect" id="searchOperTypeCselect">
+                            <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="cselect-val placeholder">全部</span>
+                                <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="cselect-panel" role="listbox">
+                                <div class="cselect-option selected" data-value="">全部</div>
+                                <div class="cselect-option" data-value="新增">新增</div>
+                                <div class="cselect-option" data-value="修改">修改</div>
+                                <div class="cselect-option" data-value="删除">删除</div>
+                                <div class="cselect-option" data-value="审批">审批</div>
+                                <div class="cselect-option" data-value="登录">登录</div>
+                                <div class="cselect-option" data-value="登出">登出</div>
+                            </div>
                         </div>
                     </div>
                     <div class="filter-actions">
@@ -126,8 +138,8 @@
             };
 
             var operatorId = $('#searchOperatorId').val().trim();
-            var moduleName = $('#searchModuleName').val();
-            var operType = $('#searchOperType').val();
+            var moduleName = document.querySelector('#searchModuleNameCselect').dataset.value;
+            var operType = document.querySelector('#searchOperTypeCselect').dataset.value;
 
             if (operatorId) {
                 queryParams.operatorId = operatorId;
@@ -224,8 +236,37 @@
 
         function resetSearch() {
             $('#searchOperatorId').val('');
-            $('#searchModuleName').val('');
-            $('#searchOperType').val('');
+            // 重置操作模块下拉框
+            $.updateCselectOptions(
+                document.querySelector('#searchModuleNameCselect'),
+                [
+                    {value: '', text: '全部', selected: true},
+                    {value: '用户管理', text: '用户管理'},
+                    {value: '楼栋管理', text: '楼栋管理'},
+                    {value: '房间管理', text: '房间管理'},
+                    {value: '床位管理', text: '床位管理'},
+                    {value: '入住管理', text: '入住管理'},
+                    {value: '调宿管理', text: '调宿管理'},
+                    {value: '报修管理', text: '报修管理'},
+                    {value: '晚归登记', text: '晚归登记'},
+                    {value: '访客登记', text: '访客登记'},
+                    {value: '用户认证', text: '用户认证'},
+                    {value: '个人信息', text: '个人信息'}
+                ]
+            );
+            // 重置操作类型下拉框
+            $.updateCselectOptions(
+                document.querySelector('#searchOperTypeCselect'),
+                [
+                    {value: '', text: '全部', selected: true},
+                    {value: '新增', text: '新增'},
+                    {value: '修改', text: '修改'},
+                    {value: '删除', text: '删除'},
+                    {value: '审批', text: '审批'},
+                    {value: '登录', text: '登录'},
+                    {value: '登出', text: '登出'}
+                ]
+            );
             search();
         }
     </script>

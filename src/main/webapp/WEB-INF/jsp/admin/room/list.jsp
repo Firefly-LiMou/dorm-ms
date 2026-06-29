@@ -32,10 +32,16 @@
                 <div class="filter-bar">
                     <div class="filter-field">
                         <label>所属楼栋</label>
-                        <div class="cselect">
-                            <select id="searchBuildingId">
-                                <option value="">全部楼栋</option>
-                            </select>
+                        <div class="cselect" id="searchBuildingIdCselect">
+                            <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="cselect-val placeholder">全部楼栋</span>
+                                <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="cselect-panel" role="listbox">
+                                <div class="cselect-option selected" data-value="">全部楼栋</div>
+                            </div>
                         </div>
                     </div>
                     <div class="filter-field">
@@ -48,13 +54,19 @@
                     </div>
                     <div class="filter-field">
                         <label>房间类型</label>
-                        <div class="cselect">
-                            <select id="searchRoomType">
-                                <option value="">全部</option>
-                                <option value="1">四人间</option>
-                                <option value="2">六人间</option>
-                                <option value="3">八人间</option>
-                            </select>
+                        <div class="cselect" id="searchRoomTypeCselect">
+                            <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="cselect-val placeholder">全部</span>
+                                <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="cselect-panel" role="listbox">
+                                <div class="cselect-option selected" data-value="">全部</div>
+                                <div class="cselect-option" data-value="1">四人间</div>
+                                <div class="cselect-option" data-value="2">六人间</div>
+                                <div class="cselect-option" data-value="3">八人间</div>
+                            </div>
                         </div>
                     </div>
                     <div class="filter-actions">
@@ -117,10 +129,14 @@
         function loadBuildingList() {
             $.ajaxRequest('/admin/building/page', 'GET', {pageSize: 100}, function(result) {
                 if (result.data && result.data.list) {
-                    var $select = $('#searchBuildingId');
+                    var options = [{value: '', text: '全部楼栋'}];
                     result.data.list.forEach(function(building) {
-                        $select.append('<option value="' + building.buildingId + '">' + building.buildingName + '</option>');
+                        options.push({value: building.buildingId, text: building.buildingName});
                     });
+                    $.updateCselectOptions(
+                        document.querySelector('#searchBuildingIdCselect'),
+                        options
+                    );
                 }
             });
         }
@@ -131,10 +147,10 @@
          */
         function loadData(params) {
             var queryParams = $.extend({}, params, {
-                buildingId: $('#searchBuildingId').val() || null,
+                buildingId: document.querySelector('#searchBuildingIdCselect').dataset.value || null,
                 roomNo: $('#searchRoomNo').val().trim(),
                 floorNum: $('#searchFloorNum').val() || null,
-                roomType: $('#searchRoomType').val() || null
+                roomType: document.querySelector('#searchRoomTypeCselect').dataset.value || null
             });
 
             $.ajaxRequest('/admin/room/page', 'GET', queryParams, function(result) {
@@ -190,10 +206,21 @@
         }
 
         function resetSearch() {
-            $('#searchBuildingId').val('');
+            // 重置楼栋下拉框
+            loadBuildingList();
+            // 重置房间类型下拉框
+            $.updateCselectOptions(
+                document.querySelector('#searchRoomTypeCselect'),
+                [
+                    {value: '', text: '全部', selected: true},
+                    {value: '1', text: '四人间'},
+                    {value: '2', text: '六人间'},
+                    {value: '3', text: '八人间'}
+                ]
+            );
+            // 重置文本输入
             $('#searchRoomNo').val('');
             $('#searchFloorNum').val('');
-            $('#searchRoomType').val('');
             search();
         }
 

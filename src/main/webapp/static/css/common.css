@@ -19,7 +19,9 @@
     --hover-bg: rgb(245, 244, 237);
     --stripe: rgba(0, 0, 0, 0.025);
     --col-line: rgb(240, 238, 230);
-    --status-ok: #2E7D6F;
+    --status-ok: rgb(46, 125, 111);
+    --surface-opaque: rgb(255, 255, 255);
+    --timeout-bg: rgb(255, 243, 205);
 
     --font-display: Georgia, 'Noto Serif SC', 'Source Han Serif SC', SimSun, serif;
     --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', PingFang SC, 'Microsoft YaHei', system-ui, sans-serif;
@@ -42,6 +44,8 @@
     --radius-lg: 12px;
 
     --sidebar-w: 240px;
+    --sidebar-w-admin: 240px;
+    --sidebar-w-dorm: 220px;
     --header-h: 56px;
 
     --accent-soft: color-mix(in oklch, var(--accent) 10%, transparent);
@@ -49,22 +53,26 @@
     --fg-soft: color-mix(in oklch, var(--fg) 6%, transparent);
 
     /* Bootstrap 变量覆盖 */
-    --bs-primary: #C4453A;
-    --bs-secondary: #7A7067;
-    --bs-success: #C4453A;
-    --bs-danger: #C4453A;
-    --bs-warning: #D4845A;
-    --bs-info: #7A7067;
-    --bs-light: #F5F4ED;
-    --bs-dark: #2D241C;
-    --bs-body-bg: #FAF9F5;
-    --bs-body-color: #2D241C;
+    --bs-primary: rgb(196, 69, 58);
+    --bs-secondary: rgb(122, 112, 103);
+    --bs-success: rgb(196, 69, 58);
+    --bs-danger: rgb(196, 69, 58);
+    --bs-warning: rgb(212, 132, 90);
+    --bs-info: rgb(122, 112, 103);
+    --bs-light: rgb(245, 244, 237);
+    --bs-dark: rgb(45, 36, 28);
+    --bs-body-bg: rgb(250, 249, 245);
+    --bs-body-color: rgb(45, 36, 28);
     --bs-body-font-family: var(--font-body);
-    --bs-border-color: #EBE6DF;
+    --bs-border-color: rgb(235, 230, 223);
     --bs-border-radius: 0.5rem;
     --bs-border-radius-lg: 0.75rem;
-    --bs-link-color: #C4453A;
+    --bs-link-color: rgb(196, 69, 58);
 }
+
+/* 角色侧栏宽度 */
+.role-admin { --sidebar-w: var(--sidebar-w-admin); }
+.role-dorm { --sidebar-w: var(--sidebar-w-dorm); }
 
 /* ============================================= */
 /* 二、全局重置                                    */
@@ -187,7 +195,7 @@ img { max-width: 100%; height: auto; }
 .user-trigger .avatar {
     width: 32px; height: 32px;
     border-radius: 50%;
-    background: var(--accent-soft);
+    background: transparent;
     color: var(--accent);
     display: grid;
     place-items: center;
@@ -1133,7 +1141,7 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ============================================= */
-/* 二十、工具类                                    */
+/* 二十一、工具类                                   */
 /* ============================================= */
 .text-left { text-align: left; }
 .text-center { text-align: center; }
@@ -1168,7 +1176,7 @@ img { max-width: 100%; height: auto; }
 .rounded { border-radius: var(--radius); } .rounded-circle { border-radius: 50%; }
 
 /* ============================================= */
-/* 二十、响应式                                    */
+/* 二十二、响应式                                   */
 /* ============================================= */
 @media (max-width: 1200px) {
     .filter-bar { flex-direction: column; align-items: stretch; }
