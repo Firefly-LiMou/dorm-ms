@@ -37,7 +37,6 @@ build/
 
 ### Docs ###
 docs/old-docs
-design-prototype
 
 ### Config ###
 /src/main/resources/config/jdbc.properties
