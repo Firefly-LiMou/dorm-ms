@@ -1,614 +1,268 @@
--- =====================================================
--- 高校公寓管理系统 测试数据脚本（30+学生，多表关联覆盖）
--- 依赖顺序：用户 → 楼栋 → 房间 → 床位 → 入住 → 调宿/报修/晚归/访客
--- 所有关联均使用子查询定位，不依赖自增ID
--- =====================================================
+-- ============================================================
+-- 高校公寓管理系统 测试数据脚本
+-- 覆盖：sys_user / dorm_building / dorm_room / dorm_bed
+--       dorm_checkin_record / dorm_move_apply / dorm_repair
+--       dorm_late_return / dorm_visitor
+-- 说明：密码均为 123456 的 MD5 加密值
+-- ============================================================
 
 USE dormitory_management;
 SET NAMES utf8mb4;
-
--- =====================================================
--- 1. 补充宿管账号
--- =====================================================
-INSERT INTO sys_user (username, password, real_name, role_type, gender, phone, status)
-VALUES
-    ('dorm003', 'e10adc3949ba59abbe56e057f20f883e', '王丽',   2, 2, '13800138003', 1),
-    ('dorm004', 'e10adc3949ba59abbe56e057f20f883e', '赵强',   2, 1, '13800138004', 1);
-
--- =====================================================
--- 2. 补充楼栋（3号楼/西区男生，4号楼/南区女生）
--- =====================================================
-INSERT INTO dorm_building (building_no, building_name, floor_count, area, manager_id, remark)
-SELECT '3号楼', '西区3号学生公寓', 5, '西区', user_id, '男生公寓'
-FROM sys_user WHERE username = 'dorm003';
-
-INSERT INTO dorm_building (building_no, building_name, floor_count, area, manager_id, remark)
-SELECT '4号楼', '南区4号学生公寓', 5, '南区', user_id, '女生公寓'
-FROM sys_user WHERE username = 'dorm004';
-
--- =====================================================
--- 3. 扩展1/2号楼房间并插入所有床位（每房间4床）
--- =====================================================
--- 为 1 号楼增加 301~502 共6间
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '301', building_id, 3, 4, 1 FROM dorm_building WHERE building_no = '1号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '302', building_id, 3, 4, 1 FROM dorm_building WHERE building_no = '1号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '401', building_id, 4, 4, 1 FROM dorm_building WHERE building_no = '1号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '402', building_id, 4, 4, 1 FROM dorm_building WHERE building_no = '1号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '501', building_id, 5, 4, 1 FROM dorm_building WHERE building_no = '1号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '502', building_id, 5, 4, 1 FROM dorm_building WHERE building_no = '1号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
--- 为 2 号楼增加 201~502 共8间
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '201', building_id, 2, 4, 1 FROM dorm_building WHERE building_no = '2号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '202', building_id, 2, 4, 1 FROM dorm_building WHERE building_no = '2号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '301', building_id, 3, 4, 1 FROM dorm_building WHERE building_no = '2号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '302', building_id, 3, 4, 1 FROM dorm_building WHERE building_no = '2号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '401', building_id, 4, 4, 1 FROM dorm_building WHERE building_no = '2号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '402', building_id, 4, 4, 1 FROM dorm_building WHERE building_no = '2号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '501', building_id, 5, 4, 1 FROM dorm_building WHERE building_no = '2号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '502', building_id, 5, 4, 1 FROM dorm_building WHERE building_no = '2号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
--- 为 3 号楼创建房间 101~502（每层2间，共10间）
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '101', building_id, 1, 4, 1 FROM dorm_building WHERE building_no = '3号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '102', building_id, 1, 4, 1 FROM dorm_building WHERE building_no = '3号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '201', building_id, 2, 4, 1 FROM dorm_building WHERE building_no = '3号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '202', building_id, 2, 4, 1 FROM dorm_building WHERE building_no = '3号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '301', building_id, 3, 4, 1 FROM dorm_building WHERE building_no = '3号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '302', building_id, 3, 4, 1 FROM dorm_building WHERE building_no = '3号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '401', building_id, 4, 4, 1 FROM dorm_building WHERE building_no = '3号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '402', building_id, 4, 4, 1 FROM dorm_building WHERE building_no = '3号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '501', building_id, 5, 4, 1 FROM dorm_building WHERE building_no = '3号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '502', building_id, 5, 4, 1 FROM dorm_building WHERE building_no = '3号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
--- 为 4 号楼创建房间 101~502
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '101', building_id, 1, 4, 1 FROM dorm_building WHERE building_no = '4号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '102', building_id, 1, 4, 1 FROM dorm_building WHERE building_no = '4号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '201', building_id, 2, 4, 1 FROM dorm_building WHERE building_no = '4号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '202', building_id, 2, 4, 1 FROM dorm_building WHERE building_no = '4号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '301', building_id, 3, 4, 1 FROM dorm_building WHERE building_no = '4号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '302', building_id, 3, 4, 1 FROM dorm_building WHERE building_no = '4号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '401', building_id, 4, 4, 1 FROM dorm_building WHERE building_no = '4号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '402', building_id, 4, 4, 1 FROM dorm_building WHERE building_no = '4号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '501', building_id, 5, 4, 1 FROM dorm_building WHERE building_no = '4号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-INSERT INTO dorm_room (room_no, building_id, floor_num, bed_total, room_type)
-SELECT '502', building_id, 5, 4, 1 FROM dorm_building WHERE building_no = '4号楼';
-SET @room = LAST_INSERT_ID();
-INSERT INTO dorm_bed (bed_no, room_id, bed_status, remark) VALUES
-                                                               ('1号床',@room,0,'上铺'),('2号床',@room,0,'下铺'),('3号床',@room,0,'上铺'),('4号床',@room,0,'下铺');
-
--- =====================================================
--- 4. 插入30名新学生（学号 2024004 ~ 2024033）
--- =====================================================
-INSERT INTO sys_user (username, password, real_name, role_type, gender, phone, grade, major, class_name, status)
-VALUES
-    ('2024004','e10adc3949ba59abbe56e057f20f883e','陈六',  3,1,'13900139004','2024级','计算机科学与技术','计科1班',1),
-    ('2024005','e10adc3949ba59abbe56e057f20f883e','赵七',  3,1,'13900139005','2024级','计算机科学与技术','计科1班',1),
-    ('2024006','e10adc3949ba59abbe56e057f20f883e','孙八',  3,2,'13900139006','2024级','计算机科学与技术','计科2班',1),
-    ('2024007','e10adc3949ba59abbe56e057f20f883e','周九',  3,2,'13900139007','2024级','软件工程','软工1班',1),
-    ('2024008','e10adc3949ba59abbe56e057f20f883e','吴十',  3,1,'13900139008','2024级','软件工程','软工1班',1),
-    ('2024009','e10adc3949ba59abbe56e057f20f883e','郑十一',3,1,'13900139009','2024级','软件工程','软工2班',1),
-    ('2024010','e10adc3949ba59abbe56e057f20f883e','王十二',3,2,'13900139010','2024级','网络工程','网工1班',1),
-    ('2024011','e10adc3949ba59abbe56e057f20f883e','冯十三',3,2,'13900139011','2024级','网络工程','网工1班',1),
-    ('2024012','e10adc3949ba59abbe56e057f20f883e','陈十四',3,1,'13900139012','2024级','数据科学','数据1班',1),
-    ('2024013','e10adc3949ba59abbe56e057f20f883e','褚十五',3,2,'13900139013','2024级','数据科学','数据1班',1),
-    ('2024014','e10adc3949ba59abbe56e057f20f883e','卫十六',3,1,'13900139014','2023级','计算机科学与技术','计科1班',1),
-    ('2024015','e10adc3949ba59abbe56e057f20f883e','蒋十七',3,1,'13900139015','2023级','计算机科学与技术','计科2班',1),
-    ('2024016','e10adc3949ba59abbe56e057f20f883e','沈十八',3,2,'13900139016','2023级','软件工程','软工1班',1),
-    ('2024017','e10adc3949ba59abbe56e057f20f883e','韩十九',3,2,'13900139017','2023级','软件工程','软工2班',1),
-    ('2024018','e10adc3949ba59abbe56e057f20f883e','杨二十',3,1,'13900139018','2023级','网络工程','网工1班',1),
-    ('2024019','e10adc3949ba59abbe56e057f20f883e','朱二十一',3,1,'13900139019','2023级','数据科学','数据1班',1),
-    ('2024020','e10adc3949ba59abbe56e057f20f883e','秦二十二',3,2,'13900139020','2022级','计算机科学与技术','计科1班',1),
-    ('2024021','e10adc3949ba59abbe56e057f20f883e','尤二十三',3,2,'13900139021','2022级','软件工程','软工1班',1),
-    ('2024022','e10adc3949ba59abbe56e057f20f883e','许二十四',3,1,'13900139022','2022级','网络工程','网工1班',1),
-    ('2024023','e10adc3949ba59abbe56e057f20f883e','何二十五',3,1,'13900139023','2022级','数据科学','数据1班',1),
-    ('2024024','e10adc3949ba59abbe56e057f20f883e','吕二十六',3,2,'13900139024','2024级','计算机科学与技术','计科2班',1),
-    ('2024025','e10adc3949ba59abbe56e057f20f883e','施二十七',3,1,'13900139025','2024级','软件工程','软工2班',1),
-    ('2024026','e10adc3949ba59abbe56e057f20f883e','张二十八',3,2,'13900139026','2023级','计算机科学与技术','计科2班',1),
-    ('2024027','e10adc3949ba59abbe56e057f20f883e','孔二十九',3,1,'13900139027','2023级','网络工程','网工1班',1),
-    ('2024028','e10adc3949ba59abbe56e057f20f883e','曹三十',3,2,'13900139028','2022级','软件工程','软工2班',1),
-    ('2024029','e10adc3949ba59abbe56e057f20f883e','严三十一',3,1,'13900139029','2022级','计算机科学与技术','计科1班',1),
-    ('2024030','e10adc3949ba59abbe56e057f20f883e','华三十二',3,1,'13900139030','2024级','数据科学','数据1班',1),
-    ('2024031','e10adc3949ba59abbe56e057f20f883e','金三十三',3,2,'13900139031','2023级','网络工程','网工1班',1),
-    ('2024032','e10adc3949ba59abbe56e057f20f883e','魏三十四',3,1,'13900139032','2022级','数据科学','数据1班',1),
-    ('2024033','e10adc3949ba59abbe56e057f20f883e','陶三十五',3,2,'13900139033','2023级','计算机科学与技术','计科1班',1);
-
--- =====================================================
--- 5. 办理入住（为所有已有和新学生分配床位）
--- =====================================================
--- 辅助：获取床位ID的通用模式（楼栋号 + 房间号 + 床位号）
--- 男生安排至1或3号楼，女生至2或4号楼，并更新床位状态
-
--- 2024001 张三 (男) → 1号楼 101 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='101') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024001'), @bed, '2025-08-25 09:30:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024002 李四 (男) → 1号楼 101 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='101') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024002'), @bed, '2025-08-25 09:35:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024003 王五 (女) → 2号楼 101 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='2号楼') AND room_no='101') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024003'), @bed, '2025-08-25 09:40:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024004 陈六 (男) → 1号楼 102 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='102') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024004'), @bed, '2025-08-25 10:00:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024005 赵七 (男) → 1号楼 102 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='102') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024005'), @bed, '2025-08-25 10:05:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024006 孙八 (女) → 2号楼 101 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='2号楼') AND room_no='101') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024006'), @bed, '2025-08-25 10:10:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024007 周九 (女) → 2号楼 102 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='2号楼') AND room_no='102') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024007'), @bed, '2025-08-25 10:15:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024008 吴十 (男) → 1号楼 102 3号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='102') AND bed_no='3号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024008'), @bed, '2025-08-25 10:20:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024009 郑十一 (男) → 1号楼 201 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='201') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024009'), @bed, '2025-08-25 10:25:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024010 王十二 (女) → 2号楼 102 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='2号楼') AND room_no='102') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024010'), @bed, '2025-08-25 10:30:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024011 冯十三 (女) → 2号楼 201 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='2号楼') AND room_no='201') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024011'), @bed, '2025-08-25 10:35:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024012 陈十四 (男) → 3号楼 101 1号床 (西区男生)
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='3号楼') AND room_no='101') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024012'), @bed, '2025-08-25 11:00:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024013 褚十五 (女) → 4号楼 101 1号床 (南区女生)
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='4号楼') AND room_no='101') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024013'), @bed, '2025-08-25 11:05:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024014 卫十六 (男) → 3号楼 101 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='3号楼') AND room_no='101') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024014'), @bed, '2025-08-25 11:10:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024015 蒋十七 (男) → 3号楼 102 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='3号楼') AND room_no='102') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024015'), @bed, '2025-08-25 11:15:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024016 沈十八 (女) → 4号楼 101 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='4号楼') AND room_no='101') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024016'), @bed, '2025-08-25 11:20:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024017 韩十九 (女) → 4号楼 102 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='4号楼') AND room_no='102') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024017'), @bed, '2025-08-25 11:25:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024018 杨二十 (男) → 3号楼 102 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='3号楼') AND room_no='102') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024018'), @bed, '2025-08-25 11:30:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024019 朱二十一 (男) → 3号楼 201 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='3号楼') AND room_no='201') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024019'), @bed, '2025-08-25 11:35:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024020 秦二十二 (女) → 2号楼 201 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='2号楼') AND room_no='201') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024020'), @bed, '2025-08-26 08:30:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024021 尤二十三 (女) → 4号楼 102 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='4号楼') AND room_no='102') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024021'), @bed, '2025-08-26 08:35:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024022 许二十四 (男) → 1号楼 201 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='201') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024022'), @bed, '2025-08-26 08:40:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024023 何二十五 (男) → 1号楼 202 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='202') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024023'), @bed, '2025-08-26 08:45:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024024 吕二十六 (女) → 4号楼 201 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='4号楼') AND room_no='201') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024024'), @bed, '2025-08-26 08:50:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024025 施二十七 (男) → 3号楼 201 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='3号楼') AND room_no='201') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024025'), @bed, '2025-08-26 08:55:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024026 张二十八 (女) → 2号楼 202 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='2号楼') AND room_no='202') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024026'), @bed, '2025-08-26 09:00:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024027 孔二十九 (男) → 1号楼 202 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='202') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024027'), @bed, '2025-08-26 09:05:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024028 曹三十 (女) → 4号楼 201 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='4号楼') AND room_no='201') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024028'), @bed, '2025-08-26 09:10:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024029 严三十一 (男) → 3号楼 202 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='3号楼') AND room_no='202') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024029'), @bed, '2025-08-26 09:15:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024030 华三十二 (男) → 1号楼 301 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='301') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024030'), @bed, '2025-08-26 09:20:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024031 金三十三 (女) → 2号楼 202 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='2号楼') AND room_no='202') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024031'), @bed, '2025-08-26 09:25:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024032 魏三十四 (男) → 3号楼 202 2号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='3号楼') AND room_no='202') AND bed_no='2号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024032'), @bed, '2025-08-26 09:30:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 2024033 陶三十五 (女) → 4号楼 202 1号床
-SET @bed = (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='4号楼') AND room_no='202') AND bed_no='1号床');
-INSERT INTO dorm_checkin_record (student_id, bed_id, checkin_time, operator_id) VALUES ((SELECT user_id FROM sys_user WHERE username='2024033'), @bed, '2025-08-26 09:35:00', 1);
-UPDATE dorm_bed SET bed_status=1 WHERE bed_id=@bed;
-
--- 部分学生已退宿（用于测试历史记录）
--- 2024005 赵七 退宿
-UPDATE dorm_checkin_record SET checkout_time = '2026-01-15 10:00:00', checkin_status = 2 WHERE student_id = (SELECT user_id FROM sys_user WHERE username='2024005');
-UPDATE dorm_bed SET bed_status = 0 WHERE bed_id = (SELECT bed_id FROM dorm_checkin_record WHERE student_id = (SELECT user_id FROM sys_user WHERE username='2024005'));
-
--- 2024010 王十二 退宿
-UPDATE dorm_checkin_record SET checkout_time = '2026-02-20 11:00:00', checkin_status = 2 WHERE student_id = (SELECT user_id FROM sys_user WHERE username='2024010');
-UPDATE dorm_bed SET bed_status = 0 WHERE bed_id = (SELECT bed_id FROM dorm_checkin_record WHERE student_id = (SELECT user_id FROM sys_user WHERE username='2024010'));
-
--- 2024020 秦二十二 退宿
-UPDATE dorm_checkin_record SET checkout_time = '2026-03-01 12:00:00', checkin_status = 2 WHERE student_id = (SELECT user_id FROM sys_user WHERE username='2024020');
-UPDATE dorm_bed SET bed_status = 0 WHERE bed_id = (SELECT bed_id FROM dorm_checkin_record WHERE student_id = (SELECT user_id FROM sys_user WHERE username='2024020'));
-
--- =====================================================
--- 6. 调宿申请数据（各种状态）
--- =====================================================
--- 申请1：张三(2024001) 申请从 1号楼101-1号床 调到 1号楼102-4号床（空闲） → 待审批
-INSERT INTO dorm_move_apply (student_id, original_bed_id, target_bed_id, apply_reason, apply_time, audit_status)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024001'),
-    (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='101') AND bed_no='1号床'),
-    (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='102') AND bed_no='4号床'),
-    '作息习惯不同，申请调换', NOW(), 0;
-
--- 申请2：李四(2024002) 申请从 1号楼101-2号床 调到 3号楼101-3号床（空闲） → 已通过
-INSERT INTO dorm_move_apply (student_id, original_bed_id, target_bed_id, apply_reason, apply_time, audit_status, auditor_id, audit_time, audit_opinion)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024002'),
-    (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='101') AND bed_no='2号床'),
-    (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='3号楼') AND room_no='101') AND bed_no='3号床'),
-    '希望与同班同学同住', DATE_SUB(NOW(), INTERVAL 7 DAY), 1,
-    (SELECT user_id FROM sys_user WHERE username='admin'), DATE_SUB(NOW(), INTERVAL 5 DAY), '同意调宿';
-
--- 申请3：陈六(2024004) 申请从 1号楼102-1号床 调到 1号楼102-3号床（已入住吴十） → 已驳回
-INSERT INTO dorm_move_apply (student_id, original_bed_id, target_bed_id, apply_reason, apply_time, audit_status, auditor_id, audit_time, audit_opinion)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024004'),
-    (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='102') AND bed_no='1号床'),
-    (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='102') AND bed_no='3号床'),
-    '下铺不方便，想换上铺', DATE_SUB(NOW(), INTERVAL 3 DAY), 2,
-    (SELECT user_id FROM sys_user WHERE username='dorm001'), DATE_SUB(NOW(), INTERVAL 2 DAY), '目标床位已有人，请重新选择';
-
--- 申请4：孙八(2024006) 申请从 2号楼101-2号床 调到 4号楼101-3号床（空闲） → 待审批
-INSERT INTO dorm_move_apply (student_id, original_bed_id, target_bed_id, apply_reason, apply_time, audit_status)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024006'),
-    (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='2号楼') AND room_no='101') AND bed_no='2号床'),
-    (SELECT bed_id FROM dorm_bed WHERE room_id = (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='4号楼') AND room_no='101') AND bed_no='3号床'),
-    '希望与好友同楼', NOW(), 0;
-
--- =====================================================
--- 7. 报修数据
--- =====================================================
--- 报修1：张三 报修房间1号楼101 水电故障 待处理
-INSERT INTO dorm_repair (student_id, room_id, repair_type, repair_content, contact_phone, submit_time, repair_status)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024001'),
-    (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='101'),
-    1, '卫生间水龙头漏水，已渗到楼下', '13900139001', NOW(), 0;
-
--- 报修2：陈六 报修房间1号楼102 家具损坏 处理中
-INSERT INTO dorm_repair (student_id, room_id, repair_type, repair_content, contact_phone, submit_time, repair_status, handler_id)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024004'),
-    (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='1号楼') AND room_no='102'),
-    2, '椅子腿断裂，无法使用', '13900139004', DATE_SUB(NOW(), INTERVAL 2 DAY), 1,
-    (SELECT user_id FROM sys_user WHERE username='dorm001');
-
--- 报修3：周九 报修房间2号楼102 门窗故障 已完成
-INSERT INTO dorm_repair (student_id, room_id, repair_type, repair_content, contact_phone, submit_time, repair_status, handler_id, handle_result, finish_time)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024007'),
-    (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='2号楼') AND room_no='102'),
-    3, '阳台门锁卡死，打不开', '13900139007', DATE_SUB(NOW(), INTERVAL 10 DAY), 2,
-    (SELECT user_id FROM sys_user WHERE username='dorm002'), '已更换门锁，恢复正常', DATE_SUB(NOW(), INTERVAL 7 DAY);
-
--- 报修4：陈十四 报修房间3号楼101 其他 待处理
-INSERT INTO dorm_repair (student_id, room_id, repair_type, repair_content, contact_phone, submit_time, repair_status)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024012'),
-    (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='3号楼') AND room_no='101'),
-    4, '空调不制冷，夏季急需', '13900139012', NOW(), 0;
-
--- 报修5：沈十八 报修房间4号楼101 水电故障 处理中
-INSERT INTO dorm_repair (student_id, room_id, repair_type, repair_content, contact_phone, submit_time, repair_status, handler_id)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024016'),
-    (SELECT room_id FROM dorm_room WHERE building_id = (SELECT building_id FROM dorm_building WHERE building_no='4号楼') AND room_no='101'),
-    1, '洗手池下水堵塞', '13900139016', DATE_SUB(NOW(), INTERVAL 1 DAY), 1,
-    (SELECT user_id FROM sys_user WHERE username='dorm004');
-
--- =====================================================
--- 8. 晚归记录数据
--- =====================================================
--- 晚归1：郑十一 1号楼 晚归
-INSERT INTO dorm_late_return (student_id, building_id, late_time, late_reason, registrar_id, record_time)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024009'),
-    (SELECT building_id FROM dorm_building WHERE building_no='1号楼'),
-    '2026-06-20 23:35:00', '实验室项目加班',
-    (SELECT user_id FROM sys_user WHERE username='dorm001'), NOW();
-
--- 晚归2：蒋十七 3号楼 晚归
-INSERT INTO dorm_late_return (student_id, building_id, late_time, late_reason, registrar_id, record_time)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024015'),
-    (SELECT building_id FROM dorm_building WHERE building_no='3号楼'),
-    '2026-06-21 23:50:00', '校外兼职',
-    (SELECT user_id FROM sys_user WHERE username='dorm003'), NOW();
-
--- 晚归3：冯十三 2号楼 晚归
-INSERT INTO dorm_late_return (student_id, building_id, late_time, late_reason, registrar_id, record_time)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024011'),
-    (SELECT building_id FROM dorm_building WHERE building_no='2号楼'),
-    '2026-06-22 00:15:00', '同学聚会',
-    (SELECT user_id FROM sys_user WHERE username='dorm002'), NOW();
-
--- 晚归4：何二十五 1号楼 未填原因
-INSERT INTO dorm_late_return (student_id, building_id, late_time, registrar_id, record_time)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024023'),
-    (SELECT building_id FROM dorm_building WHERE building_no='1号楼'),
-    '2026-06-23 23:45:00',
-    (SELECT user_id FROM sys_user WHERE username='dorm001'), NOW();
-
--- 晚归5：陶三十五 4号楼 晚归
-INSERT INTO dorm_late_return (student_id, building_id, late_time, late_reason, registrar_id, record_time)
-SELECT
-    (SELECT user_id FROM sys_user WHERE username='2024033'),
-    (SELECT building_id FROM dorm_building WHERE building_no='4号楼'),
-    '2026-06-23 23:20:00', '医院陪护',
-    (SELECT user_id FROM sys_user WHERE username='dorm004'), NOW();
-
--- =====================================================
--- 9. 访客登记数据
--- =====================================================
--- 访客1：访问张三(1号楼) 已离开
-INSERT INTO dorm_visitor (visitor_name, id_card, student_id, building_id, visit_time, leave_time, visit_reason, registrar_id)
-SELECT
-    '李华', '410102200001011234',
-    (SELECT user_id FROM sys_user WHERE username='2024001'),
-    (SELECT building_id FROM dorm_building WHERE building_no='1号楼'),
-    '2026-06-20 14:00:00', '2026-06-20 17:00:00', '家长探望',
-    (SELECT user_id FROM sys_user WHERE username='dorm001');
-
--- 访客2：访问孙八(2号楼) 未离开
-INSERT INTO dorm_visitor (visitor_name, id_card, student_id, building_id, visit_time, visit_reason, registrar_id)
-SELECT
-    '王芳', '410102199905054321',
-    (SELECT user_id FROM sys_user WHERE username='2024006'),
-    (SELECT building_id FROM dorm_building WHERE building_no='2号楼'),
-    '2026-06-21 09:30:00', '同学来访',
-    (SELECT user_id FROM sys_user WHERE username='dorm002');
-
--- 访客3：访问陈十四(3号楼) 已离开
-INSERT INTO dorm_visitor (visitor_name, id_card, student_id, building_id, visit_time, leave_time, visit_reason, registrar_id)
-SELECT
-    '张伟', '410102199806152233',
-    (SELECT user_id FROM sys_user WHERE username='2024012'),
-    (SELECT building_id FROM dorm_building WHERE building_no='3号楼'),
-    '2026-06-21 15:00:00', '2026-06-21 18:00:00', '项目讨论',
-    (SELECT user_id FROM sys_user WHERE username='dorm003');
-
--- 访客4：访问褚十五(4号楼) 未离开
-INSERT INTO dorm_visitor (visitor_name, id_card, student_id, building_id, visit_time, visit_reason, registrar_id)
-SELECT
-    '赵静', '410102200112113344',
-    (SELECT user_id FROM sys_user WHERE username='2024013'),
-    (SELECT building_id FROM dorm_building WHERE building_no='4号楼'),
-    '2026-06-22 10:00:00', '送材料',
-    (SELECT user_id FROM sys_user WHERE username='dorm004');
-
--- 访客5：访问韩十九(4号楼) 已离开
-INSERT INTO dorm_visitor (visitor_name, id_card, student_id, building_id, visit_time, leave_time, visit_reason, registrar_id)
-SELECT
-    '刘洋', '410102199707075566',
-    (SELECT user_id FROM sys_user WHERE username='2024017'),
-    (SELECT building_id FROM dorm_building WHERE building_no='4号楼'),
-    '2026-06-23 13:00:00', '2026-06-23 15:30:00', '社团活动',
-    (SELECT user_id FROM sys_user WHERE username='dorm004');
-
--- =====================================================
--- 测试数据生成完毕
--- =====================================================
-SELECT '测试数据插入成功！当前共', COUNT(*), '名学生' FROM sys_user WHERE role_type=3;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- 1. 系统用户表 sys_user
+-- ----------------------------
+INSERT INTO sys_user (user_id, username, password, real_name, role_type, gender, phone, grade, major, class_name, status) VALUES
+    (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', '系统管理员', 1, 1, '13800000001', NULL, NULL, NULL, 1),
+    (2, 'suguan1', 'e10adc3949ba59abbe56e057f20f883e', '张宿管', 2, 2, '13800000002', NULL, NULL, NULL, 1),
+    (3, 'suguan2', 'e10adc3949ba59abbe56e057f20f883e', '李宿管', 2, 1, '13800000003', NULL, NULL, NULL, 1),
+    (4, '20220001', 'e10adc3949ba59abbe56e057f20f883e', '赵一', 3, 1, '13800000004', '2022级', '计算机科学与技术', '计科2201', 1),
+    (5, '20220002', 'e10adc3949ba59abbe56e057f20f883e', '钱二', 3, 2, '13800000005', '2022级', '计算机科学与技术', '计科2201', 1),
+    (6, '20220003', 'e10adc3949ba59abbe56e057f20f883e', '孙三', 3, 1, '13800000006', '2022级', '计算机科学与技术', '计科2201', 1),
+    (7, '20220004', 'e10adc3949ba59abbe56e057f20f883e', '李四', 3, 2, '13800000007', '2022级', '计算机科学与技术', '计科2201', 1),
+    (8, '20220005', 'e10adc3949ba59abbe56e057f20f883e', '周五', 3, 1, '13800000008', '2022级', '软件工程', '软工2201', 1),
+    (9, '20220006', 'e10adc3949ba59abbe56e057f20f883e', '吴六', 3, 2, '13800000009', '2022级', '软件工程', '软工2201', 1),
+    (10, '20220007', 'e10adc3949ba59abbe56e057f20f883e', '郑七', 3, 1, '13800000010', '2022级', '软件工程', '软工2201', 1),
+    (11, '20220008', 'e10adc3949ba59abbe56e057f20f883e', '王八', 3, 2, '13800000011', '2022级', '软件工程', '软工2201', 1),
+    (12, '20220009', 'e10adc3949ba59abbe56e057f20f883e', '冯九', 3, 1, '13800000012', '2022级', '网络工程', '网工2201', 1),
+    (13, '20220010', 'e10adc3949ba59abbe56e057f20f883e', '陈十', 3, 2, '13800000013', '2022级', '网络工程', '网工2201', 1),
+    (14, '20220011', 'e10adc3949ba59abbe56e057f20f883e', '褚十一', 3, 1, '13800000014', '2022级', '网络工程', '网工2201', 1),
+    (15, '20220012', 'e10adc3949ba59abbe56e057f20f883e', '卫十二', 3, 2, '13800000015', '2022级', '网络工程', '网工2201', 1),
+    (16, '20220013', 'e10adc3949ba59abbe56e057f20f883e', '蒋十三', 3, 1, '13800000016', '2022级', '网络工程', '网工2201', 1),
+    (17, '20220014', 'e10adc3949ba59abbe56e057f20f883e', '沈十四', 3, 2, '13800000017', '2022级', '网络工程', '网工2201', 1),
+    (18, '20220015', 'e10adc3949ba59abbe56e057f20f883e', '韩十五', 3, 1, '13800000018', '2022级', '计算机科学与技术', '计科2202', 1),
+    (19, '20220016', 'e10adc3949ba59abbe56e057f20f883e', '杨十六', 3, 2, '13800000019', '2022级', '计算机科学与技术', '计科2202', 1),
+    (20, '20220017', 'e10adc3949ba59abbe56e057f20f883e', '朱十七', 3, 1, '13800000020', '2022级', '计算机科学与技术', '计科2202', 1),
+    (21, '20220018', 'e10adc3949ba59abbe56e057f20f883e', '秦十八', 3, 2, '13800000021', '2022级', '计算机科学与技术', '计科2202', 1),
+    (22, '20220019', 'e10adc3949ba59abbe56e057f20f883e', '尤十九', 3, 1, '13800000022', '2022级', '软件工程', '软工2202', 1),
+    (23, '20220020', 'e10adc3949ba59abbe56e057f20f883e', '许二十', 3, 2, '13800000023', '2022级', '软件工程', '软工2202', 1),
+    (24, '20220021', 'e10adc3949ba59abbe56e057f20f883e', '何二十一', 3, 1, '13800000024', '2022级', '软件工程', '软工2202', 1),
+    (25, '20220022', 'e10adc3949ba59abbe56e057f20f883e', '吕二十二', 3, 2, '13800000025', '2022级', '软件工程', '软工2202', 1),
+    (26, '20220023', 'e10adc3949ba59abbe56e057f20f883e', '施二十三', 3, 1, '13800000026', '2022级', '网络工程', '网工2202', 1),
+    (27, '20220024', 'e10adc3949ba59abbe56e057f20f883e', '张二十四', 3, 2, '13800000027', '2022级', '网络工程', '网工2202', 1),
+    (28, '20220025', 'e10adc3949ba59abbe56e057f20f883e', '孔二十五', 3, 1, '13800000028', '2022级', '网络工程', '网工2202', 1),
+    (29, '20220026', 'e10adc3949ba59abbe56e057f20f883e', '曹二十六', 3, 2, '13800000029', '2022级', '网络工程', '网工2202', 1),
+    (30, '20220027', 'e10adc3949ba59abbe56e057f20f883e', '严二十七', 3, 1, '13800000030', '2022级', '网络工程', '网工2202', 1),
+    (31, '20220028', 'e10adc3949ba59abbe56e057f20f883e', '华二十八', 3, 2, '13800000031', '2022级', '网络工程', '网工2202', 1),
+    (32, '20220029', 'e10adc3949ba59abbe56e057f20f883e', '金二十九', 3, 1, '13800000032', '2022级', '软件工程', '软工2202', 1),
+    (33, '20220030', 'e10adc3949ba59abbe56e057f20f883e', '魏三十', 3, 2, '13800000033', '2022级', '软件工程', '软工2202', 1);
+
+-- ----------------------------
+-- 2. 楼栋表 dorm_building
+-- ----------------------------
+INSERT INTO dorm_building (building_id, building_no, building_name, floor_count, area, manager_id, remark) VALUES
+    (1, 'B1', '1号公寓', 5, '东区', 2, '主要负责东区管理'),
+    (2, 'B2', '2号公寓', 5, '西区', 3, '主要负责西区管理'),
+    (3, 'B3', '3号公寓', 5, '南区', 2, '由宿管张代管');
+
+-- ----------------------------
+-- 3. 房间表 dorm_room
+-- 每栋楼 5 层，每层 2 个房间，共 30 间
+-- ----------------------------
+INSERT INTO dorm_room (room_id, room_no, building_id, floor_num, bed_total, room_type, remark) VALUES
+-- 1号楼
+(1, '101', 1, 1, 4, 1, '靠近楼梯'),
+(2, '102', 1, 1, 4, 1, '阴面'),
+(3, '201', 1, 2, 4, 1, '阳面'),
+(4, '202', 1, 2, 4, 1, NULL),
+(5, '301', 1, 3, 4, 1, NULL),
+(6, '302', 1, 3, 4, 1, NULL),
+(7, '401', 1, 4, 4, 1, '顶楼凉爽'),
+(8, '402', 1, 4, 4, 1, NULL),
+(9, '501', 1, 5, 4, 1, '最高层'),
+(10, '502', 1, 5, 4, 1, NULL),
+-- 2号楼
+(11, '101', 2, 1, 4, 1, '一楼方便'),
+(12, '102', 2, 1, 4, 1, NULL),
+(13, '201', 2, 2, 4, 1, NULL),
+(14, '202', 2, 2, 4, 1, NULL),
+(15, '301', 2, 3, 4, 1, NULL),
+(16, '302', 2, 3, 4, 1, NULL),
+(17, '401', 2, 4, 4, 1, NULL),
+(18, '402', 2, 4, 4, 1, NULL),
+(19, '501', 2, 5, 4, 1, NULL),
+(20, '502', 2, 5, 4, 1, NULL),
+-- 3号楼
+(21, '101', 3, 1, 4, 1, '新装修'),
+(22, '102', 3, 1, 4, 1, NULL),
+(23, '201', 3, 2, 4, 1, NULL),
+(24, '202', 3, 2, 4, 1, NULL),
+(25, '301', 3, 3, 4, 1, NULL),
+(26, '302', 3, 3, 4, 1, NULL),
+(27, '401', 3, 4, 4, 1, NULL),
+(28, '402', 3, 4, 4, 1, NULL),
+(29, '501', 3, 5, 4, 1, NULL),
+(30, '502', 3, 5, 4, 1, NULL);
+
+-- ----------------------------
+-- 4. 床位表 dorm_bed
+-- 每房间 4 张床，共计 120 张床
+-- ----------------------------
+INSERT INTO dorm_bed (bed_id, bed_no, room_id, bed_status, remark) VALUES
+-- 房间1 (room_id=1)
+(1, '1', 1, 0, NULL), (2, '2', 1, 0, NULL), (3, '3', 1, 0, NULL), (4, '4', 1, 0, NULL),
+-- 房间2 (room_id=2)
+(5, '1', 2, 0, NULL), (6, '2', 2, 0, NULL), (7, '3', 2, 0, NULL), (8, '4', 2, 0, NULL),
+-- 房间3 (room_id=3)
+(9, '1', 3, 0, NULL), (10, '2', 3, 0, NULL), (11, '3', 3, 0, NULL), (12, '4', 3, 0, NULL),
+-- 房间4 (room_id=4)
+(13, '1', 4, 0, NULL), (14, '2', 4, 0, NULL), (15, '3', 4, 0, NULL), (16, '4', 4, 0, NULL),
+-- 房间5 (room_id=5)
+(17, '1', 5, 0, NULL), (18, '2', 5, 0, NULL), (19, '3', 5, 0, NULL), (20, '4', 5, 0, NULL),
+-- 房间6 (room_id=6)
+(21, '1', 6, 0, NULL), (22, '2', 6, 0, NULL), (23, '3', 6, 0, NULL), (24, '4', 6, 0, NULL),
+-- 房间7 (room_id=7)
+(25, '1', 7, 0, NULL), (26, '2', 7, 0, NULL), (27, '3', 7, 0, NULL), (28, '4', 7, 0, NULL),
+-- 房间8 (room_id=8)
+(29, '1', 8, 0, NULL), (30, '2', 8, 0, NULL), (31, '3', 8, 0, NULL), (32, '4', 8, 0, NULL),
+-- 房间9 (room_id=9)
+(33, '1', 9, 0, NULL), (34, '2', 9, 0, NULL), (35, '3', 9, 0, NULL), (36, '4', 9, 0, NULL),
+-- 房间10 (room_id=10)
+(37, '1', 10, 0, NULL), (38, '2', 10, 0, NULL), (39, '3', 10, 0, NULL), (40, '4', 10, 0, NULL),
+
+-- 2号楼
+-- 房间11 (room_id=11)
+(41, '1', 11, 0, NULL), (42, '2', 11, 0, NULL), (43, '3', 11, 0, NULL), (44, '4', 11, 0, NULL),
+-- 房间12 (room_id=12)
+(45, '1', 12, 0, NULL), (46, '2', 12, 0, NULL), (47, '3', 12, 0, NULL), (48, '4', 12, 0, NULL),
+-- 房间13 (room_id=13)
+(49, '1', 13, 0, NULL), (50, '2', 13, 0, NULL), (51, '3', 13, 0, NULL), (52, '4', 13, 0, NULL),
+-- 房间14 (room_id=14)
+(53, '1', 14, 0, NULL), (54, '2', 14, 0, NULL), (55, '3', 14, 0, NULL), (56, '4', 14, 0, NULL),
+-- 房间15 (room_id=15)
+(57, '1', 15, 0, NULL), (58, '2', 15, 0, NULL), (59, '3', 15, 0, NULL), (60, '4', 15, 0, NULL),
+-- 房间16 (room_id=16)
+(61, '1', 16, 0, NULL), (62, '2', 16, 0, NULL), (63, '3', 16, 0, NULL), (64, '4', 16, 0, NULL),
+-- 房间17 (room_id=17)
+(65, '1', 17, 0, NULL), (66, '2', 17, 0, NULL), (67, '3', 17, 0, NULL), (68, '4', 17, 0, NULL),
+-- 房间18 (room_id=18)
+(69, '1', 18, 0, NULL), (70, '2', 18, 0, NULL), (71, '3', 18, 0, NULL), (72, '4', 18, 0, NULL),
+-- 房间19 (room_id=19)
+(73, '1', 19, 0, NULL), (74, '2', 19, 0, NULL), (75, '3', 19, 0, NULL), (76, '4', 19, 0, NULL),
+-- 房间20 (room_id=20)
+(77, '1', 20, 0, NULL), (78, '2', 20, 0, NULL), (79, '3', 20, 0, NULL), (80, '4', 20, 0, NULL),
+
+-- 3号楼
+-- 房间21 (room_id=21)
+(81, '1', 21, 0, NULL), (82, '2', 21, 0, NULL), (83, '3', 21, 0, NULL), (84, '4', 21, 0, NULL),
+-- 房间22 (room_id=22)
+(85, '1', 22, 0, NULL), (86, '2', 22, 0, NULL), (87, '3', 22, 0, NULL), (88, '4', 22, 0, NULL),
+-- 房间23 (room_id=23)
+(89, '1', 23, 0, NULL), (90, '2', 23, 0, NULL), (91, '3', 23, 0, NULL), (92, '4', 23, 0, NULL),
+-- 房间24 (room_id=24)
+(93, '1', 24, 0, NULL), (94, '2', 24, 0, NULL), (95, '3', 24, 0, NULL), (96, '4', 24, 0, NULL),
+-- 房间25 (room_id=25)
+(97, '1', 25, 0, NULL), (98, '2', 25, 0, NULL), (99, '3', 25, 0, NULL), (100, '4', 25, 0, NULL),
+-- 房间26 (room_id=26)
+(101, '1', 26, 0, NULL), (102, '2', 26, 0, NULL), (103, '3', 26, 0, NULL), (104, '4', 26, 0, NULL),
+-- 房间27 (room_id=27)
+(105, '1', 27, 0, NULL), (106, '2', 27, 0, NULL), (107, '3', 27, 0, NULL), (108, '4', 27, 0, NULL),
+-- 房间28 (room_id=28)
+(109, '1', 28, 0, NULL), (110, '2', 28, 0, NULL), (111, '3', 28, 0, NULL), (112, '4', 28, 0, NULL),
+-- 房间29 (room_id=29)
+(113, '1', 29, 0, NULL), (114, '2', 29, 0, NULL), (115, '3', 29, 0, NULL), (116, '4', 29, 0, NULL),
+-- 房间30 (room_id=30)
+(117, '1', 30, 0, NULL), (118, '2', 30, 0, NULL), (119, '3', 30, 0, NULL), (120, '4', 30, 0, NULL);
+
+-- ----------------------------
+-- 5. 入住记录表 dorm_checkin_record (原始30人)
+-- 然后更新床位状态
+-- ----------------------------
+INSERT INTO dorm_checkin_record (checkin_id, student_id, bed_id, checkin_time, checkout_time, checkin_status, operator_id, remark) VALUES
+    (1, 4, 1, '2024-09-01 10:00:00', NULL, 1, 1, '正常入住'),
+    (2, 5, 2, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (3, 6, 3, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (4, 7, 4, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (5, 8, 5, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (6, 9, 6, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (7, 10, 7, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (8, 11, 8, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (9, 12, 9, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (10, 13, 10, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (11, 14, 13, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (12, 15, 14, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (13, 16, 15, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (14, 17, 16, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (15, 18, 41, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (16, 19, 42, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (17, 20, 43, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (18, 21, 44, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (19, 22, 45, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (20, 23, 46, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (21, 24, 47, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (22, 25, 48, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (23, 26, 49, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (24, 27, 50, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (25, 28, 81, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (26, 29, 82, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (27, 30, 83, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (28, 31, 84, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (29, 32, 85, '2024-09-01 10:00:00', NULL, 1, 1, NULL),
+    (30, 33, 86, '2024-09-01 10:00:00', NULL, 1, 1, NULL);
+
+-- 根据入住记录更新床位状态为“已入住”
+UPDATE dorm_bed SET bed_status = 1 WHERE bed_id IN (1,2,3,4,5,6,7,8,9,10,13,14,15,16,41,42,43,44,45,46,47,48,49,50,81,82,83,84,85,86);
+
+-- ----------------------------
+-- 6. 调宿申请表 dorm_move_apply (含已通过操作)
+-- 先插入申请记录，再执行通过后的联动更新
+-- ----------------------------
+INSERT INTO dorm_move_apply (apply_id, student_id, original_bed_id, target_bed_id, apply_reason, apply_time, audit_status, auditor_id, audit_time, audit_opinion, remark) VALUES
+    (1, 12, 9, 11, '想换到同房间靠窗床位', '2024-10-10 12:00:00', 0, NULL, NULL, NULL, NULL),
+    (2, 26, 49, 51, '与舍友作息不一致', '2024-10-11 14:00:00', 1, 2, '2024-10-12 09:00:00', '同意调换，已安排', NULL),
+    (3, 32, 85, 87, '身体原因需下铺', '2024-10-15 10:00:00', 2, 3, '2024-10-16 10:00:00', '证明材料不足，暂缓', '需要提供医院证明'),
+    (4, 8, 5, 12, '想住阳面房间', '2024-10-20 16:00:00', 0, NULL, NULL, NULL, NULL),
+    (5, 18, 41, 52, '与同班同学就近', '2024-10-22 08:00:00', 1, 2, '2024-10-23 09:00:00', '批准调宿', NULL);
+
+-- 调宿申请2 (apply_id=2)：学生26 从 bed=49 换到 bed=51
+-- 更新原入住记录为已退宿
+UPDATE dorm_checkin_record SET checkin_status = 2, checkout_time = '2024-10-12 09:00:00', update_time = NOW()
+WHERE student_id = 26 AND checkin_status = 1;
+-- 插入新入住记录
+INSERT INTO dorm_checkin_record (checkin_id, student_id, bed_id, checkin_time, checkout_time, checkin_status, operator_id, remark) VALUES
+    (31, 26, 51, '2024-10-12 09:00:00', NULL, 1, 2, '调宿迁入');
+-- 更新床位状态：原床位置为空闲，目标床位置为已入住
+UPDATE dorm_bed SET bed_status = 0 WHERE bed_id = 49;
+UPDATE dorm_bed SET bed_status = 1 WHERE bed_id = 51;
+
+-- 调宿申请5 (apply_id=5)：学生18 从 bed=41 换到 bed=52
+UPDATE dorm_checkin_record SET checkin_status = 2, checkout_time = '2024-10-23 09:00:00', update_time = NOW()
+WHERE student_id = 18 AND checkin_status = 1;
+INSERT INTO dorm_checkin_record (checkin_id, student_id, bed_id, checkin_time, checkout_time, checkin_status, operator_id, remark) VALUES
+    (32, 18, 52, '2024-10-23 09:00:00', NULL, 1, 2, '调宿迁入');
+UPDATE dorm_bed SET bed_status = 0 WHERE bed_id = 41;
+UPDATE dorm_bed SET bed_status = 1 WHERE bed_id = 52;
+
+-- ----------------------------
+-- 7. 报修表 dorm_repair
+-- ----------------------------
+INSERT INTO dorm_repair (repair_id, student_id, room_id, repair_type, repair_content, contact_phone, submit_time, repair_status, handler_id, handle_result, finish_time, remark) VALUES
+    (1, 4, 1, 1, '水龙头漏水严重，无法关闭', '13800000004', '2024-10-05 10:30:00', 2, 2, '更换水龙头密封垫，已修好', '2024-10-06 15:00:00', NULL),
+    (2, 10, 2, 2, '书桌抽屉断裂', '13800000010', '2024-10-10 16:00:00', 1, 2, NULL, NULL, '已购买零件，等待维修'),
+    (3, 22, 12, 3, '卫生间窗户把手脱落', '13800000022', '2024-10-15 09:00:00', 0, NULL, NULL, NULL, NULL),
+    (4, 28, 21, 4, '空调制冷效果差，可能缺氟', '13800000028', '2024-10-20 14:00:00', 2, 3, '已联系售后加氟，恢复制冷', '2024-10-22 11:00:00', NULL),
+    (5, 15, 4, 1, '日光灯闪烁，有时不亮', '13800000015', '2024-10-25 18:30:00', 0, NULL, NULL, NULL, NULL);
+
+-- ----------------------------
+-- 8. 晚归记录表 dorm_late_return
+-- ----------------------------
+INSERT INTO dorm_late_return (record_id, student_id, building_id, late_time, late_reason, registrar_id, record_time, remark) VALUES
+    (1, 7, 1, '2024-10-15 23:30:00', '实验室项目加班', 2, '2024-10-15 23:35:00', NULL),
+    (2, 20, 2, '2024-10-20 23:45:00', '同学聚会', 3, '2024-10-20 23:50:00', NULL),
+    (3, 23, 2, '2024-11-01 00:10:00', NULL, 3, '2024-11-01 00:15:00', '未说明具体原因'),
+    (4, 29, 3, '2024-11-05 23:50:00', '图书馆复习晚归', 2, '2024-11-05 23:55:00', NULL),
+    (5, 13, 1, '2024-11-10 23:55:00', '参加学术会议返程', 2, '2024-11-10 23:58:00', NULL);
+
+-- ----------------------------
+-- 9. 访客记录表 dorm_visitor
+-- ----------------------------
+INSERT INTO dorm_visitor (visitor_id, visitor_name, id_card, student_id, building_id, visit_time, leave_time, visit_reason, registrar_id, remark) VALUES
+    (1, '张三', '110101199001010001', 4, 1, '2024-10-10 14:00:00', '2024-10-10 17:00:00', '家长探访', 2, NULL),
+    (2, '李四', '110101199002020002', 20, 2, '2024-10-15 10:00:00', NULL, '朋友来访', 3, '计划留宿，已拒绝'),
+    (3, '王五', '110101199003030003', 28, 3, '2024-11-01 16:00:00', '2024-11-01 18:30:00', '讨论竞赛', 2, NULL),
+    (4, '赵六', '110101199004040004', 12, 1, '2024-11-05 09:00:00', NULL, '维修电脑', 2, '已登记，当日未离开'),
+    (5, '孙七', '110101199005050005', 25, 2, '2024-11-10 13:00:00', '2024-11-10 15:00:00', '送学习资料', 3, NULL);
+
+SET FOREIGN_KEY_CHECKS = 1;
+-- ======================= 脚本结束 =======================
