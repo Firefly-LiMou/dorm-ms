@@ -33,7 +33,7 @@
                     <div class="filter-field">
                         <label>报修类型</label>
                         <div class="cselect" data-name="searchRepairType">
-                            <div class="cselect-trigger"><span class="cselect-val placeholder">全部类型</span><svg class="cselect-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+                            <div class="cselect-trigger"><span class="cselect-val placeholder">全部类型</span><svg class="cselect-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
                             <div class="cselect-panel">
                                 <button class="cselect-option selected" data-value="">全部类型</button>
                                 <button class="cselect-option" data-value="1">水电故障</button>
@@ -46,7 +46,7 @@
                     <div class="filter-field">
                         <label>处理状态</label>
                         <div class="cselect" data-name="searchStatus">
-                            <div class="cselect-trigger"><span class="cselect-val placeholder">全部状态</span><svg class="cselect-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+                            <div class="cselect-trigger"><span class="cselect-val placeholder">全部状态</span><svg class="cselect-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
                             <div class="cselect-panel">
                                 <button class="cselect-option selected" data-value="">全部状态</button>
                                 <button class="cselect-option" data-value="0">待处理</button>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="filter-actions">
                         <button type="button" class="btn btn-secondary btn-sm" onclick="search()">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                             查询
                         </button>
                         <button type="button" class="btn btn-ghost btn-sm" onclick="resetSearch()">重置</button>
