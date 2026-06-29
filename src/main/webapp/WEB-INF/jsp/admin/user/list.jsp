@@ -79,6 +79,7 @@
                     <table>
                         <thead>
                             <tr>
+                                <th style="width: 50px;">序号</th>
                                 <th>用户名</th>
                                 <th>姓名</th>
                                 <th>角色</th>
@@ -91,7 +92,7 @@
                         </thead>
                         <tbody id="userTableBody">
                             <tr>
-                                <td colspan="8" class="text-center" style="padding: 40px 0; color: var(--muted);">
+                                <td colspan="9" class="text-center" style="padding: 40px 0; color: var(--muted);">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" style="color: var(--border); margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     加载中...
                                 </td>
@@ -176,7 +177,7 @@
                     pageQueryParams.pageSize = result.data.pageSize;
                 }
             }, function() {
-                $('#userTableBody').html('<tr><td colspan="8" class="text-center" style="padding: 40px 0;"><a href="javascript:void(0)" onclick="loadData(pageQueryParams)" style="color: var(--accent); font-size: var(--fs-meta);">加载失败，点击重试</a></td></tr>');
+                $('#userTableBody').html('<tr><td colspan="9" class="text-center" style="padding: 40px 0;"><a href="javascript:void(0)" onclick="loadData(pageQueryParams)" style="color: var(--accent); font-size: var(--fs-meta);">加载失败，点击重试</a></td></tr>');
             });
         }
 
@@ -185,32 +186,29 @@
             $tbody.empty();
 
             if (!userList || userList.length === 0) {
-                $tbody.html('<tr><td colspan="8" class="text-center" style="padding: 40px 0; color: var(--muted);">暂无数据</td></tr>');
+                $tbody.html('<tr><td colspan="9" class="text-center" style="padding: 40px 0; color: var(--muted);">暂无数据</td></tr>');
                 return;
             }
 
-            userList.forEach(function(user) {
+            var startIndex = (pageQueryParams.pageNum - 1) * pageQueryParams.pageSize;
+            userList.forEach(function(user, index) {
                 var roleText = getRoleText(user.roleType);
                 var rolePill = getRolePill(user.roleType);
                 var genderText = user.gender === 1 ? '男' : (user.gender === 2 ? '女' : '-');
-                var statusHtml = user.status === 1
-                    ? '<span class="pill pill-active">正常</span>'
-                    : '<span class="pill pill-disabled">禁用</span>';
-                var toggleBtn = user.status === 1
-                    ? '<button class="btn btn-ghost btn-sm" onclick="toggleStatus(' + user.userId + ', 0)">禁用</button>'
-                    : '<button class="btn btn-ghost btn-sm" onclick="toggleStatus(' + user.userId + ', 1)">启用</button>';
+                var toggleChecked = user.status === 1 ? ' checked' : '';
+                var toggleHtml = '<label class="toggle"><input type="checkbox"' + toggleChecked + ' onchange="toggleStatus(' + user.userId + ', this.checked)"><span class="toggle-slider"></span></label>';
 
                 var row = '<tr>';
+                row += '<td class="num text-muted">' + (startIndex + index + 1) + '</td>';
                 row += '<td class="num">' + (user.username || '-') + '</td>';
                 row += '<td>' + (user.realName || '-') + '</td>';
                 row += '<td><span class="pill ' + rolePill + '">' + roleText + '</span></td>';
                 row += '<td>' + genderText + '</td>';
                 row += '<td class="num">' + (user.phone ? user.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') : '-') + '</td>';
-                row += '<td>' + statusHtml + '</td>';
+                row += '<td>' + toggleHtml + '</td>';
                 row += '<td class="num text-muted">' + $.formatDate(user.createTime, 'yyyy-MM-dd') + '</td>';
                 row += '<td class="actions">';
                 row += '<a href="${pageContext.request.contextPath}/admin/user/editPage?userId=' + user.userId + '" class="btn btn-ghost btn-sm">编辑</a>';
-                row += toggleBtn;
                 row += '</td>';
                 row += '</tr>';
                 $tbody.append(row);
@@ -237,15 +235,19 @@
             search();
         }
 
-        function toggleStatus(userId, action) {
-            var actionText = action === 1 ? '启用' : '禁用';
+        function toggleStatus(userId, isChecked) {
+            var actionText = isChecked ? '启用' : '禁用';
             $.confirm('确定要' + actionText + '该用户吗？', function() {
                 $.ajaxRequest('/admin/user/toggleStatus/' + userId, 'POST', null, function() {
                     $.toast('success', actionText + '成功');
                     loadData(pageQueryParams);
                 }, function(result) {
                     $.toast('error', result.msg || actionText + '失败');
+                    loadData(pageQueryParams);
                 });
+            }, function() {
+                // 取消时恢复 checkbox 状态
+                loadData(pageQueryParams);
             });
         }
 
