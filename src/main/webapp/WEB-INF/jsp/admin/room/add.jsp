@@ -37,9 +37,17 @@
                             </div>
                             <div class="form-field">
                                 <label>所属楼栋 <span class="required">*</span></label>
-                                <select class="form-control" id="buildingId" name="buildingId">
-                                    <option value="">请选择楼栋</option>
-                                </select>
+                                <div class="cselect" id="buildingIdCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val placeholder">请选择楼栋</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择楼栋</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-field">
                                 <label>所在楼层 <span class="required">*</span></label>
@@ -52,12 +60,20 @@
                             </div>
                             <div class="form-field">
                                 <label>房间类型 <span class="required">*</span></label>
-                                <select class="form-control" id="roomType" name="roomType">
-                                    <option value="">请选择房间类型</option>
-                                    <option value="1">四人间</option>
-                                    <option value="2">六人间</option>
-                                    <option value="3">八人间</option>
-                                </select>
+                                <div class="cselect" id="roomTypeCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val placeholder">请选择房间类型</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择房间类型</div>
+                                        <div class="cselect-option" data-value="1">四人间</div>
+                                        <div class="cselect-option" data-value="2">六人间</div>
+                                        <div class="cselect-option" data-value="3">八人间</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-field">
                                 <label>备注</label>
@@ -90,12 +106,13 @@
         var currentFloorCount = 0;
 
         $(function() {
+            $.initCustomSelect();
             // 加载楼栋列表
             loadBuildingList();
 
             // 楼栋选择变化事件
-            $('#buildingId').on('change', function() {
-                var buildingId = $(this).val();
+            document.querySelector('#buildingIdCselect').addEventListener('cselect:change', function(e) {
+                var buildingId = e.detail.value;
                 if (buildingId) {
                     loadBuildingInfo(buildingId);
                 } else {
@@ -165,10 +182,14 @@
         function loadBuildingList() {
             $.ajaxRequest('/admin/building/page', 'GET', {pageSize: 100}, function(result) {
                 if (result.data && result.data.list) {
-                    var $select = $('#buildingId');
+                    var options = [{value: '', text: '请选择楼栋'}];
                     result.data.list.forEach(function(building) {
-                        $select.append('<option value="' + building.buildingId + '">' + building.buildingName + '</option>');
+                        options.push({value: building.buildingId, text: building.buildingName});
                     });
+                    $.updateCselectOptions(
+                        document.querySelector('#buildingIdCselect'),
+                        options
+                    );
                 }
             });
         }
@@ -198,10 +219,10 @@
         function submitForm() {
             var formData = {
                 roomNo: $('#roomNo').val().trim(),
-                buildingId: parseInt($('#buildingId').val()),
+                buildingId: parseInt(document.querySelector('#buildingIdCselect').dataset.value),
                 floorNum: parseInt($('#floorNum').val()),
                 bedTotal: parseInt($('#bedTotal').val()),
-                roomType: parseInt($('#roomType').val()),
+                roomType: parseInt(document.querySelector('#roomTypeCselect').dataset.value),
                 remark: $('#remark').val().trim() || null
             };
 
