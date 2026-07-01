@@ -8,8 +8,6 @@
     <title>办理入住 - 高校公寓管理系统</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
@@ -26,25 +24,27 @@
             <!-- 内容主体 -->
             <div class="content-body">
                 <!-- 页面标题 -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="page-header">
                     <div>
-                        <h4 style="color: #333; margin-bottom: 8px;">办理入住</h4>
-                        <p style="color: #666; margin: 0;">为学生分配床位，办理入住手续</p>
+                        <h1>办理入住</h1>
+                        <p class="page-meta">为学生分配床位，办理入住手续</p>
                     </div>
                     <a href="${pageContext.request.contextPath}/dorm/checkin/list" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left mr-2"></i>返回列表
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        返回列表
                     </a>
                 </div>
 
                 <!-- 步骤1：选择学生 -->
                 <div class="form-container mb-4">
-                    <h6 class="mb-3"><i class="fas fa-user mr-2"></i>第一步：选择学生</h6>
+                    <h6 class="mb-3">第一步：选择学生</h6>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="studentNo" placeholder="请输入学号" maxlength="20">
                                 <button type="button" class="btn btn-primary" onclick="searchStudent()">
-                                    <i class="fas fa-search mr-1"></i>查询
+                                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                    查询
                                 </button>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                     <!-- 查询结果列表 -->
                     <div id="studentResult" style="display: none;" class="mt-3">
                         <div class="table-responsive">
-                            <table class="table table-sm table-bordered">
+                            <table class="table table-sm">
                                 <thead>
                                     <tr>
                                         <th>学号</th>
@@ -71,26 +71,25 @@
                     <div id="selectedStudent" style="display: none;" class="mt-3">
                         <div class="alert alert-success d-flex justify-content-between align-items-center">
                             <span>
-                                <i class="fas fa-user-check mr-2"></i>
                                 已选学生：<strong id="selectedStudentInfo"></strong>
                                 <input type="hidden" id="studentId">
                             </span>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearSelectedStudent()">
-                                <i class="fas fa-times mr-1"></i>重新选择
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="clearSelectedStudent()">
+                                重新选择
                             </button>
                         </div>
                     </div>
                     <!-- 错误提示 -->
                     <div id="studentError" style="display: none;" class="mt-3">
                         <div class="alert alert-danger">
-                            <i class="fas fa-exclamation-circle mr-2"></i><span id="studentErrorMsg"></span>
+                            <span id="studentErrorMsg"></span>
                         </div>
                     </div>
                 </div>
 
                 <!-- 步骤2：选择床位 -->
                 <div class="form-container mb-4" id="bedSection" style="display: none;">
-                    <h6 class="mb-3"><i class="fas fa-bed mr-2"></i>第二步：选择床位</h6>
+                    <h6 class="mb-3">第二步：选择床位</h6>
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label for="roomId" class="form-label">房间</label>
@@ -109,7 +108,7 @@
 
                 <!-- 步骤3：确认提交 -->
                 <div class="form-container mb-4" id="submitSection" style="display: none;">
-                    <h6 class="mb-3"><i class="fas fa-check-circle mr-2"></i>第三步：确认提交</h6>
+                    <h6 class="mb-3">第三步：确认提交</h6>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -120,7 +119,7 @@
                     </div>
                     <div class="mt-3">
                         <button type="button" class="btn btn-primary" id="btnSubmit" onclick="submitForm()">
-                            <i class="fas fa-save mr-2"></i>确认办理入住
+                            确认办理入住
                         </button>
                     </div>
                 </div>
@@ -219,7 +218,7 @@
                 row += '<td>' + (student.realName || '-') + '</td>';
                 row += '<td>' + (student.grade || '-') + '</td>';
                 row += '<td>' + (student.major || '-') + '</td>';
-                row += '<td><button class="btn btn-sm btn-primary" onclick="selectStudent(' + student.userId + ', \'' + student.username + '\', \'' + student.realName + '\', \'' + grade + '\', \'' + major + '\')"><i class="fas fa-check mr-1"></i>选择</button></td>';
+                row += '<td><button class="btn btn-sm btn-primary" onclick="selectStudent(' + student.userId + ', \'' + student.username + '\', \'' + student.realName + '\', \'' + grade + '\', \'' + major + '\')">选择</button></td>';
                 row += '</tr>';
                 $tbody.append(row);
             });
@@ -378,7 +377,7 @@
                 }, 1000);
             }, function(result) {
                 $.toast('error', result.msg || '办理失败');
-                $('#btnSubmit').prop('disabled', false).html('<i class="fas fa-save mr-2"></i>确认办理入住');
+                $('#btnSubmit').prop('disabled', false).text('确认办理入住');
             });
         }
     </script>
