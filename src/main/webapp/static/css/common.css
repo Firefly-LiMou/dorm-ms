@@ -328,7 +328,6 @@ img { max-width: 100%; height: auto; }
     font-weight: 500;
 }
 
-.menu-link i,
 .menu-link svg {
     width: 16px;
     height: 16px;
@@ -935,8 +934,6 @@ img { max-width: 100%; height: auto; }
     animation: toastSlideIn 0.3s ease;
 }
 
-.custom-toast i { font-size: 16px; }
-
 @keyframes toastSlideIn {
     from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
     to { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -1194,6 +1191,84 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ============================================= */
+/* ========== 详情页标签列 ========== */
+.detail-label {
+    width: 120px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.04em;
+}
+
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.detail-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+.detail-table td:first-child {
+    width: 120px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.04em;
+}
+
+/* ========== 系统信息区域 ========== */
+.info-section {
+    padding: var(--gap-md) var(--gap-lg);
+    border-bottom: 1px solid var(--border);
+}
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+.info-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.info-value {
+    font-size: var(--fs-body);
+    color: var(--fg);
+}
+
+/* ========== 步骤指示器 ========== */
+.step-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: var(--fs-meta);
+    font-weight: 600;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+}
+.step-circle--active {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--surface);
+}
+.step-circle--done {
+    border-color: var(--status-ok);
+    background: var(--status-ok);
+    color: var(--surface);
+}
+.step-circle--pending {
+    border-color: var(--border);
+    background: var(--bg);
+    color: var(--muted);
+}
+
 /* ========== 学生端布局 ========== */
 .student-layout .content-wrapper {
     margin-left: 0;

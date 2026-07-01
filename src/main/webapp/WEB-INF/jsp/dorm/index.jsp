@@ -92,29 +92,29 @@
 
                 <!-- 系统信息 -->
                 <section class="data-panel mb-4">
-                    <div style="padding: var(--gap-md) var(--gap-lg); border-bottom: 1px solid var(--border);">
+                    <div class="info-section">
                         <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 700; margin: 0;">系统信息</h2>
                     </div>
                     <div style="padding: var(--gap-md) var(--gap-lg);">
                         <div class="row">
                             <div class="col-md-6">
-                                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-                                    <span style="color: var(--muted);">当前时间</span>
-                                    <span class="num" id="currentTime"></span>
+                                <div class="info-row" style="border-bottom: 1px solid var(--border);">
+                                    <span class="info-label">当前时间</span>
+                                    <span class="info-value num" id="currentTime"></span>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-                                    <span style="color: var(--muted);">登录账号</span>
-                                    <span>${sessionScope.loginUser.username}</span>
+                                <div class="info-row">
+                                    <span class="info-label">登录账号</span>
+                                    <span class="info-value">${sessionScope.loginUser.username}</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-                                    <span style="color: var(--muted);">角色权限</span>
+                                <div class="info-row" style="border-bottom: 1px solid var(--border);">
+                                    <span class="info-label">角色权限</span>
                                     <span class="pill pill-manager">宿管</span>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-                                    <span style="color: var(--muted);">系统版本</span>
-                                    <span class="num">v1.0.0</span>
+                                <div class="info-row">
+                                    <span class="info-label">系统版本</span>
+                                    <span class="info-value num">v1.0.0</span>
                                 </div>
                             </div>
                         </div>

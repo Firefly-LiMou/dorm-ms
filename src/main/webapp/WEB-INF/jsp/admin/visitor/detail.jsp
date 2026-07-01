@@ -115,12 +115,12 @@
             html += '<div class="col-md-6">';
             html += '<h6 class="mb-3">访客信息</h6>';
             html += '<table class="table">';
-            html += '<tr><td style="width: 120px; color: var(--muted);">访客ID</td><td class="num">' + visitor.visitorId + '</td></tr>';
-            html += '<tr><td style="color: var(--muted);">访客姓名</td><td>' + (visitor.visitorName || '-') + '</td></tr>';
-            html += '<tr><td style="color: var(--muted);">身份证号</td><td class="num">' + (visitor.idCard || '-') + '</td></tr>';
-            html += '<tr><td style="color: var(--muted);">来访时间</td><td class="num">' + $.formatDate(visitor.visitTime) + '</td></tr>';
-            html += '<tr><td style="color: var(--muted);">离开时间</td><td class="num">' + (visitor.leaveTime ? $.formatDate(visitor.leaveTime) : '-') + '</td></tr>';
-            html += '<tr><td style="color: var(--muted);">来访事由</td><td>' + (visitor.visitReason || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">访客ID</td><td class="num">' + visitor.visitorId + '</td></tr>';
+            html += '<tr><td class="detail-label">访客姓名</td><td>' + (visitor.visitorName || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">身份证号</td><td class="num">' + (visitor.idCard || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">来访时间</td><td class="num">' + $.formatDate(visitor.visitTime) + '</td></tr>';
+            html += '<tr><td class="detail-label">离开时间</td><td class="num">' + (visitor.leaveTime ? $.formatDate(visitor.leaveTime) : '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">来访事由</td><td>' + (visitor.visitReason || '-') + '</td></tr>';
             html += '</table>';
             html += '</div>';
 
@@ -128,10 +128,10 @@
             html += '<div class="col-md-6">';
             html += '<h6 class="mb-3">其他信息</h6>';
             html += '<table class="table">';
-            html += '<tr><td style="width: 120px; color: var(--muted);">状态</td><td>' + statusBadge + '</td></tr>';
-            html += '<tr><td style="color: var(--muted);">被访学生</td><td>' + (visitor.studentName || '-') + '</td></tr>';
-            html += '<tr><td style="color: var(--muted);">楼栋</td><td>' + (visitor.buildingName || '-') + '</td></tr>';
-            html += '<tr><td style="color: var(--muted);">登记人</td><td>' + (visitor.registrarName || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">状态</td><td>' + statusBadge + '</td></tr>';
+            html += '<tr><td class="detail-label">被访学生</td><td>' + (visitor.studentName || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">楼栋</td><td>' + (visitor.buildingName || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">登记人</td><td>' + (visitor.registrarName || '-') + '</td></tr>';
             html += '</table>';
             html += '</div>';
             html += '</div>';

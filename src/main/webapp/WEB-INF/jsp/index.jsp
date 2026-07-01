@@ -10,7 +10,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 50%, #01579b 100%);
+            background: linear-gradient(135deg, rgb(196, 69, 58) 0%, rgb(176, 55, 46) 50%, rgb(156, 45, 38) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -36,7 +36,7 @@
         .showcase {
             position: relative;
             text-align: center;
-            color: #fff;
+            color: rgb(255, 255, 255);
             padding: 40px;
             max-width: 680px;
         }
@@ -94,8 +94,8 @@
         .btn-enter {
             display: inline-block;
             padding: 14px 48px;
-            background: #fff;
-            color: #1a73e8;
+            background: rgb(255, 255, 255);
+            color: rgb(196, 69, 58);
             font-size: 16px;
             font-weight: 600;
             border-radius: 30px;
@@ -107,9 +107,8 @@
         .btn-enter:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-            color: #0d47a1;
+            color: rgb(156, 45, 38);
         }
-        .btn-enter i { margin-left: 8px; }
 
         .footer-info {
             margin-top: 48px;

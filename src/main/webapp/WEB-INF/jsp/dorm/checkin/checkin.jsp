@@ -92,16 +92,28 @@
                     <h6 class="mb-3">第二步：选择床位</h6>
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label for="roomId" class="form-label">房间</label>
-                            <select class="form-control" id="roomId">
-                                <option value="">请选择房间</option>
-                            </select>
+                            <label class="form-label">房间</label>
+                            <div class="cselect" id="roomIdCselect">
+                                <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                    <span class="cselect-val placeholder">请选择房间</span>
+                                    <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="cselect-panel" role="listbox">
+                                    <div class="cselect-option" data-value="">请选择房间</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-4">
-                            <label for="bedId" class="form-label">床位</label>
-                            <select class="form-control" id="bedId" disabled>
-                                <option value="">请先选择房间</option>
-                            </select>
+                            <label class="form-label">床位</label>
+                            <div class="cselect" id="bedIdCselect">
+                                <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                    <span class="cselect-val placeholder">请先选择房间</span>
+                                    <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="cselect-panel" role="listbox">
+                                    <div class="cselect-option" data-value="">请先选择房间</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -145,16 +157,17 @@
         var selectedStudentId = null;
 
         $(function() {
+            $.initCustomSelect();
             // 加载房间列表（宿管负责楼栋）
             loadRoomList();
 
             // 房间选择变化事件
-            $('#roomId').on('change', function() {
-                var roomId = $(this).val();
+            document.querySelector('#roomIdCselect').addEventListener('cselect:change', function(e) {
+                var roomId = e.detail.value;
                 if (roomId) {
                     loadFreeBeds(roomId);
                 } else {
-                    $('#bedId').html('<option value="">请先选择房间</option>').prop('disabled', true);
+                    $.updateCselectOptions(document.querySelector('#bedIdCselect'), [{value: '', text: '请先选择房间'}]);
                 }
             });
 
@@ -313,10 +326,11 @@
                     // 加载该楼栋下的房间
                     $.ajaxRequest('/dorm/room/building/' + buildingId, 'GET', null, function(roomResult) {
                         if (roomResult.data) {
-                            var $select = $('#roomId');
+                            var options = [{value: '', text: '请选择房间'}];
                             roomResult.data.forEach(function(room) {
-                                $select.append('<option value="' + room.roomId + '">' + room.roomNo + ' (' + room.roomTypeText + ')</option>');
+                                options.push({value: room.roomId, text: room.roomNo + ' (' + room.roomTypeText + ')'});
                             });
+                            $.updateCselectOptions(document.querySelector('#roomIdCselect'), options);
                         }
                     });
                 } else {
@@ -330,18 +344,18 @@
          * @param {number} roomId - 房间ID
          */
         function loadFreeBeds(roomId) {
-            var $select = $('#bedId');
-            $select.html('<option value="">请选择床位</option>').prop('disabled', true);
+            $.updateCselectOptions(document.querySelector('#bedIdCselect'), [{value: '', text: '加载中...'}]);
 
             $.ajaxRequest('/dorm/bed/free/' + roomId, 'GET', null, function(result) {
                 if (result.data) {
                     if (result.data.length === 0) {
-                        $select.html('<option value="">该房间无空闲床位</option>');
+                        $.updateCselectOptions(document.querySelector('#bedIdCselect'), [{value: '', text: '该房间无空闲床位'}]);
                     } else {
+                        var options = [{value: '', text: '请选择床位'}];
                         result.data.forEach(function(bed) {
-                            $select.append('<option value="' + bed.bedId + '">' + bed.bedNo + '</option>');
+                            options.push({value: bed.bedId, text: bed.bedNo});
                         });
-                        $select.prop('disabled', false);
+                        $.updateCselectOptions(document.querySelector('#bedIdCselect'), options);
                     }
                 }
             });
@@ -356,7 +370,7 @@
                 return;
             }
 
-            var bedId = $('#bedId').val();
+            var bedId = document.querySelector('#bedIdCselect').dataset.value;
             if (!bedId) {
                 $.toast('warning', '请选择床位');
                 return;

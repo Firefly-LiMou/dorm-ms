@@ -59,7 +59,7 @@
                     <div class="col-md-4">
                         <div class="form-container">
                             <h6 class="mb-3">操作提示</h6>
-                            <ul style="color: var(--muted); font-size: 13px; line-height: 1.8;">
+                            <ul style="color: var(--muted); font-size: var(--fs-meta); line-height: 1.8;">
                                 <li>住宿信息由管理员/宿管办理</li>
                                 <li>如需调宿，请到"调宿申请"页面提交申请</li>
                                 <li>如有问题，请联系宿管或管理员</li>

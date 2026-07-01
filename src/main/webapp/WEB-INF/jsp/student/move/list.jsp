@@ -125,7 +125,7 @@
                 var statusBadge = getStatusBadge(item.auditStatus);
                 var actionBtn = '';
                 if (item.auditStatus === 0) {
-                    actionBtn = '<button class="btn btn-sm btn-primary" onclick="cancelApply(' + item.applyId + ')">撤销</button>';
+                    actionBtn = '<button class="btn btn-sm btn-ghost" onclick="cancelApply(' + item.applyId + ')">撤销</button>';
                 } else {
                     actionBtn = '<span class="text-muted">-</span>';
                 }

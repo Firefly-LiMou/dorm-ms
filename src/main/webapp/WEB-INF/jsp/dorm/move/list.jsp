@@ -99,67 +99,50 @@
         </div>
     </div>
 
-    <!-- 审批模态框 -->
-    <div class="modal fade" id="auditModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">审批调宿申请</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <!-- 审批弹窗 -->
+    <div class="modal-overlay" id="auditModal">
+        <div class="modal-custom">
+            <div class="modal-header">
+                <h2>审批调宿申请</h2>
+                <button type="button" class="modal-close" onclick="closeAuditModal()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <h6>申请信息</h6>
+                    <table class="detail-table">
+                        <tr><td class="detail-label">申请人</td><td id="auditStudentName"></td></tr>
+                        <tr><td class="detail-label">原床位</td><td id="auditOriginalBed"></td></tr>
+                        <tr><td class="detail-label">目标床位</td><td id="auditTargetBed"></td></tr>
+                        <tr><td class="detail-label">申请原因</td><td id="auditReason"></td></tr>
+                        <tr><td class="detail-label">申请时间</td><td id="auditTime"></td></tr>
+                    </table>
                 </div>
-                <div class="modal-body">
-                    <!-- 申请详情 -->
+                <form id="auditForm">
+                    <input type="hidden" id="auditApplyId">
                     <div class="mb-3">
-                        <h6>申请信息</h6>
-                        <table class="table table-bordered">
-                            <tr>
-                                <td class="bg-light" style="width: 120px;">申请人</td>
-                                <td id="auditStudentName"></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light">原床位</td>
-                                <td id="auditOriginalBed"></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light">目标床位</td>
-                                <td id="auditTargetBed"></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light">申请原因</td>
-                                <td id="auditReason"></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light">申请时间</td>
-                                <td id="auditTime"></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!-- 审批表单 -->
-                    <form id="auditForm">
-                        <input type="hidden" id="auditApplyId">
-                        <div class="mb-3">
-                            <label class="form-label">审批结果 <span class="required">*</span></label>
-                            <div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="auditStatus" id="auditPass" value="1" checked>
-                                    <label class="form-check-label" for="auditPass">通过</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="auditStatus" id="auditReject" value="2">
-                                    <label class="form-check-label" for="auditReject">驳回</label>
-                                </div>
+                        <label class="form-label">审批结果 <span class="required">*</span></label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="auditStatus" id="auditPass" value="1" checked>
+                                <label class="form-check-label" for="auditPass">通过</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="auditStatus" id="auditReject" value="2">
+                                <label class="form-check-label" for="auditReject">驳回</label>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="auditOpinion" class="form-label">审批意见</label>
-                            <textarea class="form-control" id="auditOpinion" rows="3" placeholder="可选填审批意见" maxlength="255"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="btnAuditSubmit" onclick="submitAudit()">确认提交</button>
-                </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="auditOpinion" class="form-label">审批意见</label>
+                        <textarea class="form-control" id="auditOpinion" rows="3" placeholder="可选填审批意见" maxlength="255"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeAuditModal()">取消</button>
+                <button type="button" class="btn btn-primary" id="btnAuditSubmit" onclick="submitAudit()">确认提交</button>
             </div>
         </div>
     </div>
@@ -361,7 +344,7 @@
                     $('#auditTime').text($.formatDate(apply.applyTime));
                     $('#auditPass').prop('checked', true);
                     $('#auditOpinion').val('');
-                    $('#auditModal').modal('show');
+                    $('#auditModal').addClass('open');
                 }
             }, function(result) {
                 $.toast('error', result.msg || '加载申请详情失败');
@@ -371,6 +354,17 @@
         /**
          * 提交审批
          */
+        function closeAuditModal() {
+            $('#auditModal').removeClass('open');
+        }
+
+        // 遮罩点击关闭
+        $(document).on('click', '.modal-overlay', function(e) {
+            if ($(e.target).hasClass('modal-overlay')) {
+                $(this).removeClass('open');
+            }
+        });
+
         function submitAudit() {
             var applyId = $('#auditApplyId').val();
             var auditStatus = $('input[name="auditStatus"]:checked').val();
@@ -385,7 +379,7 @@
 
             $.ajaxRequest('/dorm/move/audit/' + applyId, 'POST', formData, function(result) {
                 $.toast('success', '审批提交成功');
-                $('#auditModal').modal('hide');
+                closeAuditModal();
                 $('#btnAuditSubmit').prop('disabled', false).text('确认提交');
                 loadData(pageQueryParams);
             }, function(result) {

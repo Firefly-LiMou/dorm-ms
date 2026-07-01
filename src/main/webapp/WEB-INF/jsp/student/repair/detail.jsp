@@ -113,11 +113,10 @@
             steps.forEach(function(step, index) {
                 var isActive = index <= currentStepIndex;
                 var isCurrent = index === currentStepIndex;
-                var stepClass = isActive ? (isCurrent ? 'bg-primary text-white' : 'bg-success text-white') : 'bg-light text-muted';
-                var lineClass = index < steps.length - 1 ? (isActive && index < currentStepIndex ? 'bg-success' : 'bg-light') : '';
+                var stepClass = isCurrent ? 'step-circle--active' : (isActive ? 'step-circle--done' : 'step-circle--pending');
 
                 html += '<div class="d-flex align-items-center">';
-                html += '<div class="rounded-circle d-flex align-items-center justify-content-center ' + stepClass + '" style="width: 36px; height: 36px; font-size: 14px;">';
+                html += '<div class="step-circle ' + stepClass + '">';
                 if (index < currentStepIndex) {
                     html += '&#10003;';
                 } else {
