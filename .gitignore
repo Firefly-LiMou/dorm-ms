@@ -37,7 +37,6 @@ build/
 
 ### Docs ###
 docs/old-docs
-design-prototype
 *.log
 
 ### Config ###

@@ -6,117 +6,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新增房间 - 高校公寓管理系统</title>
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
-    <!-- 公共CSS -->
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
 <body>
     <div class="main-container">
-        <!-- 侧边栏 -->
         <%@ include file="/WEB-INF/jsp/common/sidebar.jsp" %>
 
-        <!-- 内容区域 -->
         <div class="content-wrapper">
-            <!-- 导航栏 -->
             <%@ include file="/WEB-INF/jsp/common/header.jsp" %>
 
-            <!-- 内容主体 -->
             <div class="content-body">
-                <!-- 页面标题 -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="page-header">
                     <div>
-                        <h4 style="color: #333; margin-bottom: 8px;">新增房间</h4>
-                        <p style="color: #666; margin: 0;">创建新的房间信息</p>
+                        <h1>新增房间</h1>
+                        <p class="page-meta">创建新的房间信息</p>
                     </div>
                     <a href="${pageContext.request.contextPath}/admin/room/list" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left mr-2"></i>返回列表
+                        返回列表
                     </a>
                 </div>
 
-                <!-- 表单 -->
                 <div class="form-container">
                     <form id="roomForm" novalidate>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="roomNo">房间编号 <span class="required">*</span></label>
-                                    <input type="text" class="form-control" id="roomNo" name="roomNo" placeholder="如：101" maxlength="20">
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label>房间编号 <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="roomNo" name="roomNo" placeholder="如：101" maxlength="20">
+                            </div>
+                            <div class="form-field">
+                                <label>所属楼栋 <span class="required">*</span></label>
+                                <div class="cselect" id="buildingIdCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val cselect-placeholder">请选择楼栋</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择楼栋</div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="buildingId">所属楼栋 <span class="required">*</span></label>
-                                    <select class="form-control" id="buildingId" name="buildingId">
-                                        <option value="">请选择楼栋</option>
-                                    </select>
+                            <div class="form-field">
+                                <label>所在楼层 <span class="required">*</span></label>
+                                <input type="number" class="form-control" id="floorNum" name="floorNum" placeholder="请选择楼栋后输入" min="1" disabled>
+                                <span class="form-hint" id="floorHint">请先选择楼栋</span>
+                            </div>
+                            <div class="form-field">
+                                <label>额定床位数 <span class="required">*</span></label>
+                                <input type="number" class="form-control" id="bedTotal" name="bedTotal" placeholder="请输入床位数" min="1" max="20">
+                            </div>
+                            <div class="form-field">
+                                <label>房间类型 <span class="required">*</span></label>
+                                <div class="cselect" id="roomTypeCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val cselect-placeholder">请选择房间类型</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择房间类型</div>
+                                        <div class="cselect-option" data-value="1">四人间</div>
+                                        <div class="cselect-option" data-value="2">六人间</div>
+                                        <div class="cselect-option" data-value="3">八人间</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="floorNum">所在楼层 <span class="required">*</span></label>
-                                    <input type="number" class="form-control" id="floorNum" name="floorNum" placeholder="请选择楼栋后输入" min="1" disabled>
-                                    <small class="form-text text-muted" id="floorHint">请先选择楼栋</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="bedTotal">额定床位数 <span class="required">*</span></label>
-                                    <input type="number" class="form-control" id="bedTotal" name="bedTotal" placeholder="请输入床位数" min="1" max="20">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="roomType">房间类型 <span class="required">*</span></label>
-                                    <select class="form-control" id="roomType" name="roomType">
-                                        <option value="">请选择房间类型</option>
-                                        <option value="1">四人间</option>
-                                        <option value="2">六人间</option>
-                                        <option value="3">八人间</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="remark">备注</label>
-                                    <input type="text" class="form-control" id="remark" name="remark" placeholder="如：朝阳房间" maxlength="100">
-                                </div>
+                            <div class="form-field">
+                                <label>备注</label>
+                                <input type="text" class="form-control" id="remark" name="remark" placeholder="如：朝阳房间" maxlength="100">
                             </div>
                         </div>
 
-                        <div class="form-group mt-4">
-                            <button type="submit" class="btn btn-primary" id="btnSubmit">
-                                <i class="fas fa-save mr-2"></i>保存
-                            </button>
-                            <a href="${pageContext.request.contextPath}/admin/room/list" class="btn btn-secondary ml-2">
-                                <i class="fas fa-times mr-2"></i>取消
-                            </a>
+                        <div style="margin-top: var(--gap-lg); display: flex; gap: var(--gap-sm);">
+                            <button type="submit" class="btn btn-primary" id="btnSubmit">保存</button>
+                            <a href="${pageContext.request.contextPath}/admin/room/list" class="btn btn-secondary">取消</a>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- 底部 -->
             <%@ include file="/WEB-INF/jsp/common/footer.jsp" %>
         </div>
     </div>
 
-    <!-- jQuery -->
     <script src="${pageContext.request.contextPath}/static/js/jquery.min.js"></script>
-    <!-- Bootstrap JS -->
     <script src="${pageContext.request.contextPath}/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery Validation -->
     <script src="${pageContext.request.contextPath}/static/js/jquery.validate.min.js"></script>
     <script src="${pageContext.request.contextPath}/static/js/messages_zh.js"></script>
-    <!-- 公共JS -->
     <script src="${pageContext.request.contextPath}/static/js/common.js"></script>
-    <!-- 导航栏JS -->
     <script>window.needChangePasswordFlag = '${sessionScope.needChangePassword}';</script>
     <script src="${pageContext.request.contextPath}/static/js/header.js"></script>
 
@@ -125,12 +106,13 @@
         var currentFloorCount = 0;
 
         $(function() {
+            $.initCustomSelect();
             // 加载楼栋列表
             loadBuildingList();
 
             // 楼栋选择变化事件
-            $('#buildingId').on('change', function() {
-                var buildingId = $(this).val();
+            document.querySelector('#buildingIdCselect').addEventListener('cselect:change', function(e) {
+                var buildingId = e.detail.value;
                 if (buildingId) {
                     loadBuildingInfo(buildingId);
                 } else {
@@ -200,10 +182,14 @@
         function loadBuildingList() {
             $.ajaxRequest('/admin/building/page', 'GET', {pageSize: 100}, function(result) {
                 if (result.data && result.data.list) {
-                    var $select = $('#buildingId');
+                    var options = [{value: '', text: '请选择楼栋'}];
                     result.data.list.forEach(function(building) {
-                        $select.append('<option value="' + building.buildingId + '">' + building.buildingName + '</option>');
+                        options.push({value: building.buildingId, text: building.buildingName});
                     });
+                    $.updateCselectOptions(
+                        document.querySelector('#buildingIdCselect'),
+                        options
+                    );
                 }
             });
         }
@@ -233,10 +219,10 @@
         function submitForm() {
             var formData = {
                 roomNo: $('#roomNo').val().trim(),
-                buildingId: parseInt($('#buildingId').val()),
+                buildingId: parseInt(document.querySelector('#buildingIdCselect').dataset.value),
                 floorNum: parseInt($('#floorNum').val()),
                 bedTotal: parseInt($('#bedTotal').val()),
-                roomType: parseInt($('#roomType').val()),
+                roomType: parseInt(document.querySelector('#roomTypeCselect').dataset.value),
                 remark: $('#remark').val().trim() || null
             };
 
@@ -249,7 +235,7 @@
                 }, 1000);
             }, function(result) {
                 $.toast('error', result.msg || '创建失败');
-                $('#btnSubmit').prop('disabled', false).html('<i class="fas fa-save mr-2"></i>保存');
+                $('#btnSubmit').prop('disabled', false).text('保存');
             });
         }
     </script>

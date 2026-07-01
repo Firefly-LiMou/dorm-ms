@@ -12,135 +12,99 @@
 
 <div class="pagination-container">
     <!-- 分页信息 -->
-    <div class="pagination-info">
-        共 <span id="totalCount">${pageInfo.total}</span> 条记录，
-        第 <span id="currentPage">${pageInfo.pageNum}</span>/<span id="totalPages">${pageInfo.pages}</span> 页
-    </div>
+    <span class="pagination-info">
+        共 <strong>${pageInfo.total}</strong> 条记录，
+        第 <strong>${pageInfo.pageNum}</strong> / <strong>${pageInfo.pages}</strong> 页
+    </span>
 
     <!-- 分页控件 -->
-    <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center pagination-controls">
         <!-- 每页条数选择 -->
         <div class="page-size-select">
             <label>每页</label>
-            <select id="pageSizeSelect" onchange="changePageSize(this.value)">
-                <option value="10" ${pageInfo.pageSize == 10 ? 'selected' : ''}>10</option>
-                <option value="20" ${pageInfo.pageSize == 20 ? 'selected' : ''}>20</option>
-                <option value="50" ${pageInfo.pageSize == 50 ? 'selected' : ''}>50</option>
-            </select>
+            <div class="cselect" id="pageSizeCselect" style="min-width: 70px;">
+                <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false" style="padding: 4px 8px;">
+                    <span class="cselect-val">${pageInfo.pageSize}</span>
+                    <svg class="cselect-arrow" viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="cselect-panel" role="listbox">
+                    <div class="cselect-option ${pageInfo.pageSize == 10 ? 'selected' : ''}" data-value="10">10</div>
+                    <div class="cselect-option ${pageInfo.pageSize == 20 ? 'selected' : ''}" data-value="20">20</div>
+                    <div class="cselect-option ${pageInfo.pageSize == 50 ? 'selected' : ''}" data-value="50">50</div>
+                </div>
+            </div>
             <label>条</label>
         </div>
 
         <!-- 分页按钮 -->
-        <nav>
-            <ul class="pagination mb-0">
-                <!-- 首页 -->
-                <li class="page-item ${pageInfo.pageNum == 1 ? 'disabled' : ''}">
-                    <a class="page-link" href="javascript:void(0)" onclick="goToPage(1)" title="首页">
-                        <i class="fas fa-angle-double-left"></i>
-                    </a>
-                </li>
+        <div class="pagination-pages">
+            <!-- 首页 -->
+            <button class="page-btn" ${pageInfo.pageNum == 1 ? 'disabled' : ''} onclick="goToPage(1)" title="首页">&laquo;</button>
 
-                <!-- 上一页 -->
-                <li class="page-item ${!pageInfo.hasPreviousPage ? 'disabled' : ''}">
-                    <a class="page-link" href="javascript:void(0)" onclick="goToPage(${pageInfo.pageNum - 1})" title="上一页">
-                        <i class="fas fa-angle-left"></i>
-                    </a>
-                </li>
+            <!-- 上一页 -->
+            <button class="page-btn" ${!pageInfo.hasPreviousPage ? 'disabled' : ''} onclick="goToPage(${pageInfo.pageNum - 1})" title="上一页">&lsaquo;</button>
 
-                <!-- 页码 -->
-                <c:choose>
-                    <c:when test="${pageInfo.pages <= 7}">
-                        <!-- 总页数小于等于7，显示所有页码 -->
-                        <c:forEach begin="1" end="${pageInfo.pages}" var="i">
-                            <li class="page-item ${pageInfo.pageNum == i ? 'active' : ''}">
-                                <a class="page-link" href="javascript:void(0)" onclick="goToPage(${i})">${i}</a>
-                            </li>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <!-- 总页数大于7，显示部分页码 -->
-                        <c:choose>
-                            <c:when test="${pageInfo.pageNum <= 4}">
-                                <!-- 当前页在前面 -->
-                                <c:forEach begin="1" end="5" var="i">
-                                    <li class="page-item ${pageInfo.pageNum == i ? 'active' : ''}">
-                                        <a class="page-link" href="javascript:void(0)" onclick="goToPage(${i})">${i}</a>
-                                    </li>
-                                </c:forEach>
-                                <li class="page-item disabled"><span class="page-link">...</span></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript:void(0)" onclick="goToPage(${pageInfo.pages})">${pageInfo.pages}</a>
-                                </li>
-                            </c:when>
-                            <c:when test="${pageInfo.pageNum >= pageInfo.pages - 3}">
-                                <!-- 当前页在后面 -->
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript:void(0)" onclick="goToPage(1)">1</a>
-                                </li>
-                                <li class="page-item disabled"><span class="page-link">...</span></li>
-                                <c:forEach begin="${pageInfo.pages - 4}" end="${pageInfo.pages}" var="i">
-                                    <li class="page-item ${pageInfo.pageNum == i ? 'active' : ''}">
-                                        <a class="page-link" href="javascript:void(0)" onclick="goToPage(${i})">${i}</a>
-                                    </li>
-                                </c:forEach>
-                            </c:when>
-                            <c:otherwise>
-                                <!-- 当前页在中间 -->
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript:void(0)" onclick="goToPage(1)">1</a>
-                                </li>
-                                <li class="page-item disabled"><span class="page-link">...</span></li>
-                                <c:forEach begin="${pageInfo.pageNum - 1}" end="${pageInfo.pageNum + 1}" var="i">
-                                    <li class="page-item ${pageInfo.pageNum == i ? 'active' : ''}">
-                                        <a class="page-link" href="javascript:void(0)" onclick="goToPage(${i})">${i}</a>
-                                    </li>
-                                </c:forEach>
-                                <li class="page-item disabled"><span class="page-link">...</span></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript:void(0)" onclick="goToPage(${pageInfo.pages})">${pageInfo.pages}</a>
-                                </li>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:otherwise>
-                </c:choose>
+            <!-- 页码 -->
+            <c:choose>
+                <c:when test="${pageInfo.pages <= 7}">
+                    <c:forEach begin="1" end="${pageInfo.pages}" var="i">
+                        <button class="page-btn ${pageInfo.pageNum == i ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <c:choose>
+                        <c:when test="${pageInfo.pageNum <= 4}">
+                            <c:forEach begin="1" end="5" var="i">
+                                <button class="page-btn ${pageInfo.pageNum == i ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>
+                            </c:forEach>
+                            <span class="page-ellipsis">...</span>
+                            <button class="page-btn" onclick="goToPage(${pageInfo.pages})">${pageInfo.pages}</button>
+                        </c:when>
+                        <c:when test="${pageInfo.pageNum >= pageInfo.pages - 3}">
+                            <button class="page-btn" onclick="goToPage(1)">1</button>
+                            <span class="page-ellipsis">...</span>
+                            <c:forEach begin="${pageInfo.pages - 4}" end="${pageInfo.pages}" var="i">
+                                <button class="page-btn ${pageInfo.pageNum == i ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <button class="page-btn" onclick="goToPage(1)">1</button>
+                            <span class="page-ellipsis">...</span>
+                            <c:forEach begin="${pageInfo.pageNum - 1}" end="${pageInfo.pageNum + 1}" var="i">
+                                <button class="page-btn ${pageInfo.pageNum == i ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>
+                            </c:forEach>
+                            <span class="page-ellipsis">...</span>
+                            <button class="page-btn" onclick="goToPage(${pageInfo.pages})">${pageInfo.pages}</button>
+                        </c:otherwise>
+                    </c:choose>
+                </c:otherwise>
+            </c:choose>
 
-                <!-- 下一页 -->
-                <li class="page-item ${!pageInfo.hasNextPage ? 'disabled' : ''}">
-                    <a class="page-link" href="javascript:void(0)" onclick="goToPage(${pageInfo.pageNum + 1})" title="下一页">
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </li>
+            <!-- 下一页 -->
+            <button class="page-btn" ${!pageInfo.hasNextPage ? 'disabled' : ''} onclick="goToPage(${pageInfo.pageNum + 1})" title="下一页">&rsaquo;</button>
 
-                <!-- 末页 -->
-                <li class="page-item ${pageInfo.pageNum == pageInfo.pages ? 'disabled' : ''}">
-                    <a class="page-link" href="javascript:void(0)" onclick="goToPage(${pageInfo.pages})" title="末页">
-                        <i class="fas fa-angle-double-right"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+            <!-- 末页 -->
+            <button class="page-btn" ${pageInfo.pageNum == pageInfo.pages ? 'disabled' : ''} onclick="goToPage(${pageInfo.pages})" title="末页">&raquo;</button>
+        </div>
     </div>
 </div>
 
 <script>
+    $(function() {
+        $.initCustomSelect();
+        document.querySelector('#pageSizeCselect').addEventListener('cselect:change', function(e) {
+            changePageSize(e.detail.value);
+        });
+    });
+
     /**
      * 跳转到指定页
-     * @param {number} pageNum - 页码
      */
     function goToPage(pageNum) {
-        // 边界检查
-        if (pageNum < 1 || pageNum > ${pageInfo.pages}) {
-            return;
-        }
-
-        // 获取查询参数
+        if (pageNum < 1 || pageNum > ${pageInfo.pages}) return;
         var queryParams = window.pageQueryParams || {};
-
-        // 更新页码
         queryParams.pageNum = pageNum;
         queryParams.pageSize = ${pageInfo.pageSize};
-
-        // 调用页面的查询函数
         if (typeof window.loadData === 'function') {
             window.loadData(queryParams);
         } else {
@@ -150,17 +114,11 @@
 
     /**
      * 切换每页条数
-     * @param {number} pageSize - 每页条数
      */
     function changePageSize(pageSize) {
-        // 获取查询参数
         var queryParams = window.pageQueryParams || {};
-
-        // 更新分页参数
         queryParams.pageNum = 1;
         queryParams.pageSize = parseInt(pageSize);
-
-        // 调用页面的查询函数
         if (typeof window.loadData === 'function') {
             window.loadData(queryParams);
         } else {

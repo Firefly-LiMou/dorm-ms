@@ -4,48 +4,54 @@
 <c:set var="ROLE_ADMIN" value="1" />
 <c:set var="ROLE_DORM" value="2" />
 <c:set var="ROLE_STUDENT" value="3" />
-<!-- 导航栏 -->
+<!-- 顶部导航栏 -->
 <nav class="navbar">
     <!-- 左侧：Logo和标题 -->
     <div class="navbar-brand">
-        <a href="${pageContext.request.contextPath}/" class="d-flex align-items-center gap-2">
-            <i class="fas fa-building" style="font-size: 24px; color: #007bff;"></i>
-            <span>高校公寓管理系统</span>
+        <a href="${pageContext.request.contextPath}/" class="d-flex align-items-center brand-link">
+            <span>寓<span>管理</span></span>
         </a>
+        <div class="header-divider"></div>
+        <c:choose>
+            <c:when test="${sessionScope.loginUser.roleType == ROLE_ADMIN}">
+                <span class="header-role">系统管理员</span>
+            </c:when>
+            <c:when test="${sessionScope.loginUser.roleType == ROLE_DORM}">
+                <span class="header-role header-role--secondary">宿管</span>
+            </c:when>
+            <c:otherwise>
+                <span class="header-role header-role--secondary">学生</span>
+            </c:otherwise>
+        </c:choose>
         <!-- 移动端侧边栏切换按钮 -->
-        <button class="navbar-toggler d-md-none" style="background: none; border: none; padding: 8px; cursor: pointer;">
-            <i class="fas fa-bars" style="font-size: 20px;"></i>
+        <button class="navbar-toggler d-md-none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
     </div>
 
     <!-- 右侧：用户信息 -->
     <div class="navbar-nav">
         <c:if test="${not empty sessionScope.loginUser}">
-            <!-- 用户信息 -->
             <div class="user-dropdown">
-                <a href="javascript:void(0)" class="nav-link">
-                    <i class="fas fa-user-circle"></i>
-                    <span>${sessionScope.loginUser.realName}</span>
-                    <c:choose>
-                        <c:when test="${sessionScope.loginUser.roleType == ROLE_ADMIN}">
-                            <span class="badge bg-primary" style="font-size: 11px;">管理员</span>
-                        </c:when>
-                        <c:when test="${sessionScope.loginUser.roleType == ROLE_DORM}">
-                            <span class="badge bg-success" style="font-size: 11px;">宿管</span>
-                        </c:when>
-                        <c:otherwise>
-                            <span class="badge bg-info" style="font-size: 11px;">学生</span>
-                        </c:otherwise>
-                    </c:choose>
-                    <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i>
-                </a>
-                <div class="dropdown-menu">
+                <div class="user-trigger">
+                    <div class="avatar">
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.loginUser.realName}">
+                                ${sessionScope.loginUser.realName.substring(0, 1)}
+                            </c:when>
+                            <c:otherwise>U</c:otherwise>
+                        </c:choose>
+                    </div>
+                    <span class="user-name">${sessionScope.loginUser.realName}</span>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="user-menu">
                     <a href="javascript:void(0)" class="dropdown-item" onclick="showChangePasswordModal(false)">
-                        <i class="fas fa-key"></i> 修改密码
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> 修改密码
                     </a>
-                    <div style="border-top: 1px solid #e0e0e0; margin: 4px 0;"></div>
+                    <div class="dropdown-divider"></div>
                     <a href="javascript:void(0)" class="dropdown-item btn-logout">
-                        <i class="fas fa-sign-out-alt"></i> 退出登录
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> 退出登录
                     </a>
                 </div>
             </div>

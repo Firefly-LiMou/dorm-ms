@@ -8,8 +8,6 @@
     <title>床位信息 - 高校公寓管理系统</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
@@ -26,35 +24,49 @@
             <!-- 内容主体 -->
             <div class="content-body">
                 <!-- 页面标题 -->
-                <div class="mb-4">
-                    <h4 style="color: #333; margin-bottom: 8px;">床位信息</h4>
-                    <p style="color: #666; margin: 0;">查看负责楼栋的床位信息</p>
+                <div class="page-header">
+                    <div>
+                        <h1>床位信息</h1>
+                        <p class="page-meta">查看负责楼栋的床位信息</p>
+                    </div>
                 </div>
 
                 <!-- 级联选择 -->
                 <div class="form-container mb-4">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="buildingId" class="form-label">选择楼栋</label>
-                            <select class="form-control" id="buildingId">
-                                <option value="">请选择楼栋</option>
-                            </select>
+                            <label class="form-label">选择楼栋</label>
+                            <div class="cselect" id="buildingIdCselect">
+                                <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                    <span class="cselect-val cselect-placeholder">请选择楼栋</span>
+                                    <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="cselect-panel" role="listbox">
+                                    <div class="cselect-option" data-value="">请选择楼栋</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="roomId" class="form-label">选择房间</label>
-                            <select class="form-control" id="roomId" disabled>
-                                <option value="">请先选择楼栋</option>
-                            </select>
+                            <label class="form-label">选择房间</label>
+                            <div class="cselect" id="roomIdCselect">
+                                <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                    <span class="cselect-val cselect-placeholder">请先选择楼栋</span>
+                                    <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="cselect-panel" role="listbox">
+                                    <div class="cselect-option" data-value="">请先选择楼栋</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 床位列表 -->
                 <div class="form-container">
-                    <h6 class="mb-3"><i class="fas fa-bed mr-2"></i>床位列表</h6>
+                    <h6 class="mb-3">床位列表</h6>
                     <div id="bedListContainer">
                         <div class="text-center py-4 text-muted">
-                            <i class="fas fa-info-circle mr-2"></i>请先选择楼栋和房间
+                            请先选择楼栋和房间
                         </div>
                     </div>
                 </div>
@@ -77,27 +89,27 @@
 
     <script>
         $(function() {
-            // 加载负责楼栋列表
+            $.initCustomSelect();
             loadBuildingList();
 
             // 楼栋选择变化事件
-            $('#buildingId').on('change', function() {
-                var buildingId = $(this).val();
+            document.querySelector('#buildingIdCselect').addEventListener('cselect:change', function(e) {
+                var buildingId = e.detail.value;
                 if (buildingId) {
                     loadRoomList(buildingId);
                 } else {
-                    $('#roomId').html('<option value="">请先选择楼栋</option>').prop('disabled', true);
-                    $('#bedListContainer').html('<div class="text-center py-4 text-muted"><i class="fas fa-info-circle mr-2"></i>请先选择楼栋和房间</div>');
+                    $.updateCselectOptions(document.querySelector('#roomIdCselect'), [{value: '', text: '请先选择楼栋'}]);
+                    $('#bedListContainer').html('<div class="text-center py-4 text-muted">请先选择楼栋和房间</div>');
                 }
             });
 
             // 房间选择变化事件
-            $('#roomId').on('change', function() {
-                var roomId = $(this).val();
+            document.querySelector('#roomIdCselect').addEventListener('cselect:change', function(e) {
+                var roomId = e.detail.value;
                 if (roomId) {
                     loadBedList(roomId);
                 } else {
-                    $('#bedListContainer').html('<div class="text-center py-4 text-muted"><i class="fas fa-info-circle mr-2"></i>请先选择房间</div>');
+                    $('#bedListContainer').html('<div class="text-center py-4 text-muted">请先选择房间</div>');
                 }
             });
         });
@@ -108,12 +120,17 @@
         function loadBuildingList() {
             $.ajaxRequest('/dorm/building/list', 'GET', null, function(result) {
                 if (result.data) {
-                    var $select = $('#buildingId');
+                    var options = [{value: '', text: '请选择楼栋'}];
                     result.data.forEach(function(building) {
-                        $select.append('<option value="' + building.buildingId + '">' + building.buildingName + '</option>');
+                        options.push({value: building.buildingId, text: building.buildingName});
                     });
+                    $.updateCselectOptions(document.querySelector('#buildingIdCselect'), options);
                     if (result.data.length === 1) {
-                        $select.val(result.data[0].buildingId).trigger('change');
+                        var cs = document.querySelector('#buildingIdCselect');
+                        cs.dataset.value = result.data[0].buildingId;
+                        cs.querySelector('.cselect-val').textContent = result.data[0].buildingName;
+                        cs.querySelector('.cselect-val').classList.remove('cselect-placeholder');
+                        cs.dispatchEvent(new CustomEvent('cselect:change', {detail: {value: String(result.data[0].buildingId)}}));
                     }
                 }
             }, function(result) {
@@ -128,15 +145,15 @@
          * @param {number} buildingId - 楼栋ID
          */
         function loadRoomList(buildingId) {
-            var $select = $('#roomId');
-            $select.html('<option value="">请选择房间</option>').prop('disabled', true);
+            $.updateCselectOptions(document.querySelector('#roomIdCselect'), [{value: '', text: '加载中...'}]);
 
             $.ajaxRequest('/dorm/room/building/' + buildingId, 'GET', null, function(result) {
                 if (result.data) {
+                    var options = [{value: '', text: '请选择房间'}];
                     result.data.forEach(function(room) {
-                        $select.append('<option value="' + room.roomId + '">' + room.roomNo + ' (' + room.roomTypeText + ')</option>');
+                        options.push({value: room.roomId, text: room.roomNo + ' (' + room.roomTypeText + ')'});
                     });
-                    $select.prop('disabled', false);
+                    $.updateCselectOptions(document.querySelector('#roomIdCselect'), options);
                 }
             });
         }
@@ -147,16 +164,16 @@
          */
         function loadBedList(roomId) {
             var $container = $('#bedListContainer');
-            $container.html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>加载中...</div>');
+            $container.html('<div class="text-center py-4">加载中...</div>');
 
             $.ajaxRequest('/dorm/bed/room/' + roomId, 'GET', null, function(result) {
                 if (result.data && result.data.length > 0) {
                     renderBedList(result.data);
                 } else {
-                    $container.html('<div class="text-center py-4 text-muted"><i class="fas fa-bed mr-2"></i>该房间暂无床位</div>');
+                    $container.html('<div class="text-center py-4 text-muted">该房间暂无床位</div>');
                 }
             }, function() {
-                $container.html('<div class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadBedList(' + roomId + ')" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></div>');
+                $container.html('<div class="text-center py-4"><a href="javascript:void(0)" onclick="loadBedList(' + roomId + ')" style="color: var(--accent);">加载失败，点击重试</a></div>');
             });
         }
 
@@ -166,7 +183,7 @@
          */
         function renderBedList(bedList) {
             var $container = $('#bedListContainer');
-            var html = '<div class="table-container"><table class="table">';
+            var html = '<div class="data-panel"><table class="table">';
             html += '<thead><tr>';
             html += '<th>床位编号</th>';
             html += '<th>状态</th>';
@@ -176,10 +193,10 @@
             html += '<tbody>';
 
             bedList.forEach(function(bed) {
-                var statusBadge = getStatusBadge(bed.bedStatus);
+                var statusPill = getStatusPill(bed.bedStatus);
                 html += '<tr>';
                 html += '<td>' + (bed.bedNo || '-') + '</td>';
-                html += '<td>' + statusBadge + '</td>';
+                html += '<td>' + statusPill + '</td>';
                 html += '<td>' + (bed.studentName || '-') + '</td>';
                 html += '<td>' + (bed.remark || '-') + '</td>';
                 html += '</tr>';
@@ -190,17 +207,17 @@
         }
 
         /**
-         * 获取状态徽章
+         * 获取状态标签
          * @param {number} status - 床位状态
-         * @returns {string} 状态徽章HTML
+         * @returns {string} 状态标签HTML
          */
-        function getStatusBadge(status) {
+        function getStatusPill(status) {
             var map = {
-                0: '<span class="badge bg-success">空闲</span>',
-                1: '<span class="badge bg-primary">已入住</span>',
-                2: '<span class="badge bg-warning">维修禁用</span>'
+                0: '<span class="pill pill-active">空闲</span>',
+                1: '<span class="pill pill-done">已入住</span>',
+                2: '<span class="pill pill-pending">维修禁用</span>'
             };
-            return map[status] || '<span class="badge bg-secondary">未知</span>';
+            return map[status] || '<span class="pill pill-quiet">未知</span>';
         }
     </script>
 </body>

@@ -8,8 +8,6 @@
     <title>报修详情 - 高校公寓管理系统</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
@@ -26,35 +24,36 @@
             <!-- 内容主体 -->
             <div class="content-body">
                 <!-- 页面标题 -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="page-header">
                     <div>
-                        <h4 style="color: #333; margin-bottom: 8px;">报修详情</h4>
-                        <p style="color: #666; margin: 0;">查看报修信息并处理</p>
+                        <h1>报修详情</h1>
+                        <p class="page-meta">查看报修信息并处理</p>
                     </div>
                     <a href="${pageContext.request.contextPath}/dorm/repair/list" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left mr-1"></i>返回列表
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        返回列表
                     </a>
                 </div>
 
                 <!-- 报修信息 -->
                 <div class="form-container mb-4" id="repairInfo">
                     <div class="text-center py-4">
-                        <i class="fas fa-spinner fa-spin mr-2"></i>加载中...
+                        加载中...
                     </div>
                 </div>
 
                 <!-- 完结报修表单（处理中状态显示） -->
                 <div class="form-container" id="completeFormContainer" style="display: none;">
-                    <h5 class="mb-3"><i class="fas fa-check-circle mr-2"></i>完结报修</h5>
+                    <h5 class="mb-3">完结报修</h5>
                     <form id="completeForm">
                         <div class="mb-3">
-                            <label for="handleResult" class="form-label">处理结果 <span class="text-danger">*</span></label>
+                            <label for="handleResult" class="form-label">处理结果 <span class="required">*</span></label>
                             <textarea class="form-control" id="handleResult" rows="4" placeholder="请输入处理结果（如维修内容、更换配件等）" maxlength="500"></textarea>
                             <div class="invalid-feedback" id="handleResultError"></div>
                             <div class="form-text">最多500个字符</div>
                         </div>
                         <button type="button" class="btn btn-primary" id="btnComplete" onclick="submitComplete()">
-                            <i class="fas fa-check mr-1"></i>确认完结
+                            确认完结
                         </button>
                     </form>
                 </div>
@@ -85,7 +84,7 @@
             currentRepairId = urlParams.get('repairId');
 
             if (!currentRepairId) {
-                $('#repairInfo').html('<div class="text-center py-4 text-danger"><i class="fas fa-exclamation-circle mr-2"></i>参数错误，未指定报修ID</div>');
+                $('#repairInfo').html('<div class="text-center py-4" style="color: var(--accent);">参数错误，未指定报修ID</div>');
                 return;
             }
 
@@ -102,7 +101,7 @@
                     renderRepairInfo(result.data);
                 }
             }, function(result) {
-                $('#repairInfo').html('<div class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadRepairDetail(' + repairId + ')" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></div>');
+                $('#repairInfo').html('<div class="text-center py-4"><a href="javascript:void(0)" onclick="loadRepairDetail(' + repairId + ')" style="color: var(--accent);">加载失败，点击重试</a></div>');
             });
         }
 
@@ -113,33 +112,33 @@
         function renderRepairInfo(repair) {
             var statusBadge = getStatusBadge(repair.repairStatus);
             var typeText = getRepairTypeText(repair.repairType);
-            var timeoutBadge = repair.isTimeout ? ' <span class="badge bg-danger">超时</span>' : '';
+            var timeoutBadge = repair.isTimeout ? ' <span class="pill pill-danger">超时</span>' : '';
 
             var html = '<div class="row">';
             // 左侧：基本信息
             html += '<div class="col-md-6">';
-            html += '<h6 class="mb-3"><i class="fas fa-info-circle mr-2"></i>基本信息</h6>';
-            html += '<table class="table table-bordered">';
-            html += '<tr><td class="bg-light" style="width: 120px;">报修ID</td><td>' + repair.repairId + '</td></tr>';
-            html += '<tr><td class="bg-light">学生姓名</td><td>' + (repair.studentName || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">学号</td><td>' + (repair.studentNo || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">楼栋</td><td>' + (repair.buildingName || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">房间</td><td>' + (repair.roomNo || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">联系电话</td><td>' + (repair.contactPhone || '-') + '</td></tr>';
+            html += '<h6 class="mb-3">基本信息</h6>';
+            html += '<table class="table">';
+            html += '<tr><td class="detail-label">报修ID</td><td class="num">' + repair.repairId + '</td></tr>';
+            html += '<tr><td class="detail-label">学生姓名</td><td>' + (repair.studentName || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">学号</td><td class="num">' + (repair.studentNo || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">楼栋</td><td>' + (repair.buildingName || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">房间</td><td>' + (repair.roomNo || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">联系电话</td><td class="num">' + (repair.contactPhone || '-') + '</td></tr>';
             html += '</table>';
             html += '</div>';
 
             // 右侧：报修信息
             html += '<div class="col-md-6">';
-            html += '<h6 class="mb-3"><i class="fas fa-wrench mr-2"></i>报修信息</h6>';
-            html += '<table class="table table-bordered">';
-            html += '<tr><td class="bg-light" style="width: 120px;">报修类型</td><td>' + typeText + '</td></tr>';
-            html += '<tr><td class="bg-light">报修内容</td><td>' + (repair.repairContent || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">提交时间</td><td>' + $.formatDate(repair.submitTime) + '</td></tr>';
-            html += '<tr><td class="bg-light">状态</td><td>' + statusBadge + timeoutBadge + '</td></tr>';
-            html += '<tr><td class="bg-light">处理人</td><td>' + (repair.handlerName || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">处理结果</td><td>' + (repair.handleResult || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">完成时间</td><td>' + (repair.finishTime ? $.formatDate(repair.finishTime) : '-') + '</td></tr>';
+            html += '<h6 class="mb-3">报修信息</h6>';
+            html += '<table class="table">';
+            html += '<tr><td class="detail-label">报修类型</td><td>' + typeText + '</td></tr>';
+            html += '<tr><td class="detail-label">报修内容</td><td>' + (repair.repairContent || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">提交时间</td><td class="num">' + $.formatDate(repair.submitTime) + '</td></tr>';
+            html += '<tr><td class="detail-label">状态</td><td>' + statusBadge + timeoutBadge + '</td></tr>';
+            html += '<tr><td class="detail-label">处理人</td><td>' + (repair.handlerName || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">处理结果</td><td>' + (repair.handleResult || '-') + '</td></tr>';
+            html += '<tr><td class="detail-label">完成时间</td><td class="num">' + (repair.finishTime ? $.formatDate(repair.finishTime) : '-') + '</td></tr>';
             html += '</table>';
             html += '</div>';
             html += '</div>';
@@ -197,11 +196,11 @@
          */
         function getStatusBadge(status) {
             var map = {
-                0: '<span class="badge bg-warning">待处理</span>',
-                1: '<span class="badge bg-info">处理中</span>',
-                2: '<span class="badge bg-success">已完成</span>'
+                0: '<span class="pill pill-pending">待处理</span>',
+                1: '<span class="pill pill-processing">处理中</span>',
+                2: '<span class="pill pill-done">已完成</span>'
             };
-            return map[status] || '<span class="badge bg-secondary">未知</span>';
+            return map[status] || '<span class="pill pill-quiet">未知</span>';
         }
 
         /**

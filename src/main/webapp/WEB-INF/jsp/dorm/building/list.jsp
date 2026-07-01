@@ -8,8 +8,6 @@
     <title>楼栋信息 - 高校公寓管理系统</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
@@ -26,14 +24,16 @@
             <!-- 内容主体 -->
             <div class="content-body">
                 <!-- 页面标题 -->
-                <div class="mb-4">
-                    <h4 style="color: #333; margin-bottom: 8px;">楼栋信息</h4>
-                    <p style="color: #666; margin: 0;">查看本人所负责的楼栋基本信息</p>
+                <div class="page-header">
+                    <div>
+                        <h1>楼栋信息</h1>
+                        <p class="page-meta">查看本人所负责的楼栋基本信息</p>
+                    </div>
                 </div>
 
                 <!-- 楼栋列表 -->
                 <div class="form-container">
-                    <div class="table-container">
+                    <div class="data-panel">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -47,7 +47,7 @@
                             <tbody id="tableBody">
                                 <tr>
                                     <td colspan="5" class="text-center py-4">
-                                        <i class="fas fa-spinner fa-spin mr-2"></i>加载中...
+                                        加载中...
                                     </td>
                                 </tr>
                             </tbody>
@@ -86,9 +86,9 @@
                 }
             }, function(result) {
                 if (result.msg && result.msg.indexOf('未负责任何楼栋') !== -1) {
-                    $('#tableBody').html('<tr><td colspan="5" class="text-center py-4 text-warning"><i class="fas fa-exclamation-triangle mr-2"></i>您暂未负责任何楼栋，请联系管理员</td></tr>');
+                    $('#tableBody').html('<tr><td colspan="5" class="text-center py-4" style="color: var(--accent-2);">您暂未负责任何楼栋，请联系管理员</td></tr>');
                 } else {
-                    $('#tableBody').html('<tr><td colspan="5" class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadData()" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></td></tr>');
+                    $('#tableBody').html('<tr><td colspan="5" class="text-center py-4"><a href="javascript:void(0)" onclick="loadData()" style="color: var(--accent);">加载失败，点击重试</a></td></tr>');
                 }
             });
         }
@@ -102,7 +102,7 @@
             $tbody.empty();
 
             if (!list || list.length === 0) {
-                $tbody.html('<tr><td colspan="5" class="text-center py-4 text-muted"><i class="fas fa-inbox mr-2"></i>暂无数据</td></tr>');
+                $tbody.html('<tr><td colspan="5" class="text-center py-4 text-muted">暂无数据</td></tr>');
                 return;
             }
 

@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>高校公寓管理系统 · 登录</title>
+  <style>
+    :root {
+      --bg:        #FAF9F5;
+      --surface:   rgba(255,255,255,0.92);
+      --fg:        #2D241C;
+      --muted:     #7A7067;
+      --border:    #EBE6DF;
+      --accent:    #C4453A;
+      --accent-2:  #D4845A;
+      --accent-soft: color-mix(in oklch, var(--accent) 10%, transparent);
+      --accent-2-soft: color-mix(in oklch, var(--accent-2) 12%, transparent);
+      --hover-bg:  rgb(245,244,237);
+      --font-display: 'Georgia', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+      --font-body:    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      --font-mono:    'SF Mono', 'JetBrains Mono', 'Consolas', ui-monospace, monospace;
+      --fs-h1: 32px; --fs-h2: 22px; --fs-h3: 16px;
+      --fs-body: 14px; --fs-meta: 12px; --fs-sm: 11px;
+      --gap-xs: 6px; --gap-sm: 10px; --gap-md: 16px; --gap-lg: 24px; --gap-xl: 40px;
+      --radius: 8px; --radius-lg: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      background: radial-gradient(circle, rgb(237,234,229) 0.8px, transparent 0.8px), var(--bg);
+      background-size: 16px 16px;
+      color: var(--fg); font-family: var(--font-body); font-size: var(--fs-body);
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ═══ Login Card ═══ */
+    .login-card {
+      width: 100%; max-width: 400px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.06);
+      padding: 48px 40px 40px;
+      position: relative;
+      animation: cardEnter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes cardEnter {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ═══ Logo ═══ */
+    .login-logo {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .login-logo-icon {
+      width: 48px; height: 48px;
+      margin: 0 auto 16px;
+      display: grid; place-items: center;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      color: var(--accent);
+      animation: iconPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes iconPulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.04); }
+    }
+    .login-logo-icon svg { width: 24px; height: 24px; }
+    .login-logo h1 {
+      font-family: var(--font-display);
+      font-size: 26px; font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .login-logo h1 span { color: var(--accent); }
+    .login-logo p {
+      font-family: var(--font-mono);
+      font-size: var(--fs-sm);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ═══ Form ═══ */
+    .login-form { display: flex; flex-direction: column; gap: 20px; }
+
+    .field { position: relative; }
+    .field label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: var(--fs-sm);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+      transition: color 0.15s;
+    }
+    .field.focused label { color: var(--accent); }
+
+    .field-input-wrap {
+      position: relative;
+    }
+    .field-input {
+      width: 100%;
+      padding: 11px 14px;
+      padding-right: 42px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--fg);
+      font: inherit; font-size: var(--fs-body);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .field-input::placeholder { color: var(--muted); opacity: 0.6; }
+    .field-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+      background: #FFFFFF;
+    }
+    .field.error .field-input {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 8%, transparent);
+    }
+    .field.valid .field-input { border-color: var(--accent); }
+
+    /* Password toggle */
+    .pwd-toggle {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      width: 28px; height: 28px;
+      display: grid; place-items: center;
+      border: none; background: transparent;
+      color: var(--muted); border-radius: 6px;
+      cursor: pointer; transition: color 0.12s, background 0.12s;
+    }
+    .pwd-toggle:hover { color: var(--fg); background: var(--hover-bg); }
+    .pwd-toggle svg { width: 16px; height: 16px; }
+
+    /* Error message */
+    .field-error {
+      font-size: var(--fs-meta);
+      color: var(--accent);
+      display: flex; align-items: center; gap: 4px;
+      max-height: 0; overflow: hidden;
+      opacity: 0; margin-top: 0;
+      transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.25s ease;
+    }
+    .field-error svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .field.error .field-error {
+      max-height: 40px; opacity: 1; margin-top: 6px;
+    }
+
+    /* Shake animation */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      15%  { transform: translateX(-6px); }
+      30%  { transform: translateX(5px); }
+      45%  { transform: translateX(-4px); }
+      60%  { transform: translateX(3px); }
+      75%  { transform: translateX(-2px); }
+      90%  { transform: translateX(1px); }
+    }
+    .shake { animation: shake 0.45s ease; }
+
+    /* ═══ Remember + Forgot ═══ */
+    .login-options {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: var(--fs-meta); color: var(--muted);
+    }
+    .remember-check {
+      display: flex; align-items: center; gap: 6px;
+      cursor: pointer; user-select: none;
+    }
+    .remember-check input[type="checkbox"] {
+      width: 14px; height: 14px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .forgot-link {
+      color: var(--muted);
+      transition: color 0.12s;
+    }
+    .forgot-link:hover { color: var(--accent); }
+
+    /* ═══ Submit Button ═══ */
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      border: none; border-radius: var(--radius);
+      background: var(--accent);
+      color: var(--surface);
+      font-size: var(--fs-body); font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-submit:hover {
+      background: color-mix(in oklch, var(--accent) 88%, black);
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px color-mix(in oklch, var(--accent) 25%, transparent);
+    }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit:disabled {
+      opacity: 0.6; cursor: not-allowed;
+      transform: none; box-shadow: none;
+    }
+
+    /* Loading spinner */
+    .btn-submit .btn-text { transition: opacity 0.2s; }
+    .btn-submit .btn-spinner {
+      position: absolute; inset: 0;
+      display: grid; place-items: center;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .btn-submit .btn-spinner svg {
+      width: 20px; height: 20px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-submit.loading .btn-text { opacity: 0; }
+    .btn-submit.loading .btn-spinner { opacity: 1; }
+
+    /* Success flash */
+    .btn-submit.success {
+      background: #2E7D6F;
+    }
+
+    /* ═══ Global Error Banner ═══ */
+    .global-error {
+      background: color-mix(in oklch, var(--accent) 6%, transparent);
+      border: 1px solid color-mix(in oklch, var(--accent) 18%, transparent);
+      border-radius: var(--radius);
+      font-size: var(--fs-meta);
+      color: var(--accent);
+      display: flex; align-items: center; gap: 8px;
+      max-height: 0; overflow: hidden;
+      opacity: 0; margin-bottom: 0;
+      padding: 0 14px;
+      border-width: 0;
+      transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease, margin-bottom 0.3s ease, border-width 0.3s ease;
+    }
+    .global-error.show {
+      max-height: 60px; opacity: 1;
+      padding: 10px 14px; margin-bottom: 4px; border-width: 1px;
+    }
+    .global-error svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ═══ Footer ═══ */
+    .login-footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: var(--fs-meta);
+      color: var(--muted);
+    }
+    .login-footer a {
+      color: var(--muted);
+      transition: color 0.12s;
+    }
+    .login-footer a:hover { color: var(--accent); }
+
+    /* ═══ First Login Notice ═══ */
+    .first-login-notice {
+      background: color-mix(in oklch, var(--accent-2) 8%, transparent);
+      border: 1px solid color-mix(in oklch, var(--accent-2) 20%, transparent);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: var(--fs-meta);
+      color: var(--accent-2);
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 4px;
+    }
+    .first-login-notice svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ═══ Focus ring animation ═══ */
+    @keyframes focusRing {
+      0%   { box-shadow: 0 0 0 0 var(--accent-soft); }
+      100% { box-shadow: 0 0 0 3px var(--accent-soft); }
+    }
+
+    /* ═══ Responsive ═══ */
+    @media (max-width: 480px) {
+      .login-card { padding: 36px 24px 32px; }
+      .login-logo h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card" data-od-id="login-card">
+
+    <!-- Logo -->
+    <div class="login-logo">
+      <div class="login-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <h1>寓<span>管理</span></h1>
+      <p>高校公寓管理系统</p>
+    </div>
+
+    <!-- Global Error -->
+    <div class="global-error" id="globalError">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+      </svg>
+      <span id="globalErrorText"></span>
+    </div>
+
+    <!-- First Login Notice -->
+    <div class="first-login-notice" id="firstLoginNotice" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span>首次登录，请修改初始密码</span>
+    </div>
+
+    <!-- Form -->
+    <form class="login-form" id="loginForm" novalidate>
+
+      <!-- Username -->
+      <div class="field" id="fieldUsername">
+        <label for="username">账号</label>
+        <div class="field-input-wrap">
+          <input class="field-input" type="text" id="username" name="username"
+                 placeholder="请输入用户名 / 工号 / 学号" autocomplete="username" autofocus>
+        </div>
+        <div class="field-error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>请输入账号</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="field" id="fieldPassword">
+        <label for="password">密码</label>
+        <div class="field-input-wrap">
+          <input class="field-input" type="password" id="password" name="password"
+                 placeholder="请输入登录密码" autocomplete="current-password">
+          <button type="button" class="pwd-toggle" id="pwdToggle" aria-label="显示密码">
+            <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+        <div class="field-error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>请输入密码</span>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="login-options">
+        <label class="remember-check">
+          <input type="checkbox" id="rememberMe">
+          <span>记住账号</span>
+        </label>
+        <a href="#" class="forgot-link">忘记密码？</a>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span class="btn-text">登 录</span>
+        <span class="btn-spinner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+        </span>
+      </button>
+
+    </form>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      <span>© 2026 高校公寓管理系统 · </span>
+      <a href="#">SSM 框架</a>
+    </div>
+
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      var form       = document.getElementById('loginForm');
+      var username   = document.getElementById('username');
+      var password   = document.getElementById('password');
+      var submitBtn  = document.getElementById('submitBtn');
+      var fieldUser  = document.getElementById('fieldUsername');
+      var fieldPwd   = document.getElementById('fieldPassword');
+      var globalErr  = document.getElementById('globalError');
+      var globalErrT = document.getElementById('globalErrorText');
+      var firstNote  = document.getElementById('firstLoginNotice');
+      var pwdToggle  = document.getElementById('pwdToggle');
+
+      /* ═══ Focus/blur 标签变色 ═══ */
+      [username, password].forEach(function(input) {
+        var field = input.closest('.field');
+        input.addEventListener('focus', function() { field.classList.add('focused'); });
+        input.addEventListener('blur', function() {
+          field.classList.remove('focused');
+          if (input.value.trim()) {
+            field.classList.add('valid');
+            field.classList.remove('error');
+          } else {
+            field.classList.remove('valid');
+          }
+        });
+      });
+
+      /* ═══ 密码可见切换 ═══ */
+      pwdToggle.addEventListener('click', function() {
+        var isPassword = password.type === 'password';
+        password.type = isPassword ? 'text' : 'password';
+        this.querySelector('.eye-open').style.display  = isPassword ? 'none' : '';
+        this.querySelector('.eye-closed').style.display = isPassword ? '' : 'none';
+        this.setAttribute('aria-label', isPassword ? '隐藏密码' : '显示密码');
+      });
+
+      /* ═══ 清除单字段错误（聚焦时清除） ═══ */
+      username.addEventListener('focus', function() {
+        fieldUser.classList.remove('error');
+        hideGlobal();
+      });
+      password.addEventListener('focus', function() {
+        fieldPwd.classList.remove('error');
+        hideGlobal();
+      });
+
+      /* ═══ 表单提交 ═══ */
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var valid = true;
+
+        /* 先清除所有 error，重置动画 */
+        fieldUser.classList.remove('error');
+        fieldPwd.classList.remove('error');
+        void fieldUser.offsetWidth;
+
+        /* 验证用户名 */
+        if (!username.value.trim()) {
+          fieldUser.classList.add('error');
+          fieldUser.classList.remove('valid');
+          fieldUser.querySelector('.field-error span').textContent = '请输入账号';
+          valid = false;
+        }
+
+        /* 验证密码 */
+        if (!password.value.trim()) {
+          fieldPwd.classList.add('error');
+          fieldPwd.classList.remove('valid');
+          fieldPwd.querySelector('.field-error span').textContent = '请输入密码';
+          valid = false;
+        } else if (password.value.length < 6) {
+          fieldPwd.classList.add('error');
+          fieldPwd.classList.remove('valid');
+          fieldPwd.querySelector('.field-error span').textContent = '密码长度不能少于 6 位';
+          valid = false;
+        }
+
+        if (!valid) {
+          /* shake 动画 */
+          var card = document.querySelector('.login-card');
+          card.classList.remove('shake');
+          void card.offsetWidth;
+          card.classList.add('shake');
+          return;
+        }
+
+        /* 模拟登录请求 */
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+
+        setTimeout(function() {
+          submitBtn.classList.remove('loading');
+
+          /* 模拟：admin/123456 → 成功; admin 其他密码 → 首次登录; 其他 → 错误 */
+          if (username.value === 'admin' && password.value === '123456') {
+            submitBtn.classList.add('success');
+            submitBtn.querySelector('.btn-text').textContent = '登录成功';
+            setTimeout(function() {
+              showFirstLogin();
+            }, 600);
+          } else if (username.value === 'admin') {
+            /* 模拟首次登录 */
+            showFirstLogin();
+          } else {
+            showGlobal('账号或密码错误，请重新输入');
+            fieldPwd.classList.add('error');
+            fieldPwd.classList.remove('valid');
+            fieldPwd.querySelector('.field-error span').textContent = '密码不正确';
+            fieldPwd.classList.add('shake');
+            setTimeout(function() { fieldPwd.classList.remove('shake'); }, 500);
+            submitBtn.disabled = false;
+          }
+        }, 1200);
+      });
+
+      /* ═══ 全局错误提示 ═══ */
+      function showGlobal(msg) {
+        globalErrT.textContent = msg;
+        globalErr.classList.remove('show');
+        void globalErr.offsetWidth;
+        globalErr.classList.add('show');
+      }
+      function hideGlobal() {
+        globalErr.classList.remove('show');
+      }
+
+      /* ═══ 首次登录提示 ═══ */
+      function showFirstLogin() {
+        firstNote.style.display = '';
+        firstNote.style.maxHeight = '0';
+        firstNote.style.opacity = '0';
+        firstNote.style.transition = 'max-height 0.3s ease, opacity 0.2s ease';
+        void firstNote.offsetWidth;
+        firstNote.style.maxHeight = '60px';
+        firstNote.style.opacity = '1';
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('success');
+        submitBtn.querySelector('.btn-text').textContent = '登 录';
+      }
+
+      /* ═══ 键盘: Enter 提交 ═══ */
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !submitBtn.disabled) {
+          form.dispatchEvent(new Event('submit'));
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

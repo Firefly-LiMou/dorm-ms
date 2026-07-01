@@ -6,149 +6,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>编辑用户 - 高校公寓管理系统</title>
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
-    <!-- 公共CSS -->
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
 <body>
     <div class="main-container">
-        <!-- 侧边栏 -->
         <%@ include file="/WEB-INF/jsp/common/sidebar.jsp" %>
 
-        <!-- 内容区域 -->
         <div class="content-wrapper">
-            <!-- 导航栏 -->
             <%@ include file="/WEB-INF/jsp/common/header.jsp" %>
 
-            <!-- 内容主体 -->
             <div class="content-body">
-                <!-- 页面标题 -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="page-header">
                     <div>
-                        <h4 style="color: #333; margin-bottom: 8px;">编辑用户</h4>
-                        <p style="color: #666; margin: 0;">修改用户信息</p>
+                        <h1>编辑用户</h1>
+                        <p class="page-meta">修改用户信息</p>
                     </div>
                     <a href="${pageContext.request.contextPath}/admin/user/list" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left mr-2"></i>返回列表
+                        返回列表
                     </a>
                 </div>
 
-                <!-- 表单 -->
                 <div class="form-container">
                     <form id="userForm" novalidate>
                         <input type="hidden" id="userId" name="userId">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="username">用户名</label>
-                                    <input type="text" class="form-control" id="username" name="username" readonly>
-                                    <small class="form-text text-muted">用户名不可修改</small>
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label>用户名</label>
+                                <input type="text" class="form-control" id="username" name="username" readonly>
+                                <span class="form-hint">用户名不可修改</span>
+                            </div>
+                            <div class="form-field">
+                                <label>真实姓名 <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="realName" name="realName" placeholder="请输入真实姓名" maxlength="20">
+                            </div>
+                            <div class="form-field">
+                                <label>角色类型 <span class="required">*</span></label>
+                                <div class="cselect" id="roleTypeCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val cselect-placeholder">请选择角色</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择角色</div>
+                                        <div class="cselect-option" data-value="1">管理员</div>
+                                        <div class="cselect-option" data-value="2">宿管</div>
+                                        <div class="cselect-option" data-value="3">学生</div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="realName">真实姓名 <span class="required">*</span></label>
-                                    <input type="text" class="form-control" id="realName" name="realName" placeholder="请输入真实姓名" maxlength="20">
+                            <div class="form-field">
+                                <label>性别</label>
+                                <div class="cselect" id="genderCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val cselect-placeholder">请选择性别</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option" data-value="">请选择性别</div>
+                                        <div class="cselect-option" data-value="1">男</div>
+                                        <div class="cselect-option" data-value="2">女</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="roleType">角色类型 <span class="required">*</span></label>
-                                    <select class="form-control" id="roleType" name="roleType">
-                                        <option value="">请选择角色</option>
-                                        <option value="1">管理员</option>
-                                        <option value="2">宿管</option>
-                                        <option value="3">学生</option>
-                                    </select>
-                                </div>
+                            <div class="form-field">
+                                <label>联系电话</label>
+                                <input type="text" class="form-control" id="phone" name="phone" placeholder="请输入联系电话" maxlength="11">
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="gender">性别</label>
-                                    <select class="form-control" id="gender" name="gender">
-                                        <option value="">请选择性别</option>
-                                        <option value="1">男</option>
-                                        <option value="2">女</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="phone">联系电话</label>
-                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="请输入联系电话" maxlength="11">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="status">账号状态</label>
-                                    <select class="form-control" id="status" name="status">
-                                        <option value="1">正常</option>
-                                        <option value="0">禁用</option>
-                                    </select>
+                            <div class="form-field">
+                                <label>账号状态</label>
+                                <div class="cselect" id="statusCselect">
+                                    <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                        <span class="cselect-val">正常</span>
+                                        <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="cselect-panel" role="listbox">
+                                        <div class="cselect-option selected" data-value="1">正常</div>
+                                        <div class="cselect-option" data-value="0">禁用</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- 学生专属字段 -->
-                        <div id="studentFields" style="display: none;">
-                            <hr>
-                            <h6 class="mb-3"><i class="fas fa-graduation-cap mr-2"></i>学生信息</h6>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="grade">年级</label>
-                                        <input type="text" class="form-control" id="grade" name="grade" placeholder="如：2024级">
-                                    </div>
+                        <div id="studentFields" style="display: none; margin-top: var(--gap-md);">
+                            <div style="border-top: 1px solid var(--border); padding-top: var(--gap-md); margin-bottom: var(--gap-md);">
+                                <span style="font-family: var(--font-mono); font-size: var(--fs-sm); letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);">学生信息</span>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label>年级</label>
+                                    <input type="text" class="form-control" id="grade" name="grade" placeholder="如：2024">
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="major">专业</label>
-                                        <input type="text" class="form-control" id="major" name="major" placeholder="请输入专业">
-                                    </div>
+                                <div class="form-field">
+                                    <label>专业</label>
+                                    <input type="text" class="form-control" id="major" name="major" placeholder="请输入专业">
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="className">班级</label>
-                                        <input type="text" class="form-control" id="className" name="className" placeholder="请输入班级">
-                                    </div>
+                                <div class="form-field full">
+                                    <label>班级</label>
+                                    <input type="text" class="form-control" id="className" name="className" placeholder="请输入班级">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group mt-4">
-                            <button type="submit" class="btn btn-primary" id="btnSubmit">
-                                <i class="fas fa-save mr-2"></i>保存
-                            </button>
-                            <a href="${pageContext.request.contextPath}/admin/user/list" class="btn btn-secondary ml-2">
-                                <i class="fas fa-times mr-2"></i>取消
-                            </a>
+                        <div style="margin-top: var(--gap-lg); display: flex; gap: var(--gap-sm);">
+                            <button type="submit" class="btn btn-primary" id="btnSubmit">保存</button>
+                            <a href="${pageContext.request.contextPath}/admin/user/list" class="btn btn-secondary">取消</a>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- 底部 -->
             <%@ include file="/WEB-INF/jsp/common/footer.jsp" %>
         </div>
     </div>
 
-    <!-- jQuery -->
     <script src="${pageContext.request.contextPath}/static/js/jquery.min.js"></script>
-    <!-- Bootstrap JS -->
     <script src="${pageContext.request.contextPath}/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery Validation -->
     <script src="${pageContext.request.contextPath}/static/js/jquery.validate.min.js"></script>
     <script src="${pageContext.request.contextPath}/static/js/messages_zh.js"></script>
-    <!-- 公共JS -->
     <script src="${pageContext.request.contextPath}/static/js/common.js"></script>
-    <!-- 导航栏JS -->
     <script>window.needChangePasswordFlag = '${sessionScope.needChangePassword}';</script>
     <script src="${pageContext.request.contextPath}/static/js/header.js"></script>
 
@@ -169,9 +153,12 @@
             // 加载用户数据
             loadUserData(userId);
 
-            // 角色类型变化时显示/隐藏学生字段
-            $('#roleType').on('change', function() {
-                if ($(this).val() === '3') {
+            // 初始化自定义下拉框
+            $.initCustomSelect();
+
+            // 角色类型变化事件
+            document.querySelector('#roleTypeCselect').addEventListener('cselect:change', function(e) {
+                if (e.detail.value === '3') {
                     $('#studentFields').show();
                 } else {
                     $('#studentFields').hide();
@@ -223,13 +210,32 @@
                     $('#userId').val(user.userId);
                     $('#username').val(user.username);
                     $('#realName').val(user.realName);
-                    $('#roleType').val(user.roleType);
-                    $('#gender').val(user.gender || '');
                     $('#phone').val(user.phone || '');
-                    $('#status').val(user.status);
                     $('#grade').val(user.grade || '');
                     $('#major').val(user.major || '');
                     $('#className').val(user.className || '');
+
+                    // 设置角色类型 cselect
+                    var roleTypeEl = document.querySelector('#roleTypeCselect');
+                    var roleTypeText = {1: '管理员', 2: '宿管', 3: '学生'}[user.roleType] || '请选择角色';
+                    roleTypeEl.dataset.value = user.roleType;
+                    roleTypeEl.querySelector('.cselect-val').textContent = roleTypeText;
+                    roleTypeEl.querySelector('.cselect-val').classList.remove('cselect-placeholder');
+
+                    // 设置性别 cselect
+                    var genderEl = document.querySelector('#genderCselect');
+                    var genderText = {1: '男', 2: '女'}[user.gender] || '请选择性别';
+                    genderEl.dataset.value = user.gender || '';
+                    genderEl.querySelector('.cselect-val').textContent = genderText;
+                    if (user.gender) {
+                        genderEl.querySelector('.cselect-val').classList.remove('cselect-placeholder');
+                    }
+
+                    // 设置状态 cselect
+                    var statusEl = document.querySelector('#statusCselect');
+                    var statusText = {1: '正常', 0: '禁用'}[user.status] || '正常';
+                    statusEl.dataset.value = user.status;
+                    statusEl.querySelector('.cselect-val').textContent = statusText;
 
                     // 显示学生字段
                     if (user.roleType === 3) {
@@ -252,10 +258,10 @@
                 userId: parseInt($('#userId').val()),
                 username: $('#username').val().trim(),
                 realName: $('#realName').val().trim(),
-                roleType: parseInt($('#roleType').val()),
-                gender: $('#gender').val() ? parseInt($('#gender').val()) : null,
+                roleType: parseInt(document.querySelector('#roleTypeCselect').dataset.value),
+                gender: document.querySelector('#genderCselect').dataset.value ? parseInt(document.querySelector('#genderCselect').dataset.value) : null,
                 phone: $('#phone').val().trim() || null,
-                status: parseInt($('#status').val()),
+                status: parseInt(document.querySelector('#statusCselect').dataset.value),
                 grade: $('#grade').val().trim() || null,
                 major: $('#major').val().trim() || null,
                 className: $('#className').val().trim() || null
@@ -271,7 +277,7 @@
                 }, 1000);
             }, function(result) {
                 $.toast('error', result.msg || '更新失败');
-                $('#btnSubmit').prop('disabled', false).html('<i class="fas fa-save mr-2"></i>保存');
+                $('#btnSubmit').prop('disabled', false).text('保存');
             });
         }
     </script>
