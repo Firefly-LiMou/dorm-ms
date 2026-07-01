@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新增楼栋 - 高校公寓管理系统</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
 <body>
