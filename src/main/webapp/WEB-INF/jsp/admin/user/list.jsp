@@ -79,7 +79,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 50px;">序号</th>
+                                <th style="width: 62px;">序号</th>
                                 <th>用户名</th>
                                 <th>姓名</th>
                                 <th>角色</th>

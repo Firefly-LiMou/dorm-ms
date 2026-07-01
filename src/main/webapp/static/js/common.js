@@ -354,6 +354,26 @@
             var valEl = cs.querySelector('.cselect-val');
             if (!trigger || !panel) return;
 
+            // 悬浮展开/收起
+            var hoverTimer = null;
+            cs.addEventListener('mouseenter', function() {
+                clearTimeout(hoverTimer);
+                hoverTimer = setTimeout(function() {
+                    document.querySelectorAll('.cselect.open').forEach(function(o) {
+                        if (o !== cs) o.classList.remove('open');
+                    });
+                    cs.classList.add('open');
+                    trigger.setAttribute('aria-expanded', 'true');
+                }, 120);
+            });
+            cs.addEventListener('mouseleave', function() {
+                clearTimeout(hoverTimer);
+                hoverTimer = setTimeout(function() {
+                    cs.classList.remove('open');
+                    trigger.setAttribute('aria-expanded', 'false');
+                }, 200);
+            });
+
             trigger.addEventListener('click', function(e) {
                 e.stopPropagation();
                 document.querySelectorAll('.cselect.open').forEach(function(o) {
@@ -366,6 +386,7 @@
             panel.querySelectorAll('.cselect-option').forEach(function(opt) {
                 opt.addEventListener('click', function(e) {
                     e.stopPropagation();
+                    clearTimeout(hoverTimer);
                     panel.querySelectorAll('.cselect-option').forEach(function(o) { o.classList.remove('selected'); });
                     opt.classList.add('selected');
                     if (valEl) {
@@ -374,6 +395,7 @@
                     }
                     cs.classList.remove('open');
                     cs.dataset.value = opt.dataset.value;
+                    cs.classList.toggle('has-value', !!opt.dataset.value);
 
                     // 触发自定义事件
                     var event = new CustomEvent('cselect:change', {
@@ -435,6 +457,7 @@
             valEl.classList.toggle('cselect-placeholder', !options[0] || !options[0].value);
         }
         cselectEl.dataset.value = options[0] ? options[0].value : '';
+        cselectEl.classList.toggle('has-value', !!(options[0] && options[0].value));
 
         // 重新绑定事件（移除已初始化标记）
         delete cselectEl.dataset.initialized;
@@ -445,6 +468,19 @@
      * 初始化页面公共功能
      */
     $(document).ready(function() {
+        // 输入框有内容时添加 has-value 类（主题色边框）
+        function syncHasValue(el) {
+            var v = $(el).val();
+            $(el).toggleClass('has-value', !!v && v.trim().length > 0);
+        }
+        $(document).on('input change blur keyup', 'input.form-control:not([readonly]), textarea.form-control:not([readonly])', function() {
+            syncHasValue(this);
+        });
+        // 初始化已有值的输入框
+        $('input.form-control:not([readonly]), textarea.form-control:not([readonly])').each(function() {
+            syncHasValue(this);
+        });
+
         // 移动端侧边栏切换
         $('.navbar-toggler').on('click', function() {
             $('.sidebar').toggleClass('show');

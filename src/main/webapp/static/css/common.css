@@ -421,10 +421,12 @@ img { max-width: 100%; height: auto; }
     background: var(--hover-bg);
 }
 
-.table .actions {
+.table .actions,
+.data-panel .actions {
     display: flex;
     gap: 8px;
     white-space: nowrap;
+    align-items: center;
 }
 
 /* ============================================= */
@@ -601,6 +603,7 @@ img { max-width: 100%; height: auto; }
 }
 
 .cselect-trigger:hover { border-color: var(--accent); }
+.cselect.has-value .cselect-trigger { border-color: var(--accent); }
 
 .cselect-val {
     font-size: var(--fs-body);
@@ -710,6 +713,10 @@ img { max-width: 100%; height: auto; }
     border-color: var(--accent);
     outline: none;
     box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.form-control.has-value:not([readonly]),
+.form-control:not(:placeholder-shown):not([readonly]) {
+    border-color: var(--accent);
 }
 
 .form-control.error { border-color: var(--accent); }
