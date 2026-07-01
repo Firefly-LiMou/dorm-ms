@@ -38,6 +38,8 @@ build/
 ### Docs ###
 docs/old-docs
 design-prototype
+*.log
 
 ### Config ###
 /src/main/resources/config/jdbc.properties
+/src/test/resources/config/jdbc-test.properties
