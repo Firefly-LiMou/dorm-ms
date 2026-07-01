@@ -6,191 +6,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>宿管首页 - 高校公寓管理系统</title>
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
-    <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
 <body>
     <div class="main-container">
-        <!-- 侧边栏 -->
         <%@ include file="/WEB-INF/jsp/common/sidebar.jsp" %>
 
-        <!-- 内容区域 -->
         <div class="content-wrapper">
-            <!-- 导航栏 -->
             <%@ include file="/WEB-INF/jsp/common/header.jsp" %>
 
-            <!-- 内容主体 -->
             <div class="content-body">
-                <!-- 欢迎信息 -->
-                <div class="mb-4">
-                    <h4 style="color: #333; margin-bottom: 8px;">欢迎回来，${sessionScope.loginUser.realName}！</h4>
-                    <p style="color: #666; margin: 0;">您当前的身份是：<span class="badge bg-success">宿管</span></p>
+                <!-- 页面头部 -->
+                <div class="page-header">
+                    <div>
+                        <h1>宿管工作台</h1>
+                        <p class="page-meta">欢迎回来，${sessionScope.loginUser.realName} · 宿管工作概览</p>
+                    </div>
                 </div>
 
                 <!-- 统计卡片 -->
-                <div class="row mb-4">
-                    <div class="col-md-4 col-sm-6 mb-3">
-                        <div class="card" style="border-left: 4px solid #007bff;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6 class="card-title text-muted mb-1">负责楼栋</h6>
-                                        <h3 class="mb-0" id="buildingCount">--</h3>
-                                    </div>
-                                    <div style="font-size: 40px; color: #007bff; opacity: 0.3;">
-                                        <i class="fas fa-building"></i>
-                                    </div>
-                                </div>
-                            </div>
+                <section class="row mb-4">
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-card-label">负责楼栋</div>
+                            <div class="stat-card-value" id="buildingCount">--</div>
+                            <div class="stat-card-sub">当前管理楼栋</div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 mb-3">
-                        <div class="card" style="border-left: 4px solid #ffc107;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6 class="card-title text-muted mb-1">待处理报修</h6>
-                                        <h3 class="mb-0" id="repairCount">--</h3>
-                                    </div>
-                                    <div style="font-size: 40px; color: #ffc107; opacity: 0.3;">
-                                        <i class="fas fa-wrench"></i>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-card-label">待处理报修</div>
+                            <div class="stat-card-value accent" id="repairCount">--</div>
+                            <div class="stat-card-sub">需跟进处理</div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 mb-3">
-                        <div class="card" style="border-left: 4px solid #dc3545;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6 class="card-title text-muted mb-1">本月晚归</h6>
-                                        <h3 class="mb-0" id="lateReturnCount">--</h3>
-                                    </div>
-                                    <div style="font-size: 40px; color: #dc3545; opacity: 0.3;">
-                                        <i class="fas fa-moon"></i>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-card-label">本月晚归</div>
+                            <div class="stat-card-value accent2" id="lateReturnCount">--</div>
+                            <div class="stat-card-sub">本月晚归人次</div>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <!-- 快捷操作 -->
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header bg-white">
-                                <h6 class="mb-0"><i class="fas fa-tachometer-alt mr-2"></i>快捷操作</h6>
+                <section class="row mb-4">
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <a href="${pageContext.request.contextPath}/dorm/checkin/list" class="module-card">
+                            <div class="module-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-6 mb-3">
-                                        <a href="${pageContext.request.contextPath}/dorm/checkin/list" class="btn btn-outline-primary w-100">
-                                            <i class="fas fa-clipboard-list mr-2"></i>入住登记
-                                        </a>
-                                    </div>
-                                    <div class="col-6 mb-3">
-                                        <a href="${pageContext.request.contextPath}/dorm/repair/list" class="btn btn-outline-warning w-100">
-                                            <i class="fas fa-wrench mr-2"></i>报修处理
-                                        </a>
-                                    </div>
-                                    <div class="col-6 mb-3">
-                                        <a href="${pageContext.request.contextPath}/dorm/late-return/list" class="btn btn-outline-info w-100">
-                                            <i class="fas fa-moon mr-2"></i>晚归登记
-                                        </a>
-                                    </div>
-                                    <div class="col-6 mb-3">
-                                        <a href="${pageContext.request.contextPath}/dorm/visitor/list" class="btn btn-outline-success w-100">
-                                            <i class="fas fa-user-friends mr-2"></i>访客登记
-                                        </a>
-                                    </div>
+                            <h3>入住登记</h3>
+                            <p>办理入住，分配空闲床位</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <a href="${pageContext.request.contextPath}/dorm/repair/list" class="module-card">
+                            <div class="module-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                            </div>
+                            <h3>报修处理</h3>
+                            <p>查看报修工单，跟进处理</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <a href="${pageContext.request.contextPath}/dorm/late-return/list" class="module-card">
+                            <div class="module-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                            </div>
+                            <h3>晚归登记</h3>
+                            <p>登记学生晚归信息</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <a href="${pageContext.request.contextPath}/dorm/visitor/list" class="module-card">
+                            <div class="module-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
+                            <h3>访客登记</h3>
+                            <p>登记来访访客信息</p>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- 系统信息 -->
+                <section class="data-panel mb-4">
+                    <div style="padding: var(--gap-md) var(--gap-lg); border-bottom: 1px solid var(--border);">
+                        <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 700; margin: 0;">系统信息</h2>
+                    </div>
+                    <div style="padding: var(--gap-md) var(--gap-lg);">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+                                    <span style="color: var(--muted);">当前时间</span>
+                                    <span class="num" id="currentTime"></span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                                    <span style="color: var(--muted);">登录账号</span>
+                                    <span>${sessionScope.loginUser.username}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+                                    <span style="color: var(--muted);">角色权限</span>
+                                    <span class="pill pill-manager">宿管</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                                    <span style="color: var(--muted);">系统版本</span>
+                                    <span class="num">v1.0.0</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header bg-white">
-                                <h6 class="mb-0"><i class="fas fa-clock mr-2"></i>系统信息</h6>
-                            </div>
-                            <div class="card-body">
-                                <ul class="list-unstyled mb-0">
-                                    <li class="mb-2">
-                                        <i class="fas fa-calendar-alt mr-2 text-muted"></i>
-                                        <span class="text-muted">当前时间：</span>
-                                        <span id="currentTime"></span>
-                                    </li>
-                                    <li class="mb-2">
-                                        <i class="fas fa-user mr-2 text-muted"></i>
-                                        <span class="text-muted">登录账号：</span>
-                                        <span>${sessionScope.loginUser.username}</span>
-                                    </li>
-                                    <li class="mb-2">
-                                        <i class="fas fa-shield-alt mr-2 text-muted"></i>
-                                        <span class="text-muted">角色权限：</span>
-                                        <span class="badge bg-success">宿管</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-info-circle mr-2 text-muted"></i>
-                                        <span class="text-muted">系统版本：</span>
-                                        <span>v1.0.0</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </section>
             </div>
 
-            <!-- 底部 -->
             <%@ include file="/WEB-INF/jsp/common/footer.jsp" %>
         </div>
     </div>
 
-    <!-- jQuery -->
     <script src="${pageContext.request.contextPath}/static/js/jquery.min.js"></script>
-    <!-- Bootstrap JS -->
     <script src="${pageContext.request.contextPath}/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- 公共JS -->
     <script src="${pageContext.request.contextPath}/static/js/common.js"></script>
-    <!-- 导航栏JS -->
     <script>window.needChangePasswordFlag = '${sessionScope.needChangePassword}';</script>
     <script src="${pageContext.request.contextPath}/static/js/header.js"></script>
 
     <script>
         $(function() {
-            // 更新当前时间
             function updateTime() {
                 var now = new Date();
-                var timeStr = $.formatDate(now, 'yyyy-MM-dd HH:mm:ss');
-                $('#currentTime').text(timeStr);
+                $('#currentTime').text($.formatDate(now, 'yyyy-MM-dd HH:mm:ss'));
             }
             updateTime();
             setInterval(updateTime, 60000);
-
-            // 加载统计数据
             loadStatistics();
         });
 
-        /**
-         * 设置统计卡片加载失败状态
-         * @param {string} elementId - 卡片元素ID
-         */
         function setLoadError(elementId) {
-            $('#' + elementId).html('<a href="javascript:void(0)" onclick="loadStatistics()" style="color: #dc3545; font-size: 14px;">加载失败，点击重试</a>');
+            $('#' + elementId).html('<a href="javascript:void(0)" onclick="loadStatistics()" style="color: var(--accent); font-size: var(--fs-meta);">加载失败，点击重试</a>');
         }
 
-        /**
-         * 加载统计数据
-         */
         function loadStatistics() {
-            // 负责楼栋
-            $('#buildingCount').text('加载中...');
+            $('#buildingCount').text('--');
             $.ajaxRequest('/dorm/building/list', 'GET', {}, function(result) {
                 if (result.data) {
                     $('#buildingCount').text(result.data.length || 0);
@@ -199,39 +157,35 @@
                 }
             }, function(result) {
                 if (result.msg && result.msg.indexOf('未负责任何楼栋') !== -1) {
-                    $('#buildingCount').html('<span style="font-size: 14px; color: #ffc107;">未分配楼栋</span>');
+                    $('#buildingCount').html('<span style="font-size: var(--fs-meta); color: var(--accent-2);">未分配</span>');
                 } else {
                     setLoadError('buildingCount');
                 }
             });
 
-            // 待处理报修
-            $('#repairCount').text('加载中...');
+            $('#repairCount').text('--');
             $.ajaxRequest('/dorm/repair/page', 'GET', { repairStatus: 0, pageSize: 1 }, function(result) {
                 $('#repairCount').text(result.data.total || 0);
             }, function(result) {
                 if (result.msg && result.msg.indexOf('未负责任何楼栋') !== -1) {
-                    $('#repairCount').html('<span style="font-size: 14px; color: #ffc107;">-</span>');
+                    $('#repairCount').html('<span style="font-size: var(--fs-meta); color: var(--accent-2);">-</span>');
                 } else {
                     setLoadError('repairCount');
                 }
             });
 
-            // 本月晚归
-            $('#lateReturnCount').text('加载中...');
+            $('#lateReturnCount').text('--');
             $.ajaxRequest('/dorm/late-return/stats', 'GET', {}, function(result) {
                 if (result.data) {
                     var total = 0;
-                    result.data.forEach(function(item) {
-                        total += item.count || 0;
-                    });
+                    result.data.forEach(function(item) { total += item.count || 0; });
                     $('#lateReturnCount').text(total);
                 } else {
                     $('#lateReturnCount').text('0');
                 }
             }, function(result) {
                 if (result.msg && result.msg.indexOf('未负责任何楼栋') !== -1) {
-                    $('#lateReturnCount').html('<span style="font-size: 14px; color: #ffc107;">-</span>');
+                    $('#lateReturnCount').html('<span style="font-size: var(--fs-meta); color: var(--accent-2);">-</span>');
                 } else {
                     setLoadError('lateReturnCount');
                 }
