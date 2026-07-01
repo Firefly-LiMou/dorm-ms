@@ -628,7 +628,7 @@ img { max-width: 100%; height: auto; }
     top: calc(100% + 4px);
     left: 0; right: 0;
     z-index: 50;
-    background: #FFFFFF;
+    background: var(--surface-opaque);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
@@ -840,7 +840,7 @@ img { max-width: 100%; height: auto; }
 /* 十四、模态框（覆盖 Bootstrap Modal）              */
 /* ============================================= */
 .modal-content {
-    background: #FFFFFF;
+    background: var(--surface-opaque);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
@@ -878,7 +878,7 @@ img { max-width: 100%; height: auto; }
 .modal-overlay.open { opacity: 1; visibility: visible; }
 
 .modal-custom {
-    background: #FFFFFF;
+    background: var(--surface-opaque);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     width: 100%; max-width: 520px;
@@ -953,7 +953,7 @@ img { max-width: 100%; height: auto; }
 }
 
 .custom-confirm .confirm-dialog {
-    background: #FFFFFF;
+    background: var(--surface-opaque);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: var(--gap-lg);
