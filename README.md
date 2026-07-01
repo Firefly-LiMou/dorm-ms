@@ -23,7 +23,7 @@
    
    ```properties
    jdbc.driver=com.mysql.cj.jdbc.Driver
-   jdbc.url=jdbc:mysql://localhost:3306/dorm_ms?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+   jdbc.url=jdbc:mysql://localhost:3306/dorm_ms?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
    jdbc.username=root
    jdbc.password=你的数据库密码
    ```
@@ -63,7 +63,73 @@
 
 ---
 
-## 三、其他项
+## 三、如何测试
+
+### 3.1 初始化数据库
+
+1. **创建数据库和表结构**
+
+   使用 `dormitory_management.sql` 创建数据库和所有表：
+
+   ```bash
+   mysql -u root -p < dormitory_management.sql
+   ```
+
+   或在 MySQL 客户端中执行：
+
+   ```sql
+   source /path/to/dormitory_management.sql;
+   ```
+
+2. **添加测试数据**
+
+   使用 `test.sql` 插入测试数据（用户、楼栋、房间、床位等）：
+
+   ```bash
+   mysql -u root -p dormitory_management < test.sql
+   ```
+
+3. **清理数据（可选）**
+
+   使用 `clear.sql` 清空所有业务数据（保留表结构）：
+
+   ```bash
+   mysql -u root -p dormitory_management < clear.sql
+   ```
+
+### 3.2 测试账号
+
+| 角色 | 用户名 | 默认密码            | 说明 |
+|------|--------|--------|------|
+| 管理员 | admin | 123456 | 系统管理员 |
+| 宿管 | dorm001 | 123456 | 负责楼栋1 |
+| 宿管 | dorm002 | 123456 | 负责楼栋2 |
+| 学生 | 2024001 | 123456 | 测试学生1 |
+| 学生 | 2024002 | 123456 | 测试学生2 |
+| 学生 | 2024003 | 123456 | 测试学生3 |
+
+
+### 3.3 测试流程建议
+
+1. **基础功能测试**
+   - 使用 admin 账号登录，测试用户管理、楼栋管理、房间管理、床位管理
+   - 使用 dorm001 账号登录，测试入住办理、报修处理、晚归登记、访客登记
+   - 使用 2024001 账号登录，测试查看个人信息、提交报修、查看晚归记录
+
+2. **业务流程测试**
+   - 入住流程：管理员创建学生 → 办理入住 → 学生查看住宿信息
+   - 报修流程：学生提交报修 → 宿管接单 → 宿管完结 → 学生查看结果
+   - 调宿流程：学生提交申请 → 管理员/宿管审批 → 查看床位变更
+   - 访客流程：宿管录入访客 → 宿管确认离开
+
+3. **权限隔离测试**
+   - 学生访问 `/admin/**` 路径应返回403
+   - 宿管访问 `/admin/**` 路径应返回403
+   - 学生访问 `/dorm/**` 路径应返回403
+
+---
+
+## 四、其他项
 
 ### 3.1 项目结构
 ```text

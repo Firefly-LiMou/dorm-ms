@@ -6,9 +6,21 @@
 -- 说明：密码均为 123456 的 MD5 加密值
 -- ============================================================
 
-USE dormitory_management;
+USE dormitory_management_test;
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- 清理已有数据（按外键依赖逆序）
+DELETE FROM dorm_visitor;
+DELETE FROM dorm_late_return;
+DELETE FROM dorm_repair;
+DELETE FROM dorm_move_apply;
+DELETE FROM dorm_checkin_record;
+DELETE FROM dorm_bed;
+DELETE FROM dorm_room;
+DELETE FROM dorm_building;
+DELETE FROM sys_oper_log;
+DELETE FROM sys_user;
 
 -- ----------------------------
 -- 1. 系统用户表 sys_user
