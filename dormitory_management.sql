@@ -13,6 +13,13 @@ CREATE DATABASE IF NOT EXISTS dormitory_management
 
 USE dormitory_management;
 
+-- 创建测试数据库
+# CREATE DATABASE IF NOT EXISTS dormitory_management_test
+#     DEFAULT CHARACTER SET utf8mb4
+#     DEFAULT COLLATE utf8mb4_0900_ai_ci;
+#
+# USE dormitory_management_test;
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 

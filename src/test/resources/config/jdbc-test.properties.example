@@ -2,7 +2,7 @@
 jdbc.driver=com.mysql.cj.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/dormitory_management_test?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
 jdbc.username=root
-jdbc.password=123456
+jdbc.password=root
 
 # Druid连接池配置
 druid.initialSize=2
