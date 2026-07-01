@@ -40,14 +40,20 @@
                 <div class="form-container">
                     <form id="repairForm">
                         <div class="mb-3">
-                            <label for="repairType" class="form-label">报修类型 <span class="required">*</span></label>
-                            <select class="form-control" id="repairType" name="repairType">
-                                <option value="">请选择报修类型</option>
-                                <option value="1">水电故障</option>
-                                <option value="2">家具损坏</option>
-                                <option value="3">门窗故障</option>
-                                <option value="4">其他</option>
-                            </select>
+                            <label class="form-label">报修类型 <span class="required">*</span></label>
+                            <div class="cselect" id="repairTypeCselect">
+                                <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+                                    <span class="cselect-val cselect-placeholder">请选择报修类型</span>
+                                    <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="cselect-panel" role="listbox">
+                                    <div class="cselect-option" data-value="">请选择报修类型</div>
+                                    <div class="cselect-option" data-value="1">水电故障</div>
+                                    <div class="cselect-option" data-value="2">家具损坏</div>
+                                    <div class="cselect-option" data-value="3">门窗故障</div>
+                                    <div class="cselect-option" data-value="4">其他</div>
+                                </div>
+                            </div>
                             <div class="invalid-feedback" id="repairTypeError"></div>
                         </div>
                         <div class="mb-3">
@@ -84,6 +90,10 @@
     <script src="${pageContext.request.contextPath}/static/js/header.js"></script>
 
     <script>
+        $(function() {
+            $.initCustomSelect();
+        });
+
         /**
          * 提交报修
          */
@@ -91,13 +101,13 @@
             var isValid = true;
 
             // 校验报修类型
-            var repairType = $('#repairType').val();
+            var repairType = document.querySelector('#repairTypeCselect').dataset.value || '';
             if (!repairType) {
-                $('#repairType').addClass('is-invalid');
+                $('#repairTypeCselect').addClass('error');
                 $('#repairTypeError').text('请选择报修类型');
                 isValid = false;
             } else {
-                $('#repairType').removeClass('is-invalid');
+                $('#repairTypeCselect').removeClass('error');
                 $('#repairTypeError').text('');
             }
 

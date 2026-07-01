@@ -45,7 +45,7 @@
                     <div class="filter-field">
                         <label>角色</label>
                         <div class="cselect" data-name="searchRoleType">
-                            <div class="cselect-trigger"><span class="cselect-val placeholder">全部角色</span><svg class="cselect-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+                            <div class="cselect-trigger"><span class="cselect-val cselect-placeholder">全部角色</span><svg class="cselect-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
                             <div class="cselect-panel">
                                 <button class="cselect-option selected" data-value="">全部角色</button>
                                 <button class="cselect-option" data-value="1">管理员</button>
@@ -57,7 +57,7 @@
                     <div class="filter-field">
                         <label>状态</label>
                         <div class="cselect" data-name="searchStatus">
-                            <div class="cselect-trigger"><span class="cselect-val placeholder">全部状态</span><svg class="cselect-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+                            <div class="cselect-trigger"><span class="cselect-val cselect-placeholder">全部状态</span><svg class="cselect-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
                             <div class="cselect-panel">
                                 <button class="cselect-option selected" data-value="">全部状态</button>
                                 <button class="cselect-option" data-value="1">正常</button>
@@ -227,8 +227,8 @@
                 cs.dataset.value = '';
                 var valEl = cs.querySelector('.cselect-val');
                 if (valEl) {
-                    valEl.textContent = valEl.classList.contains('placeholder') ? valEl.textContent : '';
-                    valEl.classList.add('placeholder');
+                    valEl.textContent = valEl.classList.contains('cselect-placeholder') ? valEl.textContent : '';
+                    valEl.classList.add('cselect-placeholder');
                 }
                 cs.querySelectorAll('.cselect-option').forEach(function(o) { o.classList.remove('selected'); });
             });

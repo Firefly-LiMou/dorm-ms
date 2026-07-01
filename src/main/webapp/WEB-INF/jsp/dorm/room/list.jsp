@@ -38,7 +38,7 @@
                             <label class="form-label">选择楼栋</label>
                             <div class="cselect" id="buildingIdCselect">
                                 <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
-                                    <span class="cselect-val placeholder">请选择楼栋</span>
+                                    <span class="cselect-val cselect-placeholder">请选择楼栋</span>
                                     <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                                 </div>
                                 <div class="cselect-panel" role="listbox">
@@ -122,7 +122,7 @@
                         var cs = document.querySelector('#buildingIdCselect');
                         cs.dataset.value = result.data[0].buildingId;
                         cs.querySelector('.cselect-val').textContent = result.data[0].buildingName;
-                        cs.querySelector('.cselect-val').classList.remove('placeholder');
+                        cs.querySelector('.cselect-val').classList.remove('cselect-placeholder');
                         cs.dispatchEvent(new CustomEvent('cselect:change', {detail: {value: String(result.data[0].buildingId)}}));
                     }
                 }

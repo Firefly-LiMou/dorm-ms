@@ -22,11 +22,17 @@
         <!-- 每页条数选择 -->
         <div class="page-size-select">
             <label>每页</label>
-            <select id="pageSizeSelect" onchange="changePageSize(this.value)">
-                <option value="10" ${pageInfo.pageSize == 10 ? 'selected' : ''}>10</option>
-                <option value="20" ${pageInfo.pageSize == 20 ? 'selected' : ''}>20</option>
-                <option value="50" ${pageInfo.pageSize == 50 ? 'selected' : ''}>50</option>
-            </select>
+            <div class="cselect" id="pageSizeCselect" style="min-width: 70px;">
+                <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false" style="padding: 4px 8px;">
+                    <span class="cselect-val">${pageInfo.pageSize}</span>
+                    <svg class="cselect-arrow" viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="cselect-panel" role="listbox">
+                    <div class="cselect-option ${pageInfo.pageSize == 10 ? 'selected' : ''}" data-value="10">10</div>
+                    <div class="cselect-option ${pageInfo.pageSize == 20 ? 'selected' : ''}" data-value="20">20</div>
+                    <div class="cselect-option ${pageInfo.pageSize == 50 ? 'selected' : ''}" data-value="50">50</div>
+                </div>
+            </div>
             <label>条</label>
         </div>
 
@@ -84,6 +90,13 @@
 </div>
 
 <script>
+    $(function() {
+        $.initCustomSelect();
+        document.querySelector('#pageSizeCselect').addEventListener('cselect:change', function(e) {
+            changePageSize(e.detail.value);
+        });
+    });
+
     /**
      * 跳转到指定页
      */

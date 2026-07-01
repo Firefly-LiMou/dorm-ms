@@ -265,6 +265,26 @@
     };
 
     /**
+     * 渲染每页条数选择器（.cselect 组件）
+     * @param {number} currentPageSize - 当前每页条数
+     * @returns {string} HTML字符串
+     */
+    $.renderPageSizeCselect = function(currentPageSize) {
+        var sizes = [10, 20, 50];
+        var html = '<div class="page-size-select"><label>每页</label>';
+        html += '<div class="cselect" style="min-width:70px;">';
+        html += '<div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false" style="padding:4px 8px;">';
+        html += '<span class="cselect-val">' + currentPageSize + '</span>';
+        html += '<svg class="cselect-arrow" viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+        html += '</div><div class="cselect-panel" role="listbox">';
+        sizes.forEach(function(s) {
+            html += '<div class="cselect-option' + (s === currentPageSize ? ' selected' : '') + '" data-value="' + s + '">' + s + '</div>';
+        });
+        html += '</div></div><label>条</label></div>';
+        return html;
+    };
+
+    /**
      * 渲染分页组件（新DOM结构）
      * @param {object} pageInfo - 分页信息对象
      * @param {string} containerId - 容器ID
@@ -350,7 +370,7 @@
                     opt.classList.add('selected');
                     if (valEl) {
                         valEl.textContent = opt.textContent;
-                        valEl.classList.remove('placeholder');
+                        valEl.classList.remove('cselect-placeholder');
                     }
                     cs.classList.remove('open');
                     cs.dataset.value = opt.dataset.value;
@@ -412,7 +432,7 @@
         // 重置显示文本
         if (valEl) {
             valEl.textContent = options[0] ? options[0].text : '请选择';
-            valEl.classList.toggle('placeholder', !options[0] || !options[0].value);
+            valEl.classList.toggle('cselect-placeholder', !options[0] || !options[0].value);
         }
         cselectEl.dataset.value = options[0] ? options[0].value : '';
 
@@ -437,14 +457,26 @@
             }
         });
 
-        // 高亮当前页面菜单，使用前缀匹配
+        // 高亮当前页面菜单：精确路径段匹配，避免 /admin/index 匹配所有 /admin/* 页面
         var currentPath = window.location.pathname;
         $('.sidebar-menu .menu-link').each(function() {
             var href = $(this).attr('href');
             if (!href || href === 'javascript:void(0)' || href === '#') return;
-            var prefix = href.replace(/\/[^\/]+$/, '/');
-            if (currentPath.indexOf(prefix) !== -1) {
+            if (currentPath === href) {
                 $(this).addClass('active');
+            } else if (href.endsWith('/index')) {
+                // /admin/index 只匹配 /admin/index 和 /admin/
+                var dir = href.substring(0, href.lastIndexOf('/') + 1);
+                if (currentPath === dir || currentPath === dir.substring(0, dir.length - 1)) {
+                    $(this).addClass('active');
+                }
+            } else {
+                // 同目录子页面匹配：/admin/user/editPage 匹配 /admin/user/list
+                var linkDir = href.substring(0, href.lastIndexOf('/') + 1);
+                var curDir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+                if (linkDir === curDir) {
+                    $(this).addClass('active');
+                }
             }
         });
 

@@ -43,7 +43,7 @@
                             <label class="form-label">处理状态</label>
                             <div class="cselect" id="searchStatusCselect">
                                 <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
-                                    <span class="cselect-val placeholder">全部</span>
+                                    <span class="cselect-val cselect-placeholder">全部</span>
                                     <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                                 </div>
                                 <div class="cselect-panel" role="listbox">
@@ -216,12 +216,7 @@
             var html = '<div class="pagination-container">';
             html += '<div class="pagination-info">共 <span>' + pageInfo.total + '</span> 条记录，第 <span>' + pageInfo.pageNum + '</span>/<span>' + pageInfo.pages + '</span> 页</div>';
             html += '<div class="d-flex align-items-center gap-3">';
-            html += '<div class="page-size-select"><label>每页</label>';
-            html += '<select onchange="changePageSize(this.value)">';
-            html += '<option value="10"' + (pageInfo.pageSize === 10 ? ' selected' : '') + '>10</option>';
-            html += '<option value="20"' + (pageInfo.pageSize === 20 ? ' selected' : '') + '>20</option>';
-            html += '<option value="50"' + (pageInfo.pageSize === 50 ? ' selected' : '') + '>50</option>';
-            html += '</select><label>条</label></div>';
+            html += $.renderPageSizeCselect(pageInfo.pageSize);
             html += '<nav><ul class="pagination mb-0">';
 
             html += '<li class="page-item' + (pageInfo.pageNum === 1 ? ' disabled' : '') + '">';
@@ -245,6 +240,7 @@
 
             html += '</ul></nav></div></div>';
             $container.html(html);
+            $.initCustomSelect();
         }
 
         function goToPage(pageNum) {

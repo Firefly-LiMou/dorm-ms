@@ -181,12 +181,7 @@
             var html = '<div class="pagination-container">';
             html += '<div class="pagination-info">共 <span>' + pageInfo.total + '</span> 条记录，第 <span>' + pageInfo.pageNum + '</span>/<span>' + pageInfo.pages + '</span> 页</div>';
             html += '<div class="d-flex align-items-center gap-3">';
-            html += '<div class="page-size-select"><label>每页</label>';
-            html += '<select onchange="changePageSize(this.value)">';
-            html += '<option value="10"' + (pageInfo.pageSize === 10 ? ' selected' : '') + '>10</option>';
-            html += '<option value="20"' + (pageInfo.pageSize === 20 ? ' selected' : '') + '>20</option>';
-            html += '<option value="50"' + (pageInfo.pageSize === 50 ? ' selected' : '') + '>50</option>';
-            html += '</select><label>条</label></div>';
+            html += $.renderPageSizeCselect(pageInfo.pageSize);
             html += '<nav><ul class="pagination mb-0">';
 
             html += '<li class="page-item' + (pageInfo.pageNum === 1 ? ' disabled' : '') + '">';
@@ -210,6 +205,7 @@
 
             html += '</ul></nav></div></div>';
             $container.html(html);
+            $.initCustomSelect();
         }
 
         function goToPage(pageNum) {

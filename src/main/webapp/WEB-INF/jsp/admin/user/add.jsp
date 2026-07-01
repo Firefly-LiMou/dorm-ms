@@ -43,7 +43,7 @@
                                 <label>角色类型 <span class="required">*</span></label>
                                 <div class="cselect" id="roleTypeCselect">
                                     <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
-                                        <span class="cselect-val placeholder">请选择角色</span>
+                                        <span class="cselect-val cselect-placeholder">请选择角色</span>
                                         <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
@@ -60,7 +60,7 @@
                                 <label>性别</label>
                                 <div class="cselect" id="genderCselect">
                                     <div class="cselect-trigger" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
-                                        <span class="cselect-val placeholder">请选择性别</span>
+                                        <span class="cselect-val cselect-placeholder">请选择性别</span>
                                         <svg class="cselect-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>

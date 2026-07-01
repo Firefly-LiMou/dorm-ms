@@ -118,6 +118,7 @@ img { max-width: 100%; height: auto; }
     flex-direction: column;
     min-width: 0;
     margin-left: var(--sidebar-w);
+    padding-top: var(--header-h);
 }
 
 /* 内容主体 */
@@ -475,7 +476,7 @@ img { max-width: 100%; height: auto; }
 /* 幽灵按钮 — 行内操作 */
 .btn-ghost {
     background: transparent;
-    color: var(--muted);
+    color: var(--fg);
     border-color: transparent;
     padding: 6px 10px;
 }
@@ -609,7 +610,12 @@ img { max-width: 100%; height: auto; }
     text-overflow: ellipsis;
 }
 
-.cselect-val.placeholder { color: var(--muted); }
+.cselect-val.cselect-placeholder {
+    color: var(--muted);
+    background-color: transparent;
+    cursor: pointer;
+    opacity: 1;
+}
 
 .cselect-arrow {
     width: 14px; height: 14px;
@@ -797,13 +803,10 @@ img { max-width: 100%; height: auto; }
     color: var(--muted);
 }
 
-.page-size-select select {
-    padding: 4px 8px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: var(--fs-meta);
-    background: var(--bg);
-}
+.page-size-select .cselect { min-width: 70px; }
+.page-size-select .cselect-trigger { padding: 4px 8px; }
+.page-size-select .cselect-val { font-size: var(--fs-meta); font-family: var(--font-mono); }
+.page-size-select .cselect-arrow { width: 12px; height: 12px; }
 
 /* ============================================= */
 /* 十三、筛选区                                    */
