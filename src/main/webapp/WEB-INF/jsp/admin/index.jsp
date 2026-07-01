@@ -27,7 +27,7 @@
                 </div>
 
                 <!-- 统计卡片 -->
-                <section class="row mb-4" style="gap: 0;">
+                <section class="row mb-4">
                     <div class="col-lg-3 col-md-6 mb-3">
                         <div class="stat-card">
                             <div class="stat-card-label">用户总数</div>

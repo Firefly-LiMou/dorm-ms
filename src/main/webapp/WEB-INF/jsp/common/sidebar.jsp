@@ -13,6 +13,12 @@
             <c:if test="${roleType == ROLE_ADMIN}">
                 <li class="sidebar-section">系统管理</li>
                 <li class="menu-item">
+                    <a href="${pageContext.request.contextPath}/admin/index" class="menu-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                        <span>系统总览</span>
+                    </a>
+                </li>
+                <li class="menu-item">
                     <a href="${pageContext.request.contextPath}/admin/user/list" class="menu-link">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         <span>用户管理</span>
