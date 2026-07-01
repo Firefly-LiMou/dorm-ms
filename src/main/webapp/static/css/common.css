@@ -1194,6 +1194,63 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ============================================= */
+/* ========== 学生端布局 ========== */
+.student-layout .content-wrapper {
+    margin-left: 0;
+}
+.student-layout .content-body {
+    padding: var(--gap-lg) var(--gap-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.student-layout .content-body > * {
+    width: 100%;
+    max-width: 960px;
+}
+
+/* 水平标签导航 */
+.student-tabs {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 40;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+.student-tabs-inner {
+    display: flex;
+    gap: 0;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 var(--gap-xl);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.student-tab {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.12s, border-color 0.12s;
+    flex-shrink: 0;
+}
+.student-tab:hover {
+    color: var(--fg);
+    background: var(--hover-bg);
+}
+.student-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 500;
+}
+
 @media (max-width: 1200px) {
     .filter-bar { flex-direction: column; align-items: stretch; }
     .filter-field input, .filter-field select { min-width: 0; width: 100%; }

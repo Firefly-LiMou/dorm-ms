@@ -8,12 +8,10 @@
     <title>提交调宿申请 - 高校公寓管理系统</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
-<body>
+<body class="student-layout">
     <div class="main-container">
         <!-- 侧边栏 -->
         <%@ include file="/WEB-INF/jsp/common/sidebar.jsp" %>
@@ -22,33 +20,35 @@
         <div class="content-wrapper">
             <!-- 导航栏 -->
             <%@ include file="/WEB-INF/jsp/common/header.jsp" %>
+            <%@ include file="/WEB-INF/jsp/common/student_tabs.jsp" %>
 
             <!-- 内容主体 -->
             <div class="content-body">
                 <!-- 页面标题 -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="page-header">
                     <div>
-                        <h4 style="color: #333; margin-bottom: 8px;">提交调宿申请</h4>
-                        <p style="color: #666; margin: 0;">申请调换到其他床位</p>
+                        <h1>提交调宿申请</h1>
+                        <p class="page-meta">申请调换到其他床位</p>
                     </div>
                     <a href="${pageContext.request.contextPath}/student/move/list" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left mr-2"></i>返回列表
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        返回列表
                     </a>
                 </div>
 
                 <!-- 当前住宿信息 -->
                 <div class="form-container mb-4">
-                    <h6 class="mb-3"><i class="fas fa-home mr-2"></i>当前住宿信息</h6>
+                    <h6 class="mb-3">当前住宿信息</h6>
                     <div id="currentInfo">
                         <div class="text-center py-4">
-                            <i class="fas fa-spinner fa-spin mr-2"></i>加载中...
+                            加载中...
                         </div>
                     </div>
                 </div>
 
                 <!-- 选择目标床位 -->
                 <div class="form-container mb-4" id="targetSection" style="display: none;">
-                    <h6 class="mb-3"><i class="fas fa-bed mr-2"></i>选择目标床位</h6>
+                    <h6 class="mb-3">选择目标床位</h6>
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label for="buildingId" class="form-label">楼栋</label>
@@ -73,15 +73,15 @@
 
                 <!-- 申请原因 -->
                 <div class="form-container mb-4" id="reasonSection" style="display: none;">
-                    <h6 class="mb-3"><i class="fas fa-edit mr-2"></i>申请原因</h6>
+                    <h6 class="mb-3">申请原因</h6>
                     <div class="form-group">
-                        <label for="applyReason">申请原因 <span class="text-danger">*</span></label>
+                        <label for="applyReason">申请原因 <span class="required">*</span></label>
                         <textarea class="form-control" id="applyReason" rows="4" placeholder="请详细说明调宿原因" maxlength="255"></textarea>
                         <div class="invalid-feedback" id="reasonError"></div>
                     </div>
                     <div class="mt-3">
                         <button type="button" class="btn btn-primary" id="btnSubmit" onclick="submitForm()">
-                            <i class="fas fa-paper-plane mr-2"></i>提交申请
+                            提交申请
                         </button>
                     </div>
                 </div>
@@ -90,7 +90,6 @@
                 <div id="noCheckinTip" style="display: none;">
                     <div class="form-container">
                         <div class="text-center py-4 text-muted">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
                             您当前没有在住记录，无法提交调宿申请。请先联系管理员办理入住。
                         </div>
                     </div>
@@ -289,7 +288,7 @@
                 }, 1000);
             }, function(result) {
                 $.toast('error', result.msg || '提交失败');
-                $('#btnSubmit').prop('disabled', false).html('<i class="fas fa-paper-plane mr-2"></i>提交申请');
+                $('#btnSubmit').prop('disabled', false).text('提交申请');
             });
         }
     </script>

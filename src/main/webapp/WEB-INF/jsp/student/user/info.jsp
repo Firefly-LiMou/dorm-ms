@@ -8,12 +8,10 @@
     <title>个人信息 - 高校公寓管理系统</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
-<body>
+<body class="student-layout">
     <div class="main-container">
         <!-- 侧边栏 -->
         <%@ include file="/WEB-INF/jsp/common/sidebar.jsp" %>
@@ -22,13 +20,16 @@
         <div class="content-wrapper">
             <!-- 导航栏 -->
             <%@ include file="/WEB-INF/jsp/common/header.jsp" %>
+            <%@ include file="/WEB-INF/jsp/common/student_tabs.jsp" %>
 
             <!-- 内容主体 -->
             <div class="content-body">
                 <!-- 页面标题 -->
-                <div class="mb-4">
-                    <h4 style="color: #333; margin-bottom: 8px;">个人信息</h4>
-                    <p style="color: #666; margin: 0;">查看和修改您的个人基本信息</p>
+                <div class="page-header">
+                    <div>
+                        <h1>个人信息</h1>
+                        <p class="page-meta">查看和修改您的个人基本信息</p>
+                    </div>
                 </div>
 
                 <!-- 个人信息卡片 -->
@@ -84,8 +85,8 @@
                                             <label>联系电话</label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" id="phone" readonly>
-                                                <button type="button" class="btn btn-outline-primary" onclick="showEditPhoneModal()">
-                                                    <i class="fas fa-edit"></i> 修改
+                                                <button type="button" class="btn btn-secondary" onclick="showEditPhoneModal()">
+                                                    修改
                                                 </button>
                                             </div>
                                         </div>
@@ -110,8 +111,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-container">
-                            <h6 class="mb-3"><i class="fas fa-info-circle mr-2"></i>操作提示</h6>
-                            <ul style="color: #666; font-size: 13px; line-height: 1.8;">
+                            <h6 class="mb-3">操作提示</h6>
+                            <ul style="color: var(--muted); font-size: 13px; line-height: 1.8;">
                                 <li>学号、姓名等基本信息由管理员维护</li>
                                 <li>联系电话可自行修改</li>
                                 <li>如需修改其他信息，请联系管理员</li>
@@ -137,7 +138,7 @@
                 <div class="modal-body">
                     <form id="editPhoneForm">
                         <div class="mb-3">
-                            <label for="newPhone" class="form-label">新联系电话 <span class="text-danger">*</span></label>
+                            <label for="newPhone" class="form-label">新联系电话 <span class="required">*</span></label>
                             <input type="text" class="form-control" id="newPhone" placeholder="请输入新的联系电话" maxlength="11">
                             <div class="invalid-feedback" id="newPhoneError"></div>
                         </div>

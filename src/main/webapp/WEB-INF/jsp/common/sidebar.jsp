@@ -5,7 +5,8 @@
 <c:set var="ROLE_DORM" value="2" />
 <c:set var="ROLE_STUDENT" value="3" />
 <c:set var="roleType" value="${sessionScope.loginUser.roleType}" />
-<!-- 侧边栏 -->
+<!-- 侧边栏（学生角色不显示） -->
+<c:if test="${roleType != ROLE_STUDENT}">
 <aside class="sidebar">
     <nav>
         <ul class="sidebar-menu">
@@ -190,3 +191,4 @@
         </ul>
     </nav>
 </aside>
+</c:if>

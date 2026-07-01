@@ -8,12 +8,10 @@
     <title>住宿信息 - 高校公寓管理系统</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
-<body>
+<body class="student-layout">
     <div class="main-container">
         <!-- 侧边栏 -->
         <%@ include file="/WEB-INF/jsp/common/sidebar.jsp" %>
@@ -22,33 +20,36 @@
         <div class="content-wrapper">
             <!-- 导航栏 -->
             <%@ include file="/WEB-INF/jsp/common/header.jsp" %>
+            <%@ include file="/WEB-INF/jsp/common/student_tabs.jsp" %>
 
             <!-- 内容主体 -->
             <div class="content-body">
                 <!-- 页面标题 -->
-                <div class="mb-4">
-                    <h4 style="color: #333; margin-bottom: 8px;">住宿信息</h4>
-                    <p style="color: #666; margin: 0;">查看您的当前住宿情况和舍友信息</p>
+                <div class="page-header">
+                    <div>
+                        <h1>住宿信息</h1>
+                        <p class="page-meta">查看您的当前住宿情况和舍友信息</p>
+                    </div>
                 </div>
 
                 <div class="row">
                     <!-- 住宿信息卡片 -->
                     <div class="col-md-8">
                         <div class="form-container mb-4">
-                            <h6 class="mb-3"><i class="fas fa-home mr-2"></i>当前住宿信息</h6>
+                            <h6 class="mb-3">当前住宿信息</h6>
                             <div id="checkinInfo">
                                 <div class="text-center py-4">
-                                    <i class="fas fa-spinner fa-spin mr-2"></i>加载中...
+                                    加载中...
                                 </div>
                             </div>
                         </div>
 
                         <!-- 舍友信息卡片 -->
                         <div class="form-container">
-                            <h6 class="mb-3"><i class="fas fa-users mr-2"></i>舍友信息</h6>
+                            <h6 class="mb-3">舍友信息</h6>
                             <div id="roommateInfo">
                                 <div class="text-center py-4">
-                                    <i class="fas fa-spinner fa-spin mr-2"></i>加载中...
+                                    加载中...
                                 </div>
                             </div>
                         </div>
@@ -57,8 +58,8 @@
                     <!-- 提示信息 -->
                     <div class="col-md-4">
                         <div class="form-container">
-                            <h6 class="mb-3"><i class="fas fa-info-circle mr-2"></i>操作提示</h6>
-                            <ul style="color: #666; font-size: 13px; line-height: 1.8;">
+                            <h6 class="mb-3">操作提示</h6>
+                            <ul style="color: var(--muted); font-size: 13px; line-height: 1.8;">
                                 <li>住宿信息由管理员/宿管办理</li>
                                 <li>如需调宿，请到"调宿申请"页面提交申请</li>
                                 <li>如有问题，请联系宿管或管理员</li>
@@ -134,10 +135,10 @@
                     }
                     $('#checkinInfo').html(html);
                 } else {
-                    $('#checkinInfo').html('<div class="text-center py-4 text-muted"><i class="fas fa-bed mr-2"></i>暂无住宿信息</div>');
+                    $('#checkinInfo').html('<div class="text-center py-4 text-muted">暂无住宿信息</div>');
                 }
             }, function() {
-                $('#checkinInfo').html('<div class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadCheckinInfo()" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></div>');
+                $('#checkinInfo').html('<div class="text-center py-4"><a href="javascript:void(0)" onclick="loadCheckinInfo()" style="color: var(--accent);">加载失败，点击重试</a></div>');
             });
         }
 
@@ -147,7 +148,7 @@
         function loadRoommateInfo() {
             $.ajaxRequest('/student/checkin/roommates', 'GET', {}, function(result) {
                 if (result.data && result.data.length > 0) {
-                    var html = '<div class="table-container"><table class="table">';
+                    var html = '<div class="data-panel"><table class="table">';
                     html += '<thead><tr>';
                     html += '<th>姓名</th>';
                     html += '<th>学号</th>';
@@ -166,10 +167,10 @@
                     html += '</tbody></table></div>';
                     $('#roommateInfo').html(html);
                 } else {
-                    $('#roommateInfo').html('<div class="text-center py-4 text-muted"><i class="fas fa-users mr-2"></i>暂无舍友信息</div>');
+                    $('#roommateInfo').html('<div class="text-center py-4 text-muted">暂无舍友信息</div>');
                 }
             }, function() {
-                $('#roommateInfo').html('<div class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadRoommateInfo()" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></div>');
+                $('#roommateInfo').html('<div class="text-center py-4"><a href="javascript:void(0)" onclick="loadRoommateInfo()" style="color: var(--accent);">加载失败，点击重试</a></div>');
             });
         }
     </script>
