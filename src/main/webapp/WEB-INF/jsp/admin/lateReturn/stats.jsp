@@ -8,8 +8,6 @@
     <title>晚归统计 - 高校公寓管理系统</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
@@ -26,13 +24,14 @@
             <!-- 内容主体 -->
             <div class="content-body">
                 <!-- 页面标题 -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="page-header">
                     <div>
-                        <h4 style="color: #333; margin-bottom: 8px;">晚归统计</h4>
-                        <p style="color: #666; margin: 0;">按楼栋统计月度晚归人次</p>
+                        <h1>晚归统计</h1>
+                        <p class="page-meta">按楼栋统计月度晚归人次</p>
                     </div>
                     <a href="${pageContext.request.contextPath}/admin/late-return/list" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left mr-1"></i>返回列表
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        返回列表
                     </a>
                 </div>
 
@@ -45,18 +44,17 @@
                         </div>
                         <div class="col-md-3 d-flex align-items-end gap-2">
                             <button type="button" class="btn btn-primary" onclick="loadData()">
-                                <i class="fas fa-search mr-1"></i>查询
+                                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                查询
                             </button>
-                            <button type="button" class="btn btn-secondary" onclick="resetSearch()">
-                                <i class="fas fa-undo mr-1"></i>重置
-                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="resetSearch()">重置</button>
                         </div>
                     </form>
                 </div>
 
                 <!-- 统计数据 -->
                 <div class="form-container">
-                    <div class="table-container">
+                    <div class="data-panel">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -68,7 +66,7 @@
                             <tbody id="tableBody">
                                 <tr>
                                     <td colspan="3" class="text-center py-4">
-                                        <i class="fas fa-spinner fa-spin mr-2"></i>加载中...
+                                        加载中...
                                     </td>
                                 </tr>
                             </tbody>
@@ -78,7 +76,6 @@
                     <!-- 合计 -->
                     <div id="totalContainer" class="mt-3" style="display: none;">
                         <div class="alert alert-info">
-                            <i class="fas fa-chart-bar mr-2"></i>
                             合计晚归人次：<strong id="totalCount">0</strong>
                         </div>
                     </div>
@@ -123,7 +120,7 @@
                     renderTable(result.data);
                 }
             }, function() {
-                $('#tableBody').html('<tr><td colspan="3" class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadData()" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></td></tr>');
+                $('#tableBody').html('<tr><td colspan="3" class="text-center py-4"><a href="javascript:void(0)" onclick="loadData()" style="color: var(--accent);">加载失败，点击重试</a></td></tr>');
                 $('#totalContainer').hide();
             });
         }
@@ -137,7 +134,7 @@
             $tbody.empty();
 
             if (!list || list.length === 0) {
-                $tbody.html('<tr><td colspan="3" class="text-center py-4 text-muted"><i class="fas fa-inbox mr-2"></i>暂无统计数据</td></tr>');
+                $tbody.html('<tr><td colspan="3" class="text-center py-4 text-muted">暂无统计数据</td></tr>');
                 $('#totalContainer').hide();
                 return;
             }
@@ -148,7 +145,7 @@
                 var row = '<tr>';
                 row += '<td>' + (item.buildingId || '-') + '</td>';
                 row += '<td>' + (item.buildingName || '-') + '</td>';
-                row += '<td><span class="badge bg-warning">' + (item.count || 0) + '</span></td>';
+                row += '<td><span class="pill pill-pending">' + (item.count || 0) + '</span></td>';
                 row += '</tr>';
                 $tbody.append(row);
             });

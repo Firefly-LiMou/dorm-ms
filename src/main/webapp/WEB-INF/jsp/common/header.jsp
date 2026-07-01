@@ -47,11 +47,11 @@
                 </div>
                 <div class="user-menu">
                     <a href="javascript:void(0)" class="dropdown-item" onclick="showChangePasswordModal(false)">
-                        <i class="fas fa-key"></i> 修改密码
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> 修改密码
                     </a>
                     <div class="dropdown-divider"></div>
                     <a href="javascript:void(0)" class="dropdown-item btn-logout">
-                        <i class="fas fa-sign-out-alt"></i> 退出登录
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> 退出登录
                     </a>
                 </div>
             </div>

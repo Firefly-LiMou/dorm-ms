@@ -8,8 +8,6 @@
     <title>录入访客 - 高校公寓管理系统</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
@@ -26,25 +24,27 @@
             <!-- 内容主体 -->
             <div class="content-body">
                 <!-- 页面标题 -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="page-header">
                     <div>
-                        <h4 style="color: #333; margin-bottom: 8px;">录入访客</h4>
-                        <p style="color: #666; margin: 0;">登记访客来访信息</p>
+                        <h1>录入访客</h1>
+                        <p class="page-meta">登记访客来访信息</p>
                     </div>
                     <a href="${pageContext.request.contextPath}/admin/visitor/list" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left mr-1"></i>返回列表
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        返回列表
                     </a>
                 </div>
 
                 <!-- 被访学生查询区域 -->
                 <div class="form-container mb-4">
-                    <h5 class="mb-3"><i class="fas fa-search mr-2"></i>查询被访学生</h5>
+                    <h5 class="mb-3">查询被访学生</h5>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="searchUsername" placeholder="请输入被访学生学号查询">
                                 <button class="btn btn-primary" type="button" onclick="searchStudent()">
-                                    <i class="fas fa-search mr-1"></i>查询
+                                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                    查询
                                 </button>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                     <!-- 查询结果 -->
                     <div id="studentResult" class="mt-3" style="display: none;">
                         <div class="table-responsive">
-                            <table class="table table-sm table-bordered">
+                            <table class="table table-sm">
                                 <thead>
                                     <tr>
                                         <th>学号</th>
@@ -72,12 +72,11 @@
                     <div id="selectedStudent" class="mt-3" style="display: none;">
                         <div class="alert alert-info d-flex justify-content-between align-items-center">
                             <span>
-                                <i class="fas fa-user-check mr-2"></i>
                                 被访学生：<strong id="selectedStudentInfo"></strong>
                                 <input type="hidden" id="selectedStudentId">
                             </span>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearSelectedStudent()">
-                                <i class="fas fa-times mr-1"></i>重新选择
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="clearSelectedStudent()">
+                                重新选择
                             </button>
                         </div>
                     </div>
@@ -85,19 +84,19 @@
 
                 <!-- 访客信息表单 -->
                 <div class="form-container" id="visitorForm" style="display: none;">
-                    <h5 class="mb-3"><i class="fas fa-user-friends mr-2"></i>访客信息</h5>
+                    <h5 class="mb-3">访客信息</h5>
                     <form id="formData">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="visitorName" class="form-label">访客姓名 <span class="text-danger">*</span></label>
+                                    <label for="visitorName" class="form-label">访客姓名 <span class="required">*</span></label>
                                     <input type="text" class="form-control" id="visitorName" name="visitorName" placeholder="请输入访客姓名" maxlength="50">
                                     <div class="invalid-feedback" id="visitorNameError"></div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="idCard" class="form-label">身份证号 <span class="text-danger">*</span></label>
+                                    <label for="idCard" class="form-label">身份证号 <span class="required">*</span></label>
                                     <input type="text" class="form-control" id="idCard" name="idCard" placeholder="请输入18位身份证号" maxlength="18">
                                     <div class="invalid-feedback" id="idCardError"></div>
                                 </div>
@@ -106,7 +105,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="visitTime" class="form-label">来访时间 <span class="text-danger">*</span></label>
+                                    <label for="visitTime" class="form-label">来访时间 <span class="required">*</span></label>
                                     <input type="datetime-local" class="form-control" id="visitTime" name="visitTime">
                                     <div class="invalid-feedback" id="visitTimeError"></div>
                                 </div>
@@ -119,7 +118,7 @@
                             </div>
                         </div>
                         <button type="button" class="btn btn-primary" id="btnSubmit" onclick="submitVisitor()">
-                            <i class="fas fa-save mr-1"></i>保存记录
+                            保存记录
                         </button>
                     </form>
                 </div>
@@ -185,7 +184,7 @@
                 row += '<td>' + genderText + '</td>';
                 row += '<td>' + (student.grade || '-') + '</td>';
                 row += '<td>' + (student.major || '-') + '</td>';
-                row += '<td><button class="btn btn-sm btn-primary" onclick="selectStudent(' + student.userId + ', \'' + student.username + '\', \'' + student.realName + '\')"><i class="fas fa-check mr-1"></i>选择</button></td>';
+                row += '<td><button class="btn btn-sm btn-primary" onclick="selectStudent(' + student.userId + ', \'' + student.username + '\', \'' + student.realName + '\')">选择</button></td>';
                 row += '</tr>';
                 $tbody.append(row);
             });

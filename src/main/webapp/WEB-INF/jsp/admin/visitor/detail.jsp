@@ -8,8 +8,6 @@
     <title>访客详情 - 高校公寓管理系统</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/vendor/fontawesome/css/all.min.css">
     <!-- 公共CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/common.css">
 </head>
@@ -26,17 +24,18 @@
             <!-- 内容主体 -->
             <div class="content-body">
                 <!-- 页面标题 -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="page-header">
                     <div>
-                        <h4 style="color: #333; margin-bottom: 8px;">访客详情</h4>
-                        <p style="color: #666; margin: 0;">查看访客信息</p>
+                        <h1>访客详情</h1>
+                        <p class="page-meta">查看访客信息</p>
                     </div>
-                    <div>
-                        <button type="button" class="btn btn-warning mr-2" id="btnLeave" style="display: none;" onclick="confirmLeave()">
-                            <i class="fas fa-sign-out-alt mr-1"></i>确认离开
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-primary" id="btnLeave" style="display: none;" onclick="confirmLeave()">
+                            确认离开
                         </button>
                         <a href="${pageContext.request.contextPath}/admin/visitor/list" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left mr-1"></i>返回列表
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                            返回列表
                         </a>
                     </div>
                 </div>
@@ -44,7 +43,7 @@
                 <!-- 访客信息 -->
                 <div class="form-container" id="visitorInfo">
                     <div class="text-center py-4">
-                        <i class="fas fa-spinner fa-spin mr-2"></i>加载中...
+                        加载中...
                     </div>
                 </div>
             </div>
@@ -74,7 +73,7 @@
             currentVisitorId = urlParams.get('visitorId');
 
             if (!currentVisitorId) {
-                $('#visitorInfo').html('<div class="text-center py-4 text-danger"><i class="fas fa-exclamation-circle mr-2"></i>参数错误，未指定访客ID</div>');
+                $('#visitorInfo').html('<div class="text-center py-4" style="color: var(--accent);">参数错误，未指定访客ID</div>');
                 return;
             }
 
@@ -91,7 +90,7 @@
                     renderVisitorInfo(result.data);
                 }
             }, function(result) {
-                $('#visitorInfo').html('<div class="text-center py-4 text-danger"><a href="javascript:void(0)" onclick="loadVisitorDetail(' + visitorId + ')" style="color: #dc3545;"><i class="fas fa-exclamation-circle mr-2"></i>加载失败，点击重试</a></div>');
+                $('#visitorInfo').html('<div class="text-center py-4"><a href="javascript:void(0)" onclick="loadVisitorDetail(' + visitorId + ')" style="color: var(--accent);">加载失败，点击重试</a></div>');
             });
         }
 
@@ -101,8 +100,8 @@
          */
         function renderVisitorInfo(visitor) {
             var statusBadge = visitor.leaveTime
-                ? '<span class="badge bg-secondary">已离开</span>'
-                : '<span class="badge bg-success">在访</span>';
+                ? '<span class="pill pill-done">已离开</span>'
+                : '<span class="pill pill-active">在访</span>';
 
             // 显示/隐藏确认离开按钮
             if (!visitor.leaveTime) {
@@ -114,25 +113,25 @@
             var html = '<div class="row">';
             // 左侧：访客信息
             html += '<div class="col-md-6">';
-            html += '<h6 class="mb-3"><i class="fas fa-user-friends mr-2"></i>访客信息</h6>';
-            html += '<table class="table table-bordered">';
-            html += '<tr><td class="bg-light" style="width: 120px;">访客ID</td><td>' + visitor.visitorId + '</td></tr>';
-            html += '<tr><td class="bg-light">访客姓名</td><td>' + (visitor.visitorName || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">身份证号</td><td>' + (visitor.idCard || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">来访时间</td><td>' + $.formatDate(visitor.visitTime) + '</td></tr>';
-            html += '<tr><td class="bg-light">离开时间</td><td>' + (visitor.leaveTime ? $.formatDate(visitor.leaveTime) : '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">来访事由</td><td>' + (visitor.visitReason || '-') + '</td></tr>';
+            html += '<h6 class="mb-3">访客信息</h6>';
+            html += '<table class="table">';
+            html += '<tr><td style="width: 120px; color: var(--muted);">访客ID</td><td class="num">' + visitor.visitorId + '</td></tr>';
+            html += '<tr><td style="color: var(--muted);">访客姓名</td><td>' + (visitor.visitorName || '-') + '</td></tr>';
+            html += '<tr><td style="color: var(--muted);">身份证号</td><td class="num">' + (visitor.idCard || '-') + '</td></tr>';
+            html += '<tr><td style="color: var(--muted);">来访时间</td><td class="num">' + $.formatDate(visitor.visitTime) + '</td></tr>';
+            html += '<tr><td style="color: var(--muted);">离开时间</td><td class="num">' + (visitor.leaveTime ? $.formatDate(visitor.leaveTime) : '-') + '</td></tr>';
+            html += '<tr><td style="color: var(--muted);">来访事由</td><td>' + (visitor.visitReason || '-') + '</td></tr>';
             html += '</table>';
             html += '</div>';
 
             // 右侧：被访学生和状态
             html += '<div class="col-md-6">';
-            html += '<h6 class="mb-3"><i class="fas fa-info-circle mr-2"></i>其他信息</h6>';
-            html += '<table class="table table-bordered">';
-            html += '<tr><td class="bg-light" style="width: 120px;">状态</td><td>' + statusBadge + '</td></tr>';
-            html += '<tr><td class="bg-light">被访学生</td><td>' + (visitor.studentName || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">楼栋</td><td>' + (visitor.buildingName || '-') + '</td></tr>';
-            html += '<tr><td class="bg-light">登记人</td><td>' + (visitor.registrarName || '-') + '</td></tr>';
+            html += '<h6 class="mb-3">其他信息</h6>';
+            html += '<table class="table">';
+            html += '<tr><td style="width: 120px; color: var(--muted);">状态</td><td>' + statusBadge + '</td></tr>';
+            html += '<tr><td style="color: var(--muted);">被访学生</td><td>' + (visitor.studentName || '-') + '</td></tr>';
+            html += '<tr><td style="color: var(--muted);">楼栋</td><td>' + (visitor.buildingName || '-') + '</td></tr>';
+            html += '<tr><td style="color: var(--muted);">登记人</td><td>' + (visitor.registrarName || '-') + '</td></tr>';
             html += '</table>';
             html += '</div>';
             html += '</div>';
